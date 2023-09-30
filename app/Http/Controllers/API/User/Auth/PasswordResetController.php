@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API\User\Auth;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rule;
@@ -67,5 +69,41 @@ class PasswordResetController extends Controller
         } else {
             return ResponseFormatter::errorValidation(['email' => [__($status)]], 'reset password failed');
         } 
+    }
+
+    public function without_confirmation(Request $request)
+    {
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'password' => ['required', 'confirmed', 'min:8'],
+            'password_confirmation' => ['required', 'min:8'],
+        ]);
+
+        $user = User::find($request->user_id);
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+        return ResponseFormatter::success(new UserResource($user), 'success reset password data');
+    }
+    
+    public function with_old_password (Request $request)
+    {
+        $request->validate([
+            'old_password' => ['required'],
+            'password' => ['required', 'confirmed', 'min:8'],
+            'password_confirmation' => ['required', 'min:8'],
+        ]);
+
+        $user = User::find(Auth::user()->id);
+        if(!Hash::check($request->old_password, $user->password)) {
+            return ResponseFormatter::errorValidation([
+                'old_password' => 'old password is invalid'
+            ], 'reset password failed', 422);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+        return ResponseFormatter::success(new UserResource($user), 'success reset password data');
     }
 }
