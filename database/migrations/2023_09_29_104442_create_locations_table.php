@@ -12,8 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->uuid('id')->primary();
+            $table->string('location_code')->unique();
+            $table->string('location');
+            $table->uuid('parent_location_id')->nullable();
+        });
+
+        Schema::table('locations', function (Blueprint $table) {
+            $table->foreign('parent_location_id')->references('id')->on('locations')->onUpdate('cascade');    
+        });
+        
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('location_id')->references('id')->on('locations')->onUpdate('cascade');
         });
     }
 

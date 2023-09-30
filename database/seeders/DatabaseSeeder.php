@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\CostCenter;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,6 +23,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             PermissionSeeder::class,
+            DepartmentSeeder::class,
+            LocationSeeder::class,
+            CostCenterSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

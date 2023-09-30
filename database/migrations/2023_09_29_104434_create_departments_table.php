@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('departments', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->uuid('id')->primary();
+            $table->string('department_code')->unique();
+            $table->string('department');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('department_id')->references('id')->on('departments')->onUpdate('cascade');
         });
     }
 

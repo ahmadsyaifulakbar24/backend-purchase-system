@@ -4,12 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\User\ResetPasswordNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -57,6 +60,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = env('PASSWORD_RESET_URL') . '?token='.$token;
+    
+        Notification::sendNow($this, new ResetPasswordNotification($url));
+    }
+
     public function createdAt(): Attribute
     {
         return Attribute::make(
@@ -77,5 +87,15 @@ class User extends Authenticatable
                 return $date_timezone;
             },
         );
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_id');
     }
 }
