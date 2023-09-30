@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
 use App\Http\Controllers\API\User\Auth\LogoutController;
@@ -43,5 +44,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('{user:id}/update-photo', [UserController::class, 'update_photo']);
         Route::post('reset-password/without-confirmation', [PasswordResetController::class, 'without_confirmation']);
         Route::post('reset-password/with-old-password', [PasswordResetController::class, 'with_old_password']);
+    });
+
+    Route::prefix('department')->group(function () {
+        Route::get('/', [DepartmentController::class, 'get']);
+        Route::post('/', [DepartmentController::class, 'store']);
+        Route::get('/{department:id}', [DepartmentController::class, 'show']);
+        Route::patch('/{department:id}', [DepartmentController::class, 'update']);
+        Route::delete('/{department:id}', [DepartmentController::class, 'destory']);
     });
 });

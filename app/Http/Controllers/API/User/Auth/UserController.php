@@ -69,7 +69,7 @@ class UserController extends Controller
         $result = $paginate ? $user->paginate($limit) : $user->get();
 
         return ResponseFormatter::success(
-            $result,
+            UserResource::collection($result)->response()->getData(),
             'success get user data'
         );
     }
