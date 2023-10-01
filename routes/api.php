@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\User\Auth\AuthController;
@@ -61,5 +62,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{location:id}', [LocationController::class, 'show']);
         Route::patch('/{location:id}', [LocationController::class, 'update']);
         Route::delete('/{location:id}', [LocationController::class, 'destory']);
+    });
+
+    Route::prefix('cost-center')->group(function () {
+        Route::get('/', [CostCenterController::class, 'get']);
+        Route::post('/', [CostCenterController::class, 'store']);
+        Route::get('/{cost_center:id}', [CostCenterController::class, 'show']);
+        Route::patch('/{cost_center:id}', [CostCenterController::class, 'update']);
+        Route::delete('/{cost_center:id}', [CostCenterController::class, 'destory']);
     });
 });

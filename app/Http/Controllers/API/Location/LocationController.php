@@ -46,10 +46,10 @@ class LocationController extends Controller
         ]);
 
         $input = $request->all();
-        $location = location::create($input);
+        $location = Location::create($input);
 
         return ResponseFormatter::success(
-            new locationResource($location),
+            new LocationResource($location),
             'success create location data'
         );
     }
@@ -74,7 +74,7 @@ class LocationController extends Controller
         $location->update($input);
 
         return ResponseFormatter::success(
-            new locationResource($location),
+            new LocationResource($location),
             'success update location data'
         );
     }
