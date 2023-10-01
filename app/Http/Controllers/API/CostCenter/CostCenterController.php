@@ -14,11 +14,9 @@ class CostCenterController extends Controller
     {
         $request->validate([
             'limit' => ['nullable', 'integer'],
-            'paginate' => ['nullable', 'in:0,1'],
             'search' => ['nullable', 'string'],
         ]);
         $search = $request->search;
-        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $cost_center = CostCenter::when($search, function ($query, string $search) {
@@ -27,12 +25,11 @@ class CostCenterController extends Controller
                                         ->orWhere('cost_center_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('cost_center', 'ASC');
-        
-        $result = $paginate ? $cost_center->paginate($limit) : $cost_center->get();
+                            ->orderBy('cost_center', 'ASC')
+                            ->paginate($limit);
 
         return ResponseFormatter::success(
-            CostCenterResource::collection($result)->response()->getData(true),
+            CostCenterResource::collection($cost_center)->response()->getData(true),
             'success get cost center data'
         );
     }
@@ -77,7 +74,7 @@ class CostCenterController extends Controller
         );
     }
 
-    public function destory(CostCenter $cost_center)
+    public function destroy(CostCenter $cost_center)
     {
         
         $cost_center->delete();

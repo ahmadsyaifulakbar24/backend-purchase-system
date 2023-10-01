@@ -14,11 +14,9 @@ class DepartmentController extends Controller
     {
         $request->validate([
             'limit' => ['nullable', 'integer'],
-            'paginate' => ['nullable', 'in:0,1'],
             'search' => ['nullable', 'string'],
         ]);
         $search = $request->search;
-        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $department = Department::when($search, function ($query, string $search) {
@@ -27,12 +25,11 @@ class DepartmentController extends Controller
                                         ->orWhere('department_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('department', 'ASC');
-        
-        $result = $paginate ? $department->paginate($limit) : $department->get();
+                            ->orderBy('department', 'ASC')
+                            ->paginate($limit);
 
         return ResponseFormatter::success(
-            DepartmentResource::collection($result)->response()->getData(true),
+            DepartmentResource::collection($department)->response()->getData(true),
             'success get department data'
         );
     }
@@ -77,7 +74,7 @@ class DepartmentController extends Controller
         );
     }
 
-    public function destory(Department $department)
+    public function destroy(Department $department)
     {
         
         $department->delete();

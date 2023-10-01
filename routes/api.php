@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Location\LocationController;
+use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
 use App\Http\Controllers\API\User\Auth\LogoutController;
@@ -59,7 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', [DepartmentController::class, 'store']);
         Route::get('/{department:id}', [DepartmentController::class, 'show']);
         Route::patch('/{department:id}', [DepartmentController::class, 'update']);
-        Route::delete('/{department:id}', [DepartmentController::class, 'destory']);
+        Route::delete('/{department:id}', [DepartmentController::class, 'destroy']);
     });
 
     Route::prefix('location')->group(function () {
@@ -67,7 +68,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', [LocationController::class, 'store']);
         Route::get('/{location:id}', [LocationController::class, 'show']);
         Route::patch('/{location:id}', [LocationController::class, 'update']);
-        Route::delete('/{location:id}', [LocationController::class, 'destory']);
+        Route::delete('/{location:id}', [LocationController::class, 'destroy']);
     });
 
     Route::prefix('cost-center')->group(function () {
@@ -75,6 +76,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', [CostCenterController::class, 'store']);
         Route::get('/{cost_center:id}', [CostCenterController::class, 'show']);
         Route::patch('/{cost_center:id}', [CostCenterController::class, 'update']);
-        Route::delete('/{cost_center:id}', [CostCenterController::class, 'destory']);
+        Route::delete('/{cost_center:id}', [CostCenterController::class, 'destroy']);
+    });
+
+    Route::prefix('supplier')->group(function () {
+        Route::get('/', [SupplierController::class, 'get']);
+        Route::post('/', [SupplierController::class, 'store']);
+        Route::get('/{supplier:id}', [SupplierController::class, 'show']);
+        Route::patch('/{supplier:id}', [SupplierController::class, 'update']);
+        Route::delete('/{supplier:id}', [SupplierController::class, 'destroy']);
     });
 });

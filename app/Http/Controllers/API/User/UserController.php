@@ -32,7 +32,6 @@ class UserController extends Controller
             'location_id.*' => ['nullable', 'exists:locations,id', 'distinct'],
 
             'limit' => ['nullable', 'integer'],
-            'paginate' => ['nullable', 'in:0,1'],
             'search' => ['nullable', 'string'],
         ]);
 
@@ -41,7 +40,6 @@ class UserController extends Controller
         $department_id = $request->department_id;
         $location_id = $request->location_id;
         $limit = $request->input('limit', 10);
-        $paginate = $request->paginate;
         $search = $request->search;
 
         $user = User::when($role, function ($query, $role) {
@@ -64,12 +62,11 @@ class UserController extends Controller
                         ->orWhere('username', 'like', '%'. $search .'%')
                         ->orWhere('name', 'like', '%'. $search .'%');
             });
-        });
-
-        $result = $paginate ? $user->paginate($limit) : $user->get();
+        })
+        ->paginate($limit);
 
         return ResponseFormatter::success(
-            UserResource::collection($result)->response()->getData(),
+            UserResource::collection($user)->response()->getData(),
             'success get user data'
         );
     }
