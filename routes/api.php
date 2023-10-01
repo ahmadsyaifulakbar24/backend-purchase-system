@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\CostCenter\CostCenterController;
+use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
+use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
@@ -85,5 +87,21 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{supplier:id}', [SupplierController::class, 'show']);
         Route::patch('/{supplier:id}', [SupplierController::class, 'update']);
         Route::delete('/{supplier:id}', [SupplierController::class, 'destroy']);
+    });
+
+    Route::prefix('discount')->group(function () {
+        Route::get('/', [DiscountController::class, 'get']);
+        Route::post('/', [DiscountController::class, 'store']);
+        Route::get('/{discount:id}', [DiscountController::class, 'show']);
+        Route::patch('/{discount:id}', [DiscountController::class, 'update']);
+        Route::delete('/{discount:id}', [DiscountController::class, 'destroy']);
+    });
+
+    Route::prefix('customer')->group(function () {
+        Route::get('/', [CustomerController::class, 'get']);
+        Route::post('/', [CustomerController::class, 'store']);
+        Route::get('/{customer:id}', [CustomerController::class, 'show']);
+        Route::patch('/{customer:id}', [CustomerController::class, 'update']);
+        Route::delete('/{customer:id}', [CustomerController::class, 'destroy']);
     });
 });
