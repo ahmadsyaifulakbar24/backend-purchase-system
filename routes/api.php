@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Department\DepartmentController;
+use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
 use App\Http\Controllers\API\User\Auth\LogoutController;
@@ -52,5 +53,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{department:id}', [DepartmentController::class, 'show']);
         Route::patch('/{department:id}', [DepartmentController::class, 'update']);
         Route::delete('/{department:id}', [DepartmentController::class, 'destory']);
+    });
+
+    Route::prefix('location')->group(function () {
+        Route::get('/', [LocationController::class, 'get']);
+        Route::post('/', [LocationController::class, 'store']);
+        Route::get('/{location:id}', [LocationController::class, 'show']);
+        Route::patch('/{location:id}', [LocationController::class, 'update']);
+        Route::delete('/{location:id}', [LocationController::class, 'destory']);
     });
 });
