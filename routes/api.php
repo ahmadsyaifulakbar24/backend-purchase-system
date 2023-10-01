@@ -12,6 +12,7 @@ use App\Http\Controllers\API\User\Auth\LogoutController;
 use App\Http\Controllers\API\User\Auth\PasswordResetController;
 use App\Http\Controllers\API\User\PermissionController;
 use App\Http\Controllers\API\User\UserController;
+use App\Http\Controllers\ItemCategory\ItemCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -103,5 +104,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{customer:id}', [CustomerController::class, 'show']);
         Route::patch('/{customer:id}', [CustomerController::class, 'update']);
         Route::delete('/{customer:id}', [CustomerController::class, 'destroy']);
+    });
+
+    Route::prefix('item-category')->group(function () {
+        Route::get('/', [ItemCategoryController::class, 'get']);
+        Route::post('/', [ItemCategoryController::class, 'store']);
+        Route::get('/{item_category:id}', [ItemCategoryController::class, 'show']);
+        Route::patch('/{item_category:id}', [ItemCategoryController::class, 'update']);
+        Route::delete('/{item_category:id}', [ItemCategoryController::class, 'destroy']);
     });
 });
