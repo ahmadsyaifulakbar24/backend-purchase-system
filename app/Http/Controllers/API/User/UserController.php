@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\User\Auth;
+namespace App\Http\Controllers\API\User;
 
 use App\Helpers\FileHelpers;
 use App\Helpers\ResponseFormatter;

@@ -7,7 +7,8 @@ use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
 use App\Http\Controllers\API\User\Auth\LogoutController;
 use App\Http\Controllers\API\User\Auth\PasswordResetController;
-use App\Http\Controllers\API\User\Auth\UserController;
+use App\Http\Controllers\API\User\PermissionController;
+use App\Http\Controllers\API\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('/', AuthController::class);
             Route::delete('/logout', LogoutController::class);
+        });
+
+        Route::prefix('role')->group(function () {
+            Route::get('/', [PermissionController::class, 'get_role']);
+            Route::post('/', [PermissionController::class, 'create_role']);
         });
 
         Route::get('/', [UserController::class, 'get']);
