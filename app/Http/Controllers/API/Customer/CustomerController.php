@@ -15,8 +15,10 @@ class CustomerController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1']
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $customer = Customer::when($search, function ($query, string $search) {
@@ -25,11 +27,11 @@ class CustomerController extends Controller
                                         ->orWhere('code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('created_at', 'DESC')
-                            ->paginate($limit);
+                            ->orderBy('created_at', 'DESC');
+        $result = $paginate ? $customer->paginate($limit) : $customer->get();
 
         return ResponseFormatter::success(
-            CustomerResource::collection($customer)->response()->getData(true),
+            CustomerResource::collection($result)->response()->getData(true),
             'success get customer data'
         );
     }

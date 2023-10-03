@@ -15,8 +15,10 @@ class LocationController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $location = Location::when($search, function ($query, string $search) {
@@ -25,12 +27,13 @@ class LocationController extends Controller
                                         ->orWhere('location_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('location', 'ASC')
-                            ->paginate($limit);
+                            ->orderBy('location', 'ASC');
+        
+        $result = $paginate ? $location->paginate($limit) : $location->get();
 
         return ResponseFormatter::success(
-            LocationResource::collection($location)->response()->getData(true),
-            'success get department data'
+            LocationResource::collection($result)->response()->getData(true),
+            'success get location data'
         );
     }
 

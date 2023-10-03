@@ -16,8 +16,10 @@ class SupplierController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $supplier = Supplier::when($search, function ($query, string $search) {
@@ -26,11 +28,12 @@ class SupplierController extends Controller
                                         ->orWhere('code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('created_at', 'DESC')
-                            ->paginate($limit);
+                            ->orderBy('created_at', 'DESC');
+            
+        $result = $paginate ? $supplier->paginate($limit) : $supplier->get();
 
         return ResponseFormatter::success(
-            SupplierResource::collection($supplier)->response()->getData(true),
+            SupplierDetailResource::collection($result)->response()->getData(true),
             'success get supplier data'
         );
     }

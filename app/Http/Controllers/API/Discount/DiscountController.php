@@ -15,18 +15,21 @@ class DiscountController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $discount = Discount::when($search, function ($query, string $search) {
                                 $query->where('discount', 'like', '%'. $search. '%');
                             })
-                            ->orderBy('discount', 'ASC')
-                            ->paginate($limit);
+                            ->orderBy('discount', 'ASC');
+                        
+        $result = $paginate ? $discount->paginate($limit) : $discount->get();                            
 
         return ResponseFormatter::success(
-            DiscountResource::collection($discount)->response()->getData(true),
+            DiscountResource::collection($result)->response()->getData(true),
             'success get discount data'
         );
     }
