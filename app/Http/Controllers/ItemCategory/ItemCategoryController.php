@@ -15,8 +15,10 @@ class ItemCategoryController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $item_category = ItemCategory::when($search, function ($query, string $search) {
@@ -25,11 +27,12 @@ class ItemCategoryController extends Controller
                                         ->orWhere('category_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('category', 'ASC')
-                            ->paginate($limit);
+                            ->orderBy('category', 'ASC');
+                        
+        $result = $paginate ? $item_category->paginate($limit) : $item_category->get();
 
         return ResponseFormatter::success(
-            ItemCategoryResource::collection($item_category)->response()->getData(true),
+            ItemCategoryResource::collection($result)->response()->getData(true),
             'success get item category data'
         );
     }

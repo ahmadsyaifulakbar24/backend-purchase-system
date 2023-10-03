@@ -15,8 +15,10 @@ class CostCenterController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
+            'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
+        $paginate = $request->paginate;
         $limit = $request->input('limit', 10);
 
         $cost_center = CostCenter::when($search, function ($query, string $search) {
@@ -25,11 +27,12 @@ class CostCenterController extends Controller
                                         ->orWhere('cost_center_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('cost_center', 'ASC')
-                            ->paginate($limit);
+                            ->orderBy('cost_center', 'ASC');
+                            
+        $result = $paginate ? $cost_center->paginate($limit) : $cost_center->get();
 
         return ResponseFormatter::success(
-            CostCenterResource::collection($cost_center)->response()->getData(true),
+            CostCenterResource::collection($result)->response()->getData(true),
             'success get cost center data'
         );
     }
