@@ -8,6 +8,7 @@ use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
+use App\Http\Controllers\API\PriceList\PriceListController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
@@ -126,5 +127,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{item_product:id}', [ItemProductController::class, 'show']);
         Route::patch('/{item_product:id}', [ItemProductController::class, 'update']);
         Route::delete('/{item_product:id}', [ItemProductController::class, 'destroy']);
+    });
+
+    Route::prefix('price-list')->group(function () {
+        Route::get('/', [PriceListController::class, 'get']);
+        Route::post('/', [PriceListController::class, 'store']);
+        Route::get('/{price_list:id}', [PriceListController::class, 'show']);
+        Route::patch('/{price_list:id}', [PriceListController::class, 'update']);
+        Route::delete('/{price_list:id}', [PriceListController::class, 'destroy']);
     });
 });

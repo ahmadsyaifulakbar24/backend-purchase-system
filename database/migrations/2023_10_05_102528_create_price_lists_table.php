@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('price_lists', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
             $table->foreignUuid('item_product_id')->constrained('item_products')->onUpdate('cascade');
