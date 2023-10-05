@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('size')->nullable();
             $table->foreignUuid('unit_id')->nullable()->constrained('params')->onUpdate('cascade');
-            $table->boolean('tax');
+            $table->enum('tax', ['yes', 'no']);
             $table->timestamps();
         });
     }
