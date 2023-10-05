@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemCategory\ItemCategoryResource;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ItemCategoryController extends Controller
 {
@@ -16,16 +17,31 @@ class ItemCategoryController extends Controller
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
+            'only_parent' => ['nullable', 'in:0,1'],
+            'parent_category_id' => [
+                'nullable',
+                Rule::exists('item_categories', 'id')->where(function($query) {
+                    $query->whereNull('parent_category_id');
+                })
+            ]
         ]);
         $search = $request->search;
-        $paginate = $request->paginate;
+        $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
+        $only_parent = $request->only_parent;
+        $parent_category_id = $request->parent_category_id;
 
         $item_category = ItemCategory::when($search, function ($query, string $search) {
                                 $query->where(function ($sub_query) use ($search) {
                                     $sub_query->where('category', 'like', '%'. $search. '%')
                                         ->orWhere('category_code', 'like', '%'. $search. '%');
                                 });
+                            })
+                            ->when($parent_category_id, function($query, string $parent_category_id) {
+                                $query->where('parent_category_id', $parent_category_id);
+                            })
+                            ->when($only_parent, function($query) {
+                                $query->whereNull('parent_category_id');
                             })
                             ->orderBy('category', 'ASC');
                         

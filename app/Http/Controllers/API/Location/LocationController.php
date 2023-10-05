@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Location\LocationResource;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class LocationController extends Controller
 {
@@ -16,16 +17,31 @@ class LocationController extends Controller
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
+            'only_parent' => ['nullable', 'in:0,1'],
+            'parent_location_id' => [
+                'nullable',
+                Rule::exists('locations', 'id')->where(function($query) {
+                    $query->whereNull('parent_location_id');
+                })
+            ]
         ]);
         $search = $request->search;
-        $paginate = $request->paginate;
+        $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
+        $only_parent = $request->only_parent;
+        $parent_location_id = $request->parent_location_id;
 
         $location = Location::when($search, function ($query, string $search) {
                                 $query->where(function ($sub_query) use ($search) {
                                     $sub_query->where('location', 'like', '%'. $search. '%')
                                         ->orWhere('location_code', 'like', '%'. $search. '%');
                                 });
+                            })
+                            ->when($parent_location_id, function($query, string $parent_location_id) {
+                                $query->where('parent_location_id', $parent_location_id);
+                            })
+                            ->when($only_parent, function($query) {
+                                $query->whereNull('parent_location_id');
                             })
                             ->orderBy('location', 'ASC');
         

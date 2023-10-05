@@ -42,7 +42,7 @@ class UserController extends Controller
         $location_id = $request->location_id;
         $limit = $request->input('limit', 10);
         $search = $request->search;
-        $paginate = $request->paginate;
+        $paginate = $request->input('paginate', 1);
 
         $user = User::when($role, function ($query, $role) {
             $query->whereHas('roles', function ($sub_query) use ($role) {

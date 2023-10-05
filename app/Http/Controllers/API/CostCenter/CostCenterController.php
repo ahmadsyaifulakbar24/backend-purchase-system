@@ -18,7 +18,7 @@ class CostCenterController extends Controller
             'paginate' => ['nullable', 'in:0,1'],
         ]);
         $search = $request->search;
-        $paginate = $request->paginate;
+        $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
         $cost_center = CostCenter::when($search, function ($query, string $search) {
