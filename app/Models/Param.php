@@ -7,20 +7,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ItemCategory extends Model
+class Param extends Model
 {
     use HasFactory, HasUuids;
-    protected $table = 'item_categories';
+    
+    protected $table = 'params';
     protected $fillable = [
-        'category_code',
+        'parent_id',
         'category',
-        'parent_category_id'
+        'param',
+        'slug',
+        'order',
     ];
 
     public $timestamps = false;
 
-    public function parent_category(): BelongsTo
+    public function parent(): BelongsTo
     {
-        return $this->belongsTo(ItemCategory::class, 'parent_category_id');
+        return $this->belongsTo(Param::class, 'parent_id');
     }
 }

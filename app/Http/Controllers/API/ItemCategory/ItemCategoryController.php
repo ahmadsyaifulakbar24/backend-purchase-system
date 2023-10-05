@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ItemCategory;
+namespace App\Http\Controllers\API\ItemCategory;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;

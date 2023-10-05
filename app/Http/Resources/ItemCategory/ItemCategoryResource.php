@@ -14,11 +14,20 @@ class ItemCategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $parent_cetegory = null;
+        if (!empty($this->parent_category)) {
+            $parent_cetegory = [
+                'id' => $this->parent_category->id,
+                'category_code' => $this->parent_category->category_code,
+                'category' => $this->parent_category->category,
+            ];
+        }
+
         return [
             'id' => $this->id,
             'category_code' => $this->category_code,
             'category' => $this->category,
-            'parent_category_id' => $this->parent_category_id,
+            'parent_category' => $parent_cetegory ,
         ];
     }
 }

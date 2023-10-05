@@ -18,4 +18,9 @@ class Location extends Model
         'parent_location_id',
     ];
     public $timestamps = false;
+
+    public function parent_location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'parent_location_id');
+    }
 }

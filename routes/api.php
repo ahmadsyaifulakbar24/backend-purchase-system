@@ -4,7 +4,10 @@ use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
+use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
+use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
@@ -12,7 +15,6 @@ use App\Http\Controllers\API\User\Auth\LogoutController;
 use App\Http\Controllers\API\User\Auth\PasswordResetController;
 use App\Http\Controllers\API\User\PermissionController;
 use App\Http\Controllers\API\User\UserController;
-use App\Http\Controllers\ItemCategory\ItemCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +40,10 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::prefix('param')->group(function () {
+        Route::get('unit', [ParamController::class, 'unit']);
+    });
+
     Route::prefix('user')->group(function () {
         Route::prefix('auth')->group(function () {
             Route::get('/', AuthController::class);
@@ -112,5 +118,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{item_category:id}', [ItemCategoryController::class, 'show']);
         Route::patch('/{item_category:id}', [ItemCategoryController::class, 'update']);
         Route::delete('/{item_category:id}', [ItemCategoryController::class, 'destroy']);
+    });
+
+    Route::prefix('item-product')->group(function () {
+        Route::get('/', [ItemProductController::class, 'get']);
+        Route::post('/', [ItemProductController::class, 'store']);
+        Route::get('/{item_product:id}', [ItemProductController::class, 'show']);
+        Route::patch('/{item_product:id}', [ItemProductController::class, 'update']);
+        Route::delete('/{item_product:id}', [ItemProductController::class, 'destroy']);
     });
 });

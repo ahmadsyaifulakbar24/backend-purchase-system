@@ -14,11 +14,21 @@ class LocationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $parent_location = null;
+        if (!empty($this->parent_location)) {
+            $parent_location = [
+                'id' => $this->parent_location->id,
+                'location_code' => $this->parent_location->location_code,
+                'location' => $this->parent_location->location,
+            ];
+        }
+
         return [
             'id' => $this->id,
             'location_code' => $this->location_code,
             'location' => $this->location,
-            'parent_location_id' => $this->parent_location_id,
+            'parent_location' => $parent_location,
         ];
     }
 }
