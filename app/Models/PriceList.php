@@ -43,6 +43,13 @@ class PriceList extends Model
         );
     }
 
+    public function price(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => intval($value),
+        );
+    }
+
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_id');
