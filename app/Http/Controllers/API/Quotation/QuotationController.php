@@ -49,7 +49,7 @@ class QuotationController extends Controller
         $last_number = $this->last_number();
         $customer = Customer::find($request->customer_id);
         $input['serial_number'] = $last_number;
-        $input['quotation_number'] = $last_number .'/SBL/Q/'. $customer->id .'/'. DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input['quotation_number'] = $last_number .'/SBL/Q/'. $customer->code .'/'. DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
 
         // database transaction for quotation and item
         $result = DB::transaction(function () use ($input, $request) {
@@ -93,10 +93,10 @@ class QuotationController extends Controller
 
             // store item product data
             foreach($request->item_product as $item_product) {
-                // delete quotation
+                // delete quotation item product
                 $quotation->item_product()->delete();
 
-                // store quotation
+                // store quotation item product
                 $item_product['reference_type'] = 'App/Models/Quotation';
                 $item_product['reference_id'] = $quotation->id;
                 SelectItemProduct::create($item_product);
@@ -134,7 +134,10 @@ class QuotationController extends Controller
 
     public function destroy(Quotation $quotation)
     {
-        $quotation->delete();
+        DB::transaction(function () use ($quotation) {
+            $quotation->item_product->delete();
+            $quotation->delete();
+        });
 
         return ResponseFormatter::success(
             null,

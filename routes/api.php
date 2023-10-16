@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PriceList\PriceListController;
+use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
@@ -145,5 +146,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
         Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
         Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
+    });
+
+    Route::prefix('purchase-request')->group(function () {
+        Route::get('/', [PurchaseRequestController::class, 'get']);
+        Route::post('/', [PurchaseRequestController::class, 'store']);
+        Route::get('/{purchase_request:id}', [PurchaseRequestController::class, 'show']);
+        Route::patch('/{purchase_request:id}', [PurchaseRequestController::class, 'update']);
+        Route::patch('/{purchase_request:id}/update-status', [PurchaseRequestController::class, 'update_status']);
+        Route::delete('/{purchase_request:id}', [PurchaseRequestController::class, 'destroy']);
     });
 });
