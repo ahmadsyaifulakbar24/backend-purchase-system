@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PriceList\PriceListController;
+use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
@@ -135,5 +136,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{price_list:id}', [PriceListController::class, 'show']);
         Route::patch('/{price_list:id}', [PriceListController::class, 'update']);
         Route::delete('/{price_list:id}', [PriceListController::class, 'destroy']);
+    });
+
+    Route::prefix('quotation')->group(function () {
+        Route::get('/', [QuotationController::class, 'get']);
+        Route::post('/', [QuotationController::class, 'store']);
+        Route::get('/{quotation:id}', [QuotationController::class, 'show']);
+        Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
+        Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
+        Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
     });
 });
