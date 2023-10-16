@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignUuid('item_category_id')->constrained('item_categories')->onUpdate('cascade');
             $table->foreignUuid('sub_item_category_id')->nullable()->constrained('item_categories')->onUpdate('cascade');
+            $table->string('brand')->nullable();
             $table->string('description')->nullable();
             $table->string('size')->nullable();
             $table->foreignUuid('unit_id')->nullable()->constrained('params')->onUpdate('cascade');

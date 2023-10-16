@@ -55,6 +55,7 @@ class ItemProductController extends Controller
                     $query->where('parent_category_id', $request->item_category_id);
                 })
             ],
+            'brand' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'size' => ['required', 'string'],
             'unit_id' => [
@@ -100,6 +101,7 @@ class ItemProductController extends Controller
                     $query->where('parent_category_id', $request->item_category_id);
                 })
             ],
+            'brand' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'size' => ['required', 'string'],
             'unit_id' => [

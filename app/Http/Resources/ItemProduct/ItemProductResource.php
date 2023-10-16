@@ -22,6 +22,7 @@ class ItemProductResource extends JsonResource
             'name' => $this->name,
             'item_category' => new ItemCategoryResource($this->item_category),
             'sub_item_category' => new ItemCategoryResource($this->sub_item_category),
+            'brand' => $this->brand,
             'description' => $this->description,
             'size' => $this->size,
             'unit' => new ParamResource($this->unit),

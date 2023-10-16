@@ -19,6 +19,7 @@ class ItemProduct extends Model
         'name',
         'item_category_id',
         'sub_item_category_id',
+        'brand',
         'description',
         'size',
         'unit_id',
