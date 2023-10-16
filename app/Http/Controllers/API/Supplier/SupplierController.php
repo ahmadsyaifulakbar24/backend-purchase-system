@@ -49,7 +49,7 @@ class SupplierController extends Controller
             'contact_person' => ['required', 'string'],
             'address' => ['required', 'string'],
             'email' => ['required', 'email'],
-            'phone' => ['required', 'integer'],
+            'phone' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();
@@ -80,7 +80,7 @@ class SupplierController extends Controller
             'contact_person' => ['required', 'string'],
             'address' => ['required', 'string'],
             'email' => ['required', 'email'],
-            'phone' => ['required', 'integer'],
+            'phone' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();
