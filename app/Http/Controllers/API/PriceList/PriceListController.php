@@ -13,10 +13,12 @@ class PriceListController extends Controller
     public function get(Request $request)
     {
         $request->validate([
+            'location_id' => ['nullable', 'exists:locations,id'],
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
         ]);
+        $location_id = $request->location_id;
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
@@ -27,6 +29,9 @@ class PriceListController extends Controller
                                         $sub_query2->where('name', 'like', '%'. $search. '%');
                                     });
                                 });
+                            })
+                            ->when($location_id, function ($query, $location_id) {
+                                $query->where('location_id', $location_id);
                             })
                             ->orderBy('created_at', 'DESC');
                             
