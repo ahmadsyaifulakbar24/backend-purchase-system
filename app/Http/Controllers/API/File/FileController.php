@@ -93,7 +93,7 @@ class FileController extends Controller
         $reference_id = $request->reference_id;
 
         $path = FileHelpers::upload_file($request->reference_type .'/'. $type , $file, 'local', false);
-        File::create([
+        $file_data = File::create([
             'reference_type' => $reference_type,
             'reference_id' => $reference_id,
             'type' => $type,
@@ -102,7 +102,10 @@ class FileController extends Controller
             'file' => $path
         ]);
 
-        return ResponseFormatter::success(null, "success uplaod file $type");
+        return ResponseFormatter::success(
+            new FileResource($file_data), 
+            "success uplaod file $type"
+        );
     }
 
     public function show_file(Request $request)
