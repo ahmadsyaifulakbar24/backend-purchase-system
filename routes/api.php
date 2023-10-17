@@ -4,6 +4,7 @@ use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\File\FileController;
 use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
@@ -139,6 +140,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/{price_list:id}', [PriceListController::class, 'destroy']);
     });
 
+    Route::prefix('file')->group(function() {
+        Route::get('/', [FileController::class, 'get_file']);
+        Route::get('/show', [FileController::class, 'show_file']);
+        Route::post('/', [FileController::class, 'store']);
+        Route::delete('/{file:id}', [FileController::class, 'destroy']);
+    });
+    
     Route::prefix('quotation')->group(function () {
         Route::get('/', [QuotationController::class, 'get']);
         Route::post('/', [QuotationController::class, 'store']);
