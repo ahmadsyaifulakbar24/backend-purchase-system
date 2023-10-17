@@ -92,11 +92,12 @@ class PurchaseRequestController extends Controller
             // store purchase request data
             $purchase_request->update($input);
 
+            // delete purchase request item product
+            $purchase_request->item_product()->delete();
+
             // store item product data
             foreach($request->item_product as $item_product) {
-                // delete purchase request item product
-                $purchase_request->item_product()->delete();
-
+                
                 // store purchase request item product
                 $item_product['reference_type'] = 'App/Models/PurchaseRequest';
                 $item_product['reference_id'] = $purchase_request->id;

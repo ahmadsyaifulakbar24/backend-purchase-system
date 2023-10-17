@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('weight')->nullable();
             $table->string('unit');
             $table->integer('quantity');
-            $table->decimal('item_price');
+            $table->decimal('item_price', 16, 2);
             $table->integer('vat');
             $table->enum('tnt', ['T', 'NT'])->nullable();
             $table->text('remark')->nullable();

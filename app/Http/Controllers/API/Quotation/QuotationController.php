@@ -91,11 +91,11 @@ class QuotationController extends Controller
             // store quotation data
             $quotation->update($input);
 
+            // delete quotation item product
+            $quotation->item_product()->delete();
+            
             // store item product data
             foreach($request->item_product as $item_product) {
-                // delete quotation item product
-                $quotation->item_product()->delete();
-
                 // store quotation item product
                 $item_product['reference_type'] = 'App/Models/Quotation';
                 $item_product['reference_id'] = $quotation->id;
@@ -135,7 +135,7 @@ class QuotationController extends Controller
     public function destroy(Quotation $quotation)
     {
         DB::transaction(function () use ($quotation) {
-            $quotation->item_product->delete();
+            $quotation->item_product()->delete();
             $quotation->delete();
         });
 
