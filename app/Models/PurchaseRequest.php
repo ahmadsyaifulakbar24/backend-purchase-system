@@ -131,6 +131,14 @@ class PurchaseRequest extends Model
 
     public function item_product(): HasMany
     {
-        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App/Models/PurchaseRequest');
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\PurchaseRequest');
+    }
+
+    public function attachment_file(): HasMany
+    {
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where([
+            ['reference_type', 'App\Models\PurchaseRequest'],
+            ['type', 'attachment']
+        ]);
     }
 }

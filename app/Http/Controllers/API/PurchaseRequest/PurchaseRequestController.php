@@ -14,6 +14,7 @@ use App\Models\SelectItemProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PurchaseRequestController extends Controller
 {
@@ -137,7 +138,15 @@ class PurchaseRequestController extends Controller
     public function destroy(PurchaseRequest $purchase_request)
     {
         DB::transaction(function () use ($purchase_request) {
+            // delete attachment file
+            $files = $purchase_request->attachment_file()->pluck('file')->toArray();
+            Storage::disk('local')->delete($files);    
+            $purchase_request->attachment_file()->delete();
+
+            // delete item product
             $purchase_request->item_product()->delete();
+
+            // delete purchase request
             $purchase_request->delete();
         });
 

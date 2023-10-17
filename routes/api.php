@@ -10,6 +10,7 @@ use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PriceList\PriceListController;
+use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
 use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\Supplier\SupplierController;
@@ -163,5 +164,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{purchase_request:id}', [PurchaseRequestController::class, 'update']);
         Route::patch('/{purchase_request:id}/update-status', [PurchaseRequestController::class, 'update_status']);
         Route::delete('/{purchase_request:id}', [PurchaseRequestController::class, 'destroy']);
+    });
+
+    Route::prefix('incoming-po')->group(function () {
+        Route::get('/', [IncomingPOController::class, 'get']);
+        Route::post('/', [IncomingPOController::class, 'store']);
+        Route::get('/{incoming_po:id}', [IncomingPOController::class, 'show']);
+        Route::patch('/{incoming_po:id}', [IncomingPOController::class, 'update']);
+        Route::delete('/{incoming_po:id}', [IncomingPOController::class, 'destroy']);
     });
 });
