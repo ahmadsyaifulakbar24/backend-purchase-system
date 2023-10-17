@@ -120,7 +120,7 @@ class Quotation extends Model
 
     public function item_product(): HasMany
     {
-        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App/Models/Quotation');
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\Quotation');
     }
 
     public function prepared_by_data(): BelongsTo

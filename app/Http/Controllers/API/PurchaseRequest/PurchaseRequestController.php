@@ -60,7 +60,7 @@ class PurchaseRequestController extends Controller
 
             // store item product data
             foreach($request->item_product as $item_product) {
-                $item_product['reference_type'] = 'App/Models/PurchaseRequest';
+                $item_product['reference_type'] = 'App\Models\PurchaseRequest';
                 $item_product['reference_id'] = $purchase_request->id;
                 SelectItemProduct::create($item_product);
             }
@@ -100,7 +100,7 @@ class PurchaseRequestController extends Controller
             foreach($request->item_product as $item_product) {
                 
                 // store purchase request item product
-                $item_product['reference_type'] = 'App/Models/PurchaseRequest';
+                $item_product['reference_type'] = 'App\Models\PurchaseRequest';
                 $item_product['reference_id'] = $purchase_request->id;
                 SelectItemProduct::create($item_product);
             }

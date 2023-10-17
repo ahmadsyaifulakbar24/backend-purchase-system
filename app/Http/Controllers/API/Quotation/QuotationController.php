@@ -58,7 +58,7 @@ class QuotationController extends Controller
 
             // store item product data
             foreach($request->item_product as $item_product) {
-                $item_product['reference_type'] = 'App/Models/Quotation';
+                $item_product['reference_type'] = 'App\Models\Quotation';
                 $item_product['reference_id'] = $quotation->id;
                 SelectItemProduct::create($item_product);
             }
@@ -97,7 +97,7 @@ class QuotationController extends Controller
             // store item product data
             foreach($request->item_product as $item_product) {
                 // store quotation item product
-                $item_product['reference_type'] = 'App/Models/Quotation';
+                $item_product['reference_type'] = 'App\Models\Quotation';
                 $item_product['reference_id'] = $quotation->id;
                 SelectItemProduct::create($item_product);
             }
