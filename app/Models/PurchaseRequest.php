@@ -23,16 +23,21 @@ class PurchaseRequest extends Model
         'shipment_date',
         'prepared_by',
         'checked_by',
-        'approved_by',
+        'approved1_by',
+        'approved2_by',
         'checked_date',
-        'approved_date'
+        'approved1_date',
+        'approved2_date',
+        'status',
+        'note',
     ];
 
     protected $casts = [
         'pr_date' => 'date',
         'shipment_date' => 'date',
         'checked_date' => 'date', 
-        'approved_date' => 'date',  
+        'approved1_date' => 'date',  
+        'approved2_date' => 'date',  
     ];
 
     public function createdAt(): Attribute
@@ -94,7 +99,22 @@ class PurchaseRequest extends Model
         );
     }
 
-    public function approvedDate(): Attribute
+    public function approved1Date(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if(!empty($value)) {
+                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
+                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                    return $date_timezone;
+                } else {
+                    return $value;
+                }
+            },
+        );
+    }
+
+    public function approved2Date(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
@@ -124,9 +144,14 @@ class PurchaseRequest extends Model
         return $this->belongsTo(User::class, 'checked_by');
     }
 
-    public function approved_by_data(): BelongsTo
+    public function approved1_by_data(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved1_by');
+    }
+
+    public function approved2_by_data(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved2_by');
     }
 
     public function item_product(): HasMany

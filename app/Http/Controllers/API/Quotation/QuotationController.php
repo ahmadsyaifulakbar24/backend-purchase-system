@@ -23,14 +23,21 @@ class QuotationController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
-            'paginate' => ['nullable', 'in:0,1']
+            'paginate' => ['nullable', 'in:0,1'],
+
+            'status' => ['nullable', 'array'],
+            'status.*' => ['nullable', 'in:draft,submit,reject,finish']
         ]);
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
+        $status = $request->status;
 
         $quotation = Quotation::when($search, function ($query, string $search) {
                                     $query->where('quotation_number', $search);
+                                })
+                                ->when($status, function ($query, array $status) {
+                                    $query->whereIn('status', $status);
                                 })
                                 ->orderBy('created_at', 'DESC');
 
@@ -116,7 +123,7 @@ class QuotationController extends Controller
     public function update_status(Request $request, Quotation $quotation)
     {
         $request->validate([
-            'status' => ['required', 'in:draft,submit,reject'],
+            'status' => ['required', 'in:submit,reject'],
             'note' => [
                 Rule::requiredIf($request->status == 'reject')
             ]
@@ -124,7 +131,15 @@ class QuotationController extends Controller
         $status = $request->status;
 
         $input = $request->only('status');
-        $input['note'] = $status == 'reject' ? $request->note : NULL;
+        if($status == 'reject') {
+            $input['note'] = $request->note;
+            $input['checked_date'] = NULL;
+            $input['approved1_date'] = NULL;
+            $input['approved2_date'] = NULL;
+        } else {
+            $input['note'] = NULL;
+        }
+        // return $input;
         $quotation->update($input);
 
         return ResponseFormatter::success(
@@ -154,9 +169,20 @@ class QuotationController extends Controller
         }
 
         if($update) {
-            $quotation->update([
-                $data[$status] => Carbon::now()
-            ]);
+
+            DB::transaction(function () use ($quotation, $data, $status) {
+                $quotation->update([
+                    $data[$status] => Carbon::now()
+                ]);
+
+                if(
+                    !empty($quotation->checked_date) && 
+                    !empty($quotation->approved1_date) && 
+                    !empty($quotation->approved2_date)
+                ) {
+                    $quotation->update([ 'status' => 'finish' ]);
+                }
+            });
 
             return ResponseFormatter::success(
                 new QuotationDetailResource($quotation),

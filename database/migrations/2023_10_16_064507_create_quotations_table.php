@@ -30,7 +30,7 @@ return new class extends Migration
             $table->date('checked_date')->nullable();
             $table->date('approved1_date')->nullable();
             $table->date('approved2_date')->nullable();
-            $table->enum('status', ['draft', 'submit', 'reject']);
+            $table->enum('status', ['draft', 'submit', 'reject', 'finish']);
             $table->text('note')->nullable();
             $table->timestamps();
         });

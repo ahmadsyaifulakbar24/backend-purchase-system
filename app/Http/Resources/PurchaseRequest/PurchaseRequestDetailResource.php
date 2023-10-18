@@ -30,12 +30,19 @@ class PurchaseRequestDetailResource extends JsonResource
                 'id' => $this->checked_by_data->id,
                 'name' => $this->checked_by_data->name,
             ],
-            'approved_by' => [
-                'id' => $this->approved_by_data->id,
-                'name' => $this->approved_by_data->name,
+            'approved1_by' => [
+                'id' => $this->approved1_by_data->id,
+                'name' => $this->approved1_by_data->name,
+            ],
+            'approved2_by' => [
+                'id' => $this->approved2_by_data->id,
+                'name' => $this->approved2_by_data->name,
             ],
             'checked_date' => $this->checked_date,
-            'approved_date' => $this->approved_date,
+            'approved1_date' => $this->approved_date,
+            'approved2_date' => $this->approved2_date,
+            'status' => $this->status,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'item_product' => PurchaseRequestItemProductResource::collection($this->item_product),

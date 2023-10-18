@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PurchaseRequestController extends Controller
 {
@@ -23,14 +24,21 @@ class PurchaseRequestController extends Controller
         $request->validate([
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
-            'paginate' => ['nullable', 'in:0,1']
+            'paginate' => ['nullable', 'in:0,1'],
+
+            'status' => ['nullable', 'array'],
+            'status.*' => ['nullable', 'in:draft,submit,reject,finish']
         ]);
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
+        $status = $request->status;
 
         $purchase_request = PurchaseRequest::when($search, function ($query, string $search) {
                                             $query->where('pr_number', $search);
+                                        })
+                                        ->when($status, function ($query, array $status) {
+                                            $query->whereIn('status', $status);
                                         })
                                         ->orderBy('created_at', 'DESC');
 
@@ -52,6 +60,7 @@ class PurchaseRequestController extends Controller
         $location = Location::find($request->location_id);
         $input['serial_number'] = $last_number;
         $input['pr_number'] = $last_number .'/SBL/PR/'. $location->location_code .'/'. DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input['status'] = 'draft';
 
         // database transaction for purchase request and item data
         $result = DB::transaction(function () use ($input, $request) {
@@ -117,22 +126,76 @@ class PurchaseRequestController extends Controller
     public function update_status(Request $request, PurchaseRequest $purchase_request)
     {
         $request->validate([
-            'status' => ['required', 'in:checked,approved']
+            'status' => ['required', 'in:submit,reject'],
+            'note' => [
+                Rule::requiredIf($request->status == 'reject')
+            ]
         ]);
-        
-        $data = [
-            'checked' => 'checked_date',
-            'approved' => 'approved_date',
-        ];
+        $status = $request->status;
 
-        $purchase_request->update([
-            $data[$request->status] => Carbon::now()
-        ]);
+        $input = $request->only('status');
+        if($status == 'reject') {
+            $input['note'] = $request->note;
+            $input['checked_date'] = NULL;
+            $input['approved1_date'] = NULL;
+            $input['approved2_date'] = NULL;
+        } else {
+            $input['note'] = NULL;
+        }
+        // return $input;
+        $purchase_request->update($input);
 
         return ResponseFormatter::success(
             new PurchaseRequestDetailResource($purchase_request),
-            'success update purchase request data'
+            'success update status purchase request data'
         );
+    }
+    
+    public function update_approval_status(Request $request, PurchaseRequest $purchase_request)
+    {
+        $request->validate([
+            'status' => ['required', 'in:checked,approved1,approved2']
+        ]);
+        $status = $request->status;
+
+        $data = [
+            'checked' => 'checked_date',
+            'approved1' => 'approved1_date',
+            'approved2' => 'approved2_date',
+        ];
+
+        $update = false;
+        if ($status == 'checked') {
+            $update = $purchase_request->status == 'submit' ? true : false;
+        } else if (in_array($status, ['approved1','approved2'])) {
+            $update = !empty($purchase_request->checked_date) ? true : false;
+        }
+
+        if($update) {
+
+            DB::transaction(function () use ($purchase_request, $data, $status) {
+                $purchase_request->update([
+                    $data[$status] => Carbon::now()
+                ]);
+
+                if(
+                    !empty($purchase_request->checked_date) && 
+                    !empty($purchase_request->approved1_date) && 
+                    !empty($purchase_request->approved2_date)
+                ) {
+                    $purchase_request->update([ 'status' => 'finish' ]);
+                }
+            });
+
+            return ResponseFormatter::success(
+                new PurchaseRequestDetailResource($purchase_request),
+                'success update approval status purchase request data'
+            );
+        } else {
+            return ResponseFormatter::errorValidation([
+                'quotation_id' => 'Cannot update this quote because the status does not match'
+            ], 'update status quotation failed', 422);
+        }
     }
 
     public function destroy(PurchaseRequest $purchase_request)

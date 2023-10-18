@@ -163,6 +163,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', [PurchaseRequestController::class, 'store']);
         Route::get('/{purchase_request:id}', [PurchaseRequestController::class, 'show']);
         Route::patch('/{purchase_request:id}', [PurchaseRequestController::class, 'update']);
+        Route::patch('/{purchase_request:id}/update-approval-status', [PurchaseRequestController::class, 'update_approval_status']);
         Route::patch('/{purchase_request:id}/update-status', [PurchaseRequestController::class, 'update_status']);
         Route::delete('/{purchase_request:id}', [PurchaseRequestController::class, 'destroy']);
     });
