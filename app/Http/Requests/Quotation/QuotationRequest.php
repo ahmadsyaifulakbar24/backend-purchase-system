@@ -31,7 +31,8 @@ class QuotationRequest extends FormRequest
             'shipment_date' => ['required', 'date'],
             'prepared_by' => ['required', 'exists:users,id'],
             'checked_by' => ['required', 'exists:users,id'],
-            'approved_by' => ['required', 'exists:users,id'],
+            'approved1_by' => ['required', 'exists:users,id'],
+            'approved2_by' => ['required', 'exists:users,id'],
             'term_condition' => ['required', 'string'],
 
             'item_product' => ['required', 'array'],

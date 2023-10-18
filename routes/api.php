@@ -153,6 +153,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', [QuotationController::class, 'store']);
         Route::get('/{quotation:id}', [QuotationController::class, 'show']);
         Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
+        Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
         Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
         Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
     });

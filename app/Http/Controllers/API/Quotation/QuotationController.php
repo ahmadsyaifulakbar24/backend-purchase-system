@@ -14,6 +14,7 @@ use App\Models\SelectItemProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class QuotationController extends Controller
 {
@@ -50,6 +51,7 @@ class QuotationController extends Controller
         $customer = Customer::find($request->customer_id);
         $input['serial_number'] = $last_number;
         $input['quotation_number'] = $last_number .'/SBL/Q/'. $customer->code .'/'. DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input['status'] = 'draft';
 
         // database transaction for quotation and item
         $result = DB::transaction(function () use ($input, $request) {
@@ -114,22 +116,57 @@ class QuotationController extends Controller
     public function update_status(Request $request, Quotation $quotation)
     {
         $request->validate([
-            'status' => ['required', 'in:checked,approved']
+            'status' => ['required', 'in:draft,submit,reject'],
+            'note' => [
+                Rule::requiredIf($request->status == 'reject')
+            ]
         ]);
-        
-        $data = [
-            'checked' => 'checked_date',
-            'approved' => 'approved_date',
-        ];
+        $status = $request->status;
 
-        $quotation->update([
-            $data[$request->status] => Carbon::now()
-        ]);
+        $input = $request->only('status');
+        $input['note'] = $status == 'reject' ? $request->note : NULL;
+        $quotation->update($input);
 
         return ResponseFormatter::success(
             new QuotationDetailResource($quotation),
-            'success update quotation data'
+            'success update status quotation data'
         );
+    }
+
+    public function update_approval_status(Request $request, Quotation $quotation)
+    {
+        $request->validate([
+            'status' => ['required', 'in:checked,approved1,approved2']
+        ]);
+        $status = $request->status;
+
+        $data = [
+            'checked' => 'checked_date',
+            'approved1' => 'approved1_date',
+            'approved2' => 'approved2_date',
+        ];
+
+        $update = false;
+        if ($status == 'checked') {
+            $update = $quotation->status == 'submit' ? true : false;
+        } else if (in_array($status, ['approved1','approved2'])) {
+            $update = !empty($quotation->checked_date) ? true : false;
+        }
+
+        if($update) {
+            $quotation->update([
+                $data[$status] => Carbon::now()
+            ]);
+
+            return ResponseFormatter::success(
+                new QuotationDetailResource($quotation),
+                'success update approval status quotation data'
+            );
+        } else {
+            return ResponseFormatter::errorValidation([
+                'quotation_id' => 'Cannot update this quote because the status does not match'
+            ], 'update status quotation failed', 422);
+        }
     }
 
     public function destroy(Quotation $quotation)
