@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\PurchaseRequest;
 
+use App\Http\Resources\File\FileResource;
 use App\Http\Resources\Location\LocationResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -38,6 +39,7 @@ class PurchaseRequestDetailResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'item_product' => PurchaseRequestItemProductResource::collection($this->item_product),
+            'attachment_file' => FileResource::collection($this->attachment_file)
         ];
     }
 }

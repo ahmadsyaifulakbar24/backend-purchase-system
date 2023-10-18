@@ -3,6 +3,7 @@
 namespace App\Http\Resources\PurchaseOrder\IncomingPO;
 
 use App\Http\Resources\Customer\CustomerResource;
+use App\Http\Resources\File\FileResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -22,6 +23,7 @@ class IncomingPODetailResource extends JsonResource
             'date_received' => $this->date_received,
             'total' => $this->total,
             'description' => $this->description,
+            'attachment_file' => FileResource::collection($this->attachment_file),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
