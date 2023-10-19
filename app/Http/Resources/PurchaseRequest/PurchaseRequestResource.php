@@ -25,6 +25,18 @@ class PurchaseRequestResource extends JsonResource
                 'id' => $this->prepared_by_data->id,
                 'name' => $this->prepared_by_data->name,
             ],
+            'checked_by' => [
+                'id' => $this->checked_by_data->id,
+                'name' => $this->checked_by_data->name,
+            ],
+            'approved1_by' => [
+                'id' => $this->approved1_by_data->id,
+                'name' => $this->approved1_by_data->name,
+            ],
+            'approved2_by' => [
+                'id' => $this->approved2_by_data->id,
+                'name' => $this->approved2_by_data->name,
+            ],
             'checked_date' => $this->checked_date,
             'approved1_date' => $this->approved1_date,
             'approved2_date' => $this->approved2_date,
