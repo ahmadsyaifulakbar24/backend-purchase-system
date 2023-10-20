@@ -16,12 +16,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('reference_type');
             $table->string('reference_id');
-            $table->string('item_name');
-            $table->string('item_brand')->nullable();
+            $table->foreignUuid('item_product_id')->constrained('item_products')->onUpdate('cascade');
             $table->string('description')->nullable();
-            $table->string('size')->nullable();
             $table->integer('weight')->nullable();
-            $table->string('unit');
             $table->integer('quantity');
             $table->decimal('item_price', 16, 2);
             $table->integer('vat');

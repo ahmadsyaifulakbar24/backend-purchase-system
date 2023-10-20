@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SelectItemProduct extends Model
 {
@@ -16,12 +17,9 @@ class SelectItemProduct extends Model
     protected $fillable = [
         'reference_type',
         'reference_id',
-        'item_name',
-        'item_brand',
+        'item_product_id',
         'description',
-        'size',
         'weight',
-        'unit',
         'quantity',
         'item_price',
         'vat',
@@ -30,4 +28,9 @@ class SelectItemProduct extends Model
     ];
 
     public $timestamps = false;
+
+    public function item_product(): BelongsTo
+    {
+        return $this->belongsTo(ItemProduct::class, 'item_product_id');
+    }
 }
