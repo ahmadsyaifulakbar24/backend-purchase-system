@@ -10,21 +10,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CateringPo extends Model
+class OutgoingPo extends Model
 {
     use HasFactory, HasUuids;
     protected $table = 'catering_po';
+
     protected $fillable = [
-        'purchase_request_id',
         'po_number',
         'supplier_id',
         'attn_name',
         'request_date',
         'delivery_date',
-        'location_id',
+        'shipping_address',
         'discount_id',
         'term_condition',
-        'term_payment',
         'prepared_by',
         'checked_by',
         'approved1_by',
@@ -132,19 +131,9 @@ class CateringPo extends Model
         );
     }
 
-    public function purchase_request(): BelongsTo
-    {
-        return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
-    }
-
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
-    }
-
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class, 'location_id');
     }
 
     public function discount(): BelongsTo
@@ -176,13 +165,12 @@ class CateringPo extends Model
     {
         return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\PurchaseRequest');
     }
-
+    
     public function attachment_file(): HasMany
     {
         return $this->hasMany(File::class, 'reference_id')->where([
-            ['reference_type', 'App\Models\CateringPo'],
+            ['reference_type', 'App\Models\OutgoingPo'],
             ['type', 'attachment']
         ]);
     }
-
 }
