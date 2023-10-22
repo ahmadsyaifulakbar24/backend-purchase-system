@@ -30,6 +30,7 @@ class PurchaseRequestRequest extends FormRequest
             'approved2_by' => ['required', 'exists:users,id'],
 
             'item_product' => ['required', 'array'],
+            'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
             'item_product.*.item_name' => ['required', 'string'],
             'item_product.*.item_brand' => ['required', 'string'],
             'item_product.*.description' => ['required', 'string'],

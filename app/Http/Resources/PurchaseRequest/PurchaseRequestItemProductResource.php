@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\PurchaseRequest;
 
+use App\Http\Resources\ItemProduct\ItemProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ class PurchaseRequestItemProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'item_product' => new ItemProductResource($this->item_product),
             'item_name' => $this->item_name,
             'item_brand' => $this->item_brand,
             'description' => $this->description,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Quotation;
 
+use App\Http\Resources\ItemProduct\ItemProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ class QuotationItemProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'item_product' => new ItemProductResource($this->item_product),
             'item_name' => $this->item_name,
             'weight' => $this->weight,
             'unit' => $this->unit,
