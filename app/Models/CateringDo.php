@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CateringPo extends Model
+class CateringDo extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'catering_po';
+    protected $table = 'catering_do';
     protected $fillable = [
         'purchase_request_id',
-        'po_number',
+        'do_number',
         'supplier_id',
         'attn_name',
         'request_date',
@@ -181,9 +181,8 @@ class CateringPo extends Model
     public function attachment_file(): HasMany
     {
         return $this->hasMany(File::class, 'reference_id')->where([
-            ['reference_type', 'App\Models\CateringPo'],
+            ['reference_type', 'App\Models\CateringDo'],
             ['type', 'attachment']
         ]);
     }
-
 }

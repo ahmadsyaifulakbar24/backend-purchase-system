@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incoming_po', function (Blueprint $table) {
+        Schema::create('incoming_do', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('po_number')->unique();
-            $table->foreignUuid('customer_id')->constrained('customers')->onUpdate('cascade');
+            $table->string('do_number')->unique();
+            $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
+            $table->date('delivery_date');
             $table->date('received_date');
-            $table->bigInteger('total');
-            $table->text('description')->nullable();
+            $table->string('total');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('incoming_po');
+        Schema::dropIfExists('incoming_do');
     }
 };

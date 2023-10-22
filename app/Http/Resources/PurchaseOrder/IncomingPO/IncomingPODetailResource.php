@@ -20,7 +20,7 @@ class IncomingPODetailResource extends JsonResource
             'id' => $this->id,
             'po_number' => $this->po_number,
             'customer' => new CustomerResource($this->customer),
-            'date_received' => $this->date_received,
+            'received_date' => $this->received_date,
             'total' => $this->total,
             'description' => $this->description,
             'attachment_file' => FileResource::collection($this->attachment_file),

@@ -10,20 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class IncomingPo extends Model
+class IncomingDo extends Model
 {
     use HasFactory, HasUuids;
-
-    protected $table = 'incoming_po';
+    protected $table = 'incoming_do';
     protected $fillable = [
-        'po_number',
-        'customer_id',
+        'do_number',
+        'supplier_id',
+        'delivery_date',
         'received_date',
         'total',
-        'description'
+        'description',
     ];
     protected $casts = [
-        'received_date' => 'date'
+        'delivery_date' => 'date',
+        'received_date' => 'date',
     ];
 
     public function createdAt(): Attribute
@@ -48,27 +49,38 @@ class IncomingPo extends Model
         );
     }
 
-    public function receivedDate(): Attribute
+    public function deliveryDate(): Attribute
     {
         return Attribute::make(
             get: function ($value) {
-                $date = Carbon::parse($value)->format('Y-m-d');
-                $date_timezone = Carbon::createFromFormat('Y-m-d', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d');
+                $date = Carbon::parse($value)->format('Y-m-d H:i:s');
+                $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
                 return $date_timezone;
             },
         );
     }
 
-    public function customer(): BelongsTo
+    public function receivedDate(): Attribute
     {
-        return $this->belongsTo(Customer::class, 'customer_id');
+        return Attribute::make(
+            get: function ($value) {
+                $date = Carbon::parse($value)->format('Y-m-d H:i:s');
+                $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                return $date_timezone;
+            },
+        );
     }
 
-    public function attachment_file(): HasMany 
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    public function attachment_file(): HasMany
     {
         return $this->hasMany(File::class, 'reference_id')->where([
-            ['reference_type', 'App\Models\IncomingPo'],
-            ['type', 'attachment'],
+            ['reference_type', 'App\Models\IncomingDo'],
+            ['type', 'attachment']
         ]);
     }
 }

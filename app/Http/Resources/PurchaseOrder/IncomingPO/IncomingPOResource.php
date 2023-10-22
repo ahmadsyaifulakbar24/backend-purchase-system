@@ -19,7 +19,7 @@ class IncomingPOResource extends JsonResource
             'id' => $this->id,
             'po_number' => $this->po_number,
             'customer' => new CustomerResource($this->customer),
-            'date_received' => $this->date_received,
+            'received_date' => $this->received_date,
             'total' => $this->total,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -10,22 +10,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CateringPo extends Model
+class OutgoingDo extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'catering_po';
+    protected $table = 'outgoing_do';
     protected $fillable = [
-        'purchase_request_id',
-        'po_number',
-        'supplier_id',
-        'attn_name',
-        'request_date',
+        'do_number',
+        'incoming_po_id',
+        'customer_id',
+        'address',
         'delivery_date',
         'location_id',
-        'discount_id',
-        'term_condition',
-        'term_payment',
         'prepared_by',
         'checked_by',
         'approved1_by',
@@ -37,8 +33,7 @@ class CateringPo extends Model
     ];
 
     protected $casts = [
-        'request_date' => 'date',
-        'delivery_date' => 'date',
+        'delivery_date',
         'checked_date' => 'date', 
         'approved1_date' => 'date',  
         'approved2_date' => 'date',  
@@ -61,17 +56,6 @@ class CateringPo extends Model
             get: function ($value) {
                 $date = Carbon::parse($value)->format('Y-m-d H:i:s');
                 $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-                return $date_timezone;
-            },
-        );
-    }
-
-    public function requestDate(): Attribute
-    {
-        return Attribute::make(
-            get: function($value) {
-                $date = Carbon::parse($value)->format('Y-m-d');
-                $date_timezone = Carbon::createFromFormat('Y-m-d', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d');
                 return $date_timezone;
             },
         );
@@ -133,24 +117,19 @@ class CateringPo extends Model
         );
     }
 
-    public function purchase_request(): BelongsTo
+    public function incoming_po(): BelongsTo
     {
-        return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');
+        return $this->belongsTo(IncomingPo::class, 'incoming_po_id');
     }
 
-    public function supplier(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'location_id');
-    }
-
-    public function discount(): BelongsTo
-    {
-        return $this->belongsTo(Discount::class, 'discount_id');
     }
 
     public function prepared_by_data(): BelongsTo
@@ -177,13 +156,4 @@ class CateringPo extends Model
     {
         return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\PurchaseRequest');
     }
-
-    public function attachment_file(): HasMany
-    {
-        return $this->hasMany(File::class, 'reference_id')->where([
-            ['reference_type', 'App\Models\CateringPo'],
-            ['type', 'attachment']
-        ]);
-    }
-
 }

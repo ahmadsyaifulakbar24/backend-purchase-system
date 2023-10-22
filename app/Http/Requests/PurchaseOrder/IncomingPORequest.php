@@ -32,7 +32,7 @@ class IncomingPORequest extends FormRequest
         $rules = [
             'po_number' => $po_number_validation,
             'customer_id' => ['required', 'exists:customers,id'],
-            'date_received' => ['required', 'date'],
+            'received_date' => ['required', 'date'],
             'total' => ['required', 'integer'],
             'description' => ['nullable', 'string'],
         ];
