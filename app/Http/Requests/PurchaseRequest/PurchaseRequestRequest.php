@@ -31,11 +31,7 @@ class PurchaseRequestRequest extends FormRequest
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
-            'item_product.*.item_name' => ['required', 'string'],
-            'item_product.*.item_brand' => ['required', 'string'],
             'item_product.*.description' => ['required', 'string'],
-            'item_product.*.size' => ['required', 'string'],
-            'item_product.*.unit' => ['required', 'string'],
             'item_product.*.item_price' => ['required', 'numeric'],
             'item_product.*.quantity' => ['required', 'string'],
             'item_product.*.vat' => ['required', 'integer'],

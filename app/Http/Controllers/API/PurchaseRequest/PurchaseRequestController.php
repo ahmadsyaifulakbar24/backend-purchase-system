@@ -35,7 +35,7 @@ class PurchaseRequestController extends Controller
         $status = $request->status;
 
         $purchase_request = PurchaseRequest::when($search, function ($query, string $search) {
-                                            $query->where('pr_number', $search);
+                                            $query->where('pr_number', 'like', '%'.$search.'%');
                                         })
                                         ->when($status, function ($query, array $status) {
                                             $query->whereIn('status', $status);
@@ -119,7 +119,7 @@ class PurchaseRequestController extends Controller
 
         return ResponseFormatter::success(
             new PurchaseRequestDetailResource($result),
-            'success create purchase request data'
+            'success update purchase request data'
         );
     }
 

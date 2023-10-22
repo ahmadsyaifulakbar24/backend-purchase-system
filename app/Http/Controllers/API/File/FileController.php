@@ -23,11 +23,13 @@ class FileController extends Controller
         $this->reference_alias = [
             'purchase_request', 
             'incoming_po', 
+            'catering_po', 
         ];
 
         $this->reference_type = [
             'purchase_request' => 'App\Models\PurchaseRequest',
             'incoming_po' => 'App\Models\IncomingPo',
+            'catering_po' => 'App\Models\CateringPo',
         ];
 
         $this->type = [

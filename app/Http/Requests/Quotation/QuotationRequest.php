@@ -37,9 +37,7 @@ class QuotationRequest extends FormRequest
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
-            'item_product.*.item_name' => ['required', 'string'],
             'item_product.*.weight' => ['required', 'integer'],
-            'item_product.*.unit' => ['required', 'string'],
             'item_product.*.quantity' => ['required', 'string'],
             'item_product.*.item_price' => ['required', 'numeric'],
             'item_product.*.vat' => ['required', 'integer'],

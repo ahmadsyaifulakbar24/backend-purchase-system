@@ -11,7 +11,7 @@ class CateringPORequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,29 @@ class CateringPORequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            //
+            'purchase_request_id' => ['required', 'exists:purchase_requests,id'],
+            'supplier_id' => ['required', 'exists:suppliers,id'],
+            'attn_name' => ['required', 'string'],
+            'request_date' => ['required', 'date'],
+            'delivery_date' => ['required', 'date'],
+            'location_id' => ['required', 'exists:locations,id'],
+            'discount_id' => ['required', 'exists:discounts,id'],
+            'term_condition' => ['required', 'string'],
+            'term_payment' => ['required', 'string'],
+            'prepared_by' => ['required', 'exists:users,id'],
+            'checked_by' => ['required', 'exists:users,id'],
+            'approved1_by' => ['required', 'exists:users,id'],
+            'approved2_by' => ['required', 'exists:users,id'],
+
+            'item_product' => ['required', 'array'],
+            'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
+            'item_product.*.description' => ['required', 'string'],
+            'item_product.*.item_price' => ['required', 'numeric'],
+            'item_product.*.quantity' => ['required', 'string'],
+            'item_product.*.vat' => ['required', 'integer'],
+            'item_product.*.remark' => ['required', 'string'],
         ];
     }
 }

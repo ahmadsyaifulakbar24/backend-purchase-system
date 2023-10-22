@@ -10,6 +10,7 @@ use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PriceList\PriceListController;
+use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
 use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
 use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
@@ -105,7 +106,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [DiscountController::class, 'get']);
         Route::post('/', [DiscountController::class, 'store']);
         Route::get('/{discount:id}', [DiscountController::class, 'show']);
-        Route::patch('/{discount:id}', [DiscountController::class, 'update']);
+        // Route::patch('/{discount:id}', [DiscountController::class, 'update']);
         Route::delete('/{discount:id}', [DiscountController::class, 'destroy']);
     });
 
@@ -174,5 +175,15 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{incoming_po:id}', [IncomingPOController::class, 'show']);
         Route::patch('/{incoming_po:id}', [IncomingPOController::class, 'update']);
         Route::delete('/{incoming_po:id}', [IncomingPOController::class, 'destroy']);
+    });
+
+    Route::prefix('catering-po')->group(function () {
+        Route::get('/', [CateringPOController::class, 'get']);
+        Route::post('/', [CateringPOController::class, 'store']);
+        Route::get('/{catering_po:id}', [CateringPOController::class, 'show']);
+        Route::patch('/{catering_po:id}', [CateringPOController::class, 'update']);
+        Route::patch('/{catering_po:id}/update-approval-status', [CateringPOController::class, 'update_approval_status']);
+        Route::patch('/{catering_po:id}/update-status', [CateringPOController::class, 'update_status']);
+        Route::delete('/{catering_po:id}', [CateringPOController::class, 'destroy']);
     });
 });

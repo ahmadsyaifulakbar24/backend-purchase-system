@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             LocationSeeder::class,
             CostCenterSeeder::class,
+            DiscountSeeder::class,
             UserSeeder::class,
         ]);
     }

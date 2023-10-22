@@ -57,20 +57,20 @@ class DiscountController extends Controller
         );
     }
 
-    public function update(Discount $discount, Request $request)
-    {
-        $request->validate([
-            'discount' => ['required', 'unique:discounts,discount,' . $discount->id, 'integer', 'max:100']
-        ]);
+    // public function update(Discount $discount, Request $request)
+    // {
+    //     $request->validate([
+    //         'discount' => ['required', 'unique:discounts,discount,' . $discount->id, 'integer', 'max:100']
+    //     ]);
 
-        $input = $request->all();
-        $discount->update($input);
+    //     $input = $request->all();
+    //     $discount->update($input);
 
-        return ResponseFormatter::success(
-            new DiscountResource($discount),
-            'success update discount data'
-        );
-    }
+    //     return ResponseFormatter::success(
+    //         new DiscountResource($discount),
+    //         'success update discount data'
+    //     );
+    // }
 
     public function destroy(Discount $discount)
     {

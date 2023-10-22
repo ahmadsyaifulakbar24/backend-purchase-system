@@ -34,7 +34,7 @@ class QuotationController extends Controller
         $status = $request->status;
 
         $quotation = Quotation::when($search, function ($query, string $search) {
-                                    $query->where('quotation_number', $search);
+                                    $query->where('quotation_number', 'like', '%'.$search.'%');
                                 })
                                 ->when($status, function ($query, array $status) {
                                     $query->whereIn('status', $status);

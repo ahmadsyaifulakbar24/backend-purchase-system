@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Quotation;
 
 use App\Http\Resources\Customer\CustomerResource;
+use App\Http\Resources\SelectItemProduct\SelectItemProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -49,7 +50,7 @@ class QuotationDetailResource extends JsonResource
             'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'item_product' => QuotationItemProductResource::collection($this->item_product),
+            'item_product' => SelectItemProductResource::collection($this->item_product),
         ];
     }
 }

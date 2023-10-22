@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('catering_po', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('purchase_request_id')->constrained('purchase_requests')->onUpdate('cascade');
+            $table->bigInteger('serial_number');
             $table->string('po_number')->unique();
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
             $table->string('attn_name');

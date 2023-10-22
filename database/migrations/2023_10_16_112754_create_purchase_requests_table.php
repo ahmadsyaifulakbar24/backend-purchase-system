@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchase_requests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('serial_number');
+            $table->bigInteger('serial_number');
             $table->string('pr_number')->unique();
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->date('pr_date');

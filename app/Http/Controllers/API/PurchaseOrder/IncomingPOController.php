@@ -26,7 +26,7 @@ class IncomingPOController extends Controller
         $limit = $request->input('limit', 10);
 
         $incoming_po = IncomingPo::when($search, function ($query, string $search) {
-                                    $query->where('po_number', $search);
+                                    $query->where('po_number', 'like', '%'.$search.'%');
                                 })
                                 ->orderBy('created_at', 'DESC');
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Quotation;
+namespace App\Http\Resources\SelectItemProduct;
 
 use App\Http\Resources\ItemProduct\ItemProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuotationItemProductResource extends JsonResource
+class SelectItemProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,9 +18,8 @@ class QuotationItemProductResource extends JsonResource
         return [
             'id' => $this->id,
             'item_product' => new ItemProductResource($this->item_product),
-            'item_name' => $this->item_name,
+            'description' => $this->description,
             'weight' => $this->weight,
-            'unit' => $this->unit,
             'quantity' => $this->quantity,
             'item_price' => $this->item_price,
             'vat' => $this->vat,
