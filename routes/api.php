@@ -73,6 +73,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('department')->group(function () {
         Route::get('/', [DepartmentController::class, 'get']);
         Route::post('/', [DepartmentController::class, 'store']);
+        Route::post('/import', [DepartmentController::class, 'import']);
         Route::get('/{department:id}', [DepartmentController::class, 'show']);
         Route::patch('/{department:id}', [DepartmentController::class, 'update']);
         Route::delete('/{department:id}', [DepartmentController::class, 'destroy']);

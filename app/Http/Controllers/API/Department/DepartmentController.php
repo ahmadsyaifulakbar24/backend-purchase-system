@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API\Department;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Department\DepartmentResource;
+use App\Imports\DepartmentImport;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DepartmentController extends Controller
 {
@@ -50,6 +52,21 @@ class DepartmentController extends Controller
         return ResponseFormatter::success(
             new DepartmentResource($department),
             'success create department data'
+        );
+    }
+
+    public function import(Request $request) 
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+        $file = $request->file;
+
+        Excel::import(new DepartmentImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import department data'
         );
     }
 
