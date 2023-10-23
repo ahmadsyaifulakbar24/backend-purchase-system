@@ -6,8 +6,10 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Supplier\SupplierDetailResource;
 use App\Http\Resources\Supplier\SupplierResource;
+use App\Imports\SupplierImport;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SupplierController extends Controller
 {
@@ -58,6 +60,21 @@ class SupplierController extends Controller
         return ResponseFormatter::success(
             new SupplierDetailResource($supplier),
             'success create supplier data'
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+        $file = $request->file;
+
+        Excel::import(new SupplierImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import supplier data'
         );
     }
 

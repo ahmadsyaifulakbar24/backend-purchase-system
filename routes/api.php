@@ -99,6 +99,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SupplierController::class, 'get']);
         Route::post('/', [SupplierController::class, 'store']);
+        Route::post('/import', [SupplierController::class, 'import']);
         Route::get('/{supplier:id}', [SupplierController::class, 'show']);
         Route::patch('/{supplier:id}', [SupplierController::class, 'update']);
         Route::delete('/{supplier:id}', [SupplierController::class, 'destroy']);

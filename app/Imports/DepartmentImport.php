@@ -14,7 +14,7 @@ class DepartmentImport implements ToCollection, WithHeadingRow, WithValidation
     use Importable;
     
     /**
-    * @param Collection $collection
+    * @param Collection $rows
     */
     public function collection(Collection $rows)
     {
