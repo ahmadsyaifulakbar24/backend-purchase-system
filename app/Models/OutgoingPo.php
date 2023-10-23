@@ -31,7 +31,8 @@ class OutgoingPo extends Model
         'checked_date',
         'approved1_date',
         'approved2_date',
-        'status'
+        'status',
+        'note',
     ];
 
     protected $casts = [

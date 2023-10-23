@@ -50,6 +50,7 @@ class CateringPODetailResource extends JsonResource
             'approved1_date' => $this->approved1_date,
             'approved2_date' => $this->approved2_date,
             'status' => $this->status,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'item_product' => SelectItemProductResource::collection($this->item_product),
