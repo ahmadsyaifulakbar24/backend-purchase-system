@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API\Discount;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Discount\DiscountResource;
+use App\Imports\DiscountImport;
 use App\Models\Discount;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DiscountController extends Controller
 {
@@ -46,6 +48,21 @@ class DiscountController extends Controller
         return ResponseFormatter::success(
             new DiscountResource($discount),
             'success create discount data'
+        );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+        $file = $request->file;
+
+        Excel::import(new DiscountImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import discount data'
         );
     }
 

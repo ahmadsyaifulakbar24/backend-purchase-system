@@ -108,6 +108,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('discount')->group(function () {
         Route::get('/', [DiscountController::class, 'get']);
         Route::post('/', [DiscountController::class, 'store']);
+        Route::post('/import', [DiscountController::class, 'import']);
         Route::get('/{discount:id}', [DiscountController::class, 'show']);
         // Route::patch('/{discount:id}', [DiscountController::class, 'update']);
         Route::delete('/{discount:id}', [DiscountController::class, 'destroy']);
