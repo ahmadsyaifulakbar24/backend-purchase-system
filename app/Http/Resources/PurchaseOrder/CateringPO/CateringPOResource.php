@@ -19,6 +19,10 @@ class CateringPOResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'purchase_request' => [
+                'id' => $this->purchase_request->id,
+                'pr_number' => $this->purchase_request->pr_number
+            ],
             'po_number' => $this->po_number,
             'supplier' => new SupplierResource($this->supplier),
             'attn_name' => $this->attn_name,
