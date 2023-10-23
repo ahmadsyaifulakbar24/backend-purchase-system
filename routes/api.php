@@ -81,6 +81,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('location')->group(function () {
         Route::get('/', [LocationController::class, 'get']);
         Route::post('/', [LocationController::class, 'store']);
+        Route::post('/import', [LocationController::class, 'import']);
         Route::get('/{location:id}', [LocationController::class, 'show']);
         Route::patch('/{location:id}', [LocationController::class, 'update']);
         Route::delete('/{location:id}', [LocationController::class, 'destroy']);

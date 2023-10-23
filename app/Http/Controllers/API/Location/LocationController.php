@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API\Location;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Location\LocationResource;
+use App\Imports\LocationImport;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LocationController extends Controller
 {
@@ -68,6 +70,22 @@ class LocationController extends Controller
             new LocationResource($location),
             'success create location data'
         );
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        Excel::import(new LocationImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import location data'
+        );
+
     }
 
     public function show(Location $location)
