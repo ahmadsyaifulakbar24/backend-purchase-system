@@ -116,6 +116,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('customer')->group(function () {
         Route::get('/', [CustomerController::class, 'get']);
         Route::post('/', [CustomerController::class, 'store']);
+        Route::post('/import', [CustomerController::class, 'import']);
         Route::get('/{customer:id}', [CustomerController::class, 'show']);
         Route::patch('/{customer:id}', [CustomerController::class, 'update']);
         Route::delete('/{customer:id}', [CustomerController::class, 'destroy']);

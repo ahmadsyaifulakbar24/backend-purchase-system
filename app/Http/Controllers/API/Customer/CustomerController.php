@@ -5,8 +5,10 @@ namespace App\Http\Controllers\API\Customer;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Customer\CustomerResource;
+use App\Imports\CustomerImport;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -53,6 +55,21 @@ class CustomerController extends Controller
         return ResponseFormatter::success(
             new CustomerResource($customer),
             'success create customer data'
+        );
+    }
+
+    public function import (Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        Excel::import(new CustomerImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import customer data'
         );
     }
 
