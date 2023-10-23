@@ -5,9 +5,11 @@ namespace App\Http\Controllers\API\ItemCategory;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemCategory\ItemCategoryResource;
+use App\Imports\ItemCategoryImport;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemCategoryController extends Controller
 {
@@ -67,6 +69,21 @@ class ItemCategoryController extends Controller
         return ResponseFormatter::success(
             new ItemCategoryResource($item_category),
             'success create item category data'
+        );
+    }
+
+    public function import (Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        Excel::import(new ItemCategoryImport, $file);
+
+        return ResponseFormatter::success(
+            null,
+            'success import item category data'
         );
     }
 

@@ -126,6 +126,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('item-category')->group(function () {
         Route::get('/', [ItemCategoryController::class, 'get']);
         Route::post('/', [ItemCategoryController::class, 'store']);
+        Route::post('/import', [ItemCategoryController::class, 'import']);
         Route::get('/{item_category:id}', [ItemCategoryController::class, 'show']);
         Route::patch('/{item_category:id}', [ItemCategoryController::class, 'update']);
         Route::delete('/{item_category:id}', [ItemCategoryController::class, 'destroy']);
