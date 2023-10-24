@@ -5,9 +5,13 @@ namespace App\Http\Controllers\API\ItemProduct;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemProduct\ItemProductResource;
+use App\Imports\ItemProductImport;
 use App\Models\ItemProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class ItemProductController extends Controller
 {
@@ -50,7 +54,7 @@ class ItemProductController extends Controller
                 })
             ],
             'sub_item_category_id' => [
-                'nullable', 
+                'required', 
                 Rule::exists('item_categories', 'id')->where(function($query) use ($request) {
                     $query->where('parent_category_id', $request->item_category_id);
                 })
@@ -76,6 +80,34 @@ class ItemProductController extends Controller
         );
     }
 
+    public function import (Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+        
+        try {
+            Excel::import(new ItemProductImport, $file);
+
+            return ResponseFormatter::success(
+                null,
+                'success import item product data'
+            );
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            foreach ($failures as $failure) {
+                $errors[] =  $failure->errors();
+            }
+            
+            return ResponseFormatter::errorValidation(
+                $errors,
+                'import item product failed',
+            );
+        }
+
+    }
+
     public function show(ItemProduct $item_product)
     {
         return ResponseFormatter::success(
@@ -96,7 +128,7 @@ class ItemProductController extends Controller
                 })
             ],
             'sub_item_category_id' => [
-                'nullable', 
+                'required', 
                 Rule::exists('item_categories', 'id')->where(function($query) use ($request) {
                     $query->where('parent_category_id', $request->item_category_id);
                 })

@@ -135,6 +135,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('item-product')->group(function () {
         Route::get('/', [ItemProductController::class, 'get']);
         Route::post('/', [ItemProductController::class, 'store']);
+        Route::post('/import', [ItemProductController::class, 'import']);
         Route::get('/{item_product:id}', [ItemProductController::class, 'show']);
         Route::patch('/{item_product:id}', [ItemProductController::class, 'update']);
         Route::delete('/{item_product:id}', [ItemProductController::class, 'destroy']);
