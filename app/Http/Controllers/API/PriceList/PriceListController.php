@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\PriceList;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PriceList\PriceListResource;
+use App\Imports\CategoryProductPriceImport;
 use App\Imports\PriceListImport;
 use App\Models\PriceList;
 use Illuminate\Http\Request;
@@ -88,6 +89,32 @@ class PriceListController extends Controller
                 'import price list failed',
             );
         }
+    }
+
+    public function import_category_product_price(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        try {
+            Excel::import(new CategoryProductPriceImport, $file);
+            return ResponseFormatter::success(
+                null,
+                'success import category, product and price list data'
+            );
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            foreach ($failures as $failure) {
+                $errors[] =  $failure->errors();
+            }
+            
+            return ResponseFormatter::errorValidation(
+                $errors,
+                'import category, product and price list data failed',
+            );
+        }        
     }
 
     public function show(PriceList $price_list)

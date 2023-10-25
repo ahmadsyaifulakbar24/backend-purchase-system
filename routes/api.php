@@ -145,6 +145,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [PriceListController::class, 'get']);
         Route::post('/', [PriceListController::class, 'store']);
         Route::post('/import', [PriceListController::class, 'import']);
+        Route::post('/import-category-product-price', [PriceListController::class, 'import_category_product_price']);
         Route::get('/{price_list:id}', [PriceListController::class, 'show']);
         Route::patch('/{price_list:id}', [PriceListController::class, 'update']);
         Route::delete('/{price_list:id}', [PriceListController::class, 'destroy']);
