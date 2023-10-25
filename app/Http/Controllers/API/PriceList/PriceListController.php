@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API\PriceList;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PriceList\PriceListResource;
+use App\Imports\PriceListImport;
 use App\Models\PriceList;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class PriceListController extends Controller
 {
@@ -59,6 +62,32 @@ class PriceListController extends Controller
             new PriceListResource($price_list),
             'success create price list data'
         );
+    }
+
+    public function import (Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        try {
+            Excel::import(new PriceListImport, $file);
+            return ResponseFormatter::success(
+                null,
+                'success import price list data'
+            );
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            foreach ($failures as $failure) {
+                $errors[] =  $failure->errors();
+            }
+            
+            return ResponseFormatter::errorValidation(
+                $errors,
+                'import price list failed',
+            );
+        }
     }
 
     public function show(PriceList $price_list)
