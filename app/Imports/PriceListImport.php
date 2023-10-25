@@ -7,7 +7,6 @@ use App\Models\Location;
 use App\Models\PriceList;
 use App\Models\Supplier;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -53,7 +52,6 @@ class PriceListImport implements ToCollection, WithHeadingRow, WithValidation
             }
         }
 
-        Log::error($validationErrors);
         if(!empty($validationErrors)) {
             foreach($validationErrors as $valError) {
                 $error = [$valError['message']];
