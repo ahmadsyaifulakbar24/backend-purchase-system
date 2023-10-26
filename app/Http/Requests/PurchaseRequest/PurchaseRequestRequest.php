@@ -25,6 +25,7 @@ class PurchaseRequestRequest extends FormRequest
             'location_id' => ['required', 'exists:locations,id'],
             'pr_date' => ['required', 'date'],
             'shipment_date' => ['required', 'date'],
+            'note' => ['nullable', 'string'],
             'prepared_by' => ['required', 'exists:users,id'],
             'approved1_by' => ['required', 'exists:users,id'],
             'approved2_by' => ['required', 'exists:users,id'],

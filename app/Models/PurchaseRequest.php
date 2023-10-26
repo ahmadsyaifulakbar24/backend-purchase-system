@@ -21,6 +21,7 @@ class PurchaseRequest extends Model
         'location_id',
         'pr_date',
         'shipment_date',
+        'note',
         'prepared_by',
         'checked_by',
         'approved1_by',

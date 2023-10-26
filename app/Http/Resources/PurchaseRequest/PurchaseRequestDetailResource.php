@@ -23,6 +23,7 @@ class PurchaseRequestDetailResource extends JsonResource
             'location' => new LocationResource($this->location),
             'pr_date' => $this->pr_date,
             'shipment_date' => $this->shipment_date,
+            'note' => $this->note,
             'prepared_by' => [
                 'id' => $this->prepared_by_data->id,
                 'name' => $this->prepared_by_data->name,
