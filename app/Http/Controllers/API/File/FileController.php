@@ -24,12 +24,20 @@ class FileController extends Controller
             'purchase_request', 
             'incoming_po', 
             'catering_po', 
+            'outgoing_po',
+            'incoming_do', 
+            'catering_do', 
+            'outgoing_do',
         ];
 
         $this->reference_type = [
             'purchase_request' => 'App\Models\PurchaseRequest',
             'incoming_po' => 'App\Models\IncomingPo',
             'catering_po' => 'App\Models\CateringPo',
+            'outgoing_po' => 'App\Models\OutgoingPo',
+            'incoming_do' => 'App\Models\IncomingDo',
+            'catering_do' => 'App\Models\CateringDo',
+            'outgoing_do' => 'App\Models\OutgoingDo',
         ];
 
         $this->type = [

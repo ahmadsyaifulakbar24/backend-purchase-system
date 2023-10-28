@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Customer\CustomerController;
+use App\Http\Controllers\API\DeliveryOrder\IncomingDOController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\File\FileController;
@@ -205,5 +206,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{outgoing_po:id}/update-approval-status', [OutgoingPOContoller::class, 'update_approval_status']);
         Route::patch('/{outgoing_po:id}/update-status', [OutgoingPOContoller::class, 'update_status']);
         Route::delete('/{outgoing_po:id}', [OutgoingPOContoller::class, 'destroy']);
+    });
+
+    Route::prefix('incoming-do')->group(function () {
+        Route::get('/', [IncomingDOController::class, 'get']);
+        Route::post('/', [IncomingDOController::class, 'store']);
+        Route::get('/{incoming_do:id}', [IncomingDOController::class, 'show']);
+        Route::patch('/{incoming_do:id}', [IncomingDOController::class, 'update']);
+        Route::delete('/{incoming_do:id}', [IncomingDOController::class, 'destroy']);
     });
 });

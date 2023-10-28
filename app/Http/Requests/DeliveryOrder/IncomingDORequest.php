@@ -11,7 +11,7 @@ class IncomingDORequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,19 @@ class IncomingDORequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->isMethod('patch') || $this->isMethod('put')) {
+            $incoming_do_id = $this->route('incoming_do')->id;
+            $do_number_validation = ['required', 'unique:incoming_do,do_number,' . $incoming_do_id];
+        } else {
+            $do_number_validation = ['required', 'unique:incoming_do,do_number'];
+        }
         return [
-            //
+            'do_number' => $do_number_validation,
+            'supplier_id' => ['required', 'exists:suppliers,id'],
+            'delivery_date' => ['required', 'date'],
+            'received_date' => ['required', 'date'],
+            'total' => ['required', 'integer'],
+            'description' => ['nullable', 'string'],
         ];
     }
 }
