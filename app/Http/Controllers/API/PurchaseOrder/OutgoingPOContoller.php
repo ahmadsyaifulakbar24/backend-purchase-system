@@ -5,11 +5,11 @@ namespace App\Http\Controllers\API\PurchaseOrder;
 use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PurchaseOrder\CateringPORequest;
-use App\Http\Resources\PurchaseOrder\CateringPO\CateringPODetailResource;
-use App\Http\Resources\PurchaseOrder\CateringPO\CateringPOResource;
-use App\Models\CateringPo;
+use App\Http\Requests\PurchaseOrder\OutgoingPORequest;
+use App\Http\Resources\PurchaseOrder\OutgoingPO\OutgoingPODetailResource;
+use App\Http\Resources\PurchaseOrder\OutgoingPO\OutgoingPOResource;
 use App\Models\Location;
+use App\Models\OutgoingPo;
 use App\Models\SelectItemProduct;
 use App\Models\Supplier;
 use Carbon\Carbon;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
-class CateringPOController extends Controller
+class OutgoingPOContoller extends Controller
 {
     public function get(Request $request)
     {
@@ -35,7 +35,7 @@ class CateringPOController extends Controller
         $limit = $request->input('limit', 10);
         $status = $request->status;
 
-        $catering_po = CateringPo::when($search, function ($query, string $search) {
+        $outgoing_po = OutgoingPo::when($search, function ($query, string $search) {
                                             $query->where('po_number', 'like', '%'.$search.'%');
                                         })
                                         ->when($status, function ($query, array $status) {
@@ -43,16 +43,17 @@ class CateringPOController extends Controller
                                         })
                                         ->orderBy('created_at', 'DESC');
 
-        $result = $paginate ? $catering_po->paginate($limit) : $catering_po->get();
+        $result = $paginate ? $outgoing_po->paginate($limit) : $outgoing_po->get();
 
         return ResponseFormatter::success(
-            CateringPOResource::collection($result)->response()->getData(true),
-            'success get catering po data'
+            OutgoingPOResource::collection($result)->response()->getData(true),
+            'success get outgoing po data'
         );
     }
 
-    public function store(CateringPORequest $request) {
-        $input = $request->except([
+    public function store(OutgoingPORequest $request)
+    {
+        $input = $request->safe()->except([
             'item_product'
         ]);
 
@@ -63,66 +64,66 @@ class CateringPOController extends Controller
         $input['po_number'] = $last_number .'/SBL/'. $supplier->code .'/'. $location->location_code .'/'. DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
         $input['status'] = 'draft';
 
-        // database transaction for catering po and item data
+        // database transaction for outgoing po and item data
         $result = DB::transaction(function () use ($input, $request) {
-            // store catering po data
-            $catering_po = CateringPo::create($input);
+            // store outgoing po data
+            $outgoing_po = OutgoingPo::create($input);
 
             // store item product data
             foreach($request->item_product as $item_product) {
-                $item_product['reference_type'] = 'App\Models\CateringPo';
-                $item_product['reference_id'] = $catering_po->id;
+                $item_product['reference_type'] = 'App\Models\OutgoingPo';
+                $item_product['reference_id'] = $outgoing_po->id;
                 SelectItemProduct::create($item_product);
             }
 
-            return $catering_po;
+            return $outgoing_po;
         });
 
         return ResponseFormatter::success(
-            new CateringPODetailResource($result),
-            'success create catering po request data'
+            new OutgoingPODetailResource($result),
+            'success create outgoing po data'
         );
     }
 
-    public function show(CateringPo $catering_po)
-    {
+    public function show(OutgoingPo $outgoing_po)
+    {  
         return ResponseFormatter::success(
-            new CateringPODetailResource($catering_po),
-            'success show catering po detail data'
+            new OutgoingPODetailResource($outgoing_po),
+            'success show outgoing po detail data'
         );
     }
 
-    public function update(CateringPORequest $request, CateringPo $catering_po)
+    public function update(OutgoingPORequest $request, OutgoingPo $outgoing_po)
     {
         $input = $request->except([
             'item_product'
         ]);
 
-        // database transaction for catering po and item data
-        $result = DB::transaction(function () use ($input, $request, $catering_po) {
-            // store catering po data
-            $catering_po->update($input);
+        // database transaction for outgoing po and item data
+        $result = DB::transaction(function () use ($input, $request, $outgoing_po) {
+            // store outgoing po data
+            $outgoing_po->update($input);
 
-            // delete catering po item product
-            $catering_po->item_product()->delete();
+            // delete outgoing po item product
+            $outgoing_po->item_product()->delete();
 
             // store item product data
             foreach($request->item_product as $item_product) {
-                $item_product['reference_type'] = 'App\Models\CateringPo';
-                $item_product['reference_id'] = $catering_po->id;
+                $item_product['reference_type'] = 'App\Models\OutgoingPO';
+                $item_product['reference_id'] = $outgoing_po->id;
                 SelectItemProduct::create($item_product);
             }
 
-            return $catering_po;
+            return $outgoing_po;
         });
 
         return ResponseFormatter::success(
-            new CateringPODetailResource($result),
-            'success update catering po data'
+            new OutgoingPODetailResource($result),
+            'success update outgoing po data'
         );
     }
 
-    public function update_status(Request $request, CateringPo $catering_po)
+    public function update_status(Request $request, OutgoingPo $outgoing_po)
     {
         $request->validate([
             'status' => ['required', 'in:submit,reject'],
@@ -142,15 +143,15 @@ class CateringPOController extends Controller
             $input['note'] = NULL;
         }
         // return $input;
-        $catering_po->update($input);
+        $outgoing_po->update($input);
 
         return ResponseFormatter::success(
-            new CateringPODetailResource($catering_po),
-            'success update status catering po data'
+            new OutgoingPODetailResource($outgoing_po),
+            'success update status outgoing po data'
         );
     }
 
-    public function update_approval_status(Request $request, CateringPo $catering_po)
+    public function update_approval_status(Request $request, OutgoingPo $outgoing_po)
     {
         $request->validate([
             'status' => ['required', 'in:checked,approved1,approved2']
@@ -165,64 +166,66 @@ class CateringPOController extends Controller
 
         $update = false;
         if ($status == 'checked') {
-            $update = $catering_po->status == 'submit' ? true : false;
+            $update = $outgoing_po->status == 'submit' ? true : false;
         } else if (in_array($status, ['approved1','approved2'])) {
-            $update = !empty($catering_po->checked_date) ? true : false;
+            $update = !empty($outgoing_po->checked_date) ? true : false;
         }
 
         if($update) {
 
-            DB::transaction(function () use ($catering_po, $data, $status) {
-                $catering_po->update([
+            DB::transaction(function () use ($outgoing_po, $data, $status) {
+                $outgoing_po->update([
                     $data[$status] => Carbon::now()
                 ]);
 
                 if(
-                    !empty($catering_po->checked_date) && 
-                    !empty($catering_po->approved1_date) && 
-                    !empty($catering_po->approved2_date)
+                    !empty($outgoing_po->checked_date) && 
+                    !empty($outgoing_po->approved1_date) && 
+                    !empty($outgoing_po->approved2_date)
                 ) {
-                    $catering_po->update([ 'status' => 'finish' ]);
+                    $outgoing_po->update([ 'status' => 'finish' ]);
                 }
             });
 
             return ResponseFormatter::success(
-                new CateringPODetailResource($catering_po),
-                'success update approval status catering po data'
+                new OutgoingPODetailResource($outgoing_po),
+                'success update approval status outgoing po data'
             );
         } else {
             return ResponseFormatter::errorValidation([
-                'catering_po_id' => 'Cannot update this catering po because the status does not match'
-            ], 'update status catering po failed', 422);
+                'outgoing_po_id' => 'Cannot update this outgoing po because the status does not match'
+            ], 'update status outgoing po failed', 422);
         }
     }
 
-    public function destroy(CateringPo $catering_po)
+    public function destroy(OutgoingPo $outgoing_po)
     {
-        DB::transaction(function () use ($catering_po) {
+        DB::transaction(function () use ($outgoing_po) {
             // delete attachment file
-            $files = $catering_po->attachment_file()->pluck('file')->toArray();
+            $files = $outgoing_po->attachment_file()->pluck('file')->toArray();
             Storage::disk('local')->delete($files);    
-            $catering_po->attachment_file()->delete();
+            $outgoing_po->attachment_file()->delete();
 
             // delete item product
-            $catering_po->item_product()->delete();
+            $outgoing_po->item_product()->delete();
 
-            // delete purchase request
-            $catering_po->delete();
+            // delete outgoing po
+            $outgoing_po->delete();
         });
 
         return ResponseFormatter::success(
             null,
-            'success delete purchase request data'
+            'success delete outgoing po data'
         );
     }
 
     public function last_number()
     {
-         $last_number = CateringPo::whereYear('created_at', Carbon::now()->year)
+         $last_number = OutgoingPo::whereYear('created_at', Carbon::now()->year)
                                 ->whereMonth('created_at', Carbon::now()->month)
                                 ->max('serial_number');
         return $last_number + 1;
     }
+
+
 }

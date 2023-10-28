@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->date('pr_date');
             $table->date('shipment_date');
-            $table->text('note')->nullable();
+            $table->text('description')->nullable();
             $table->foreignUuid('prepared_by')->constrained('users')->onUpdate('cascade');
             $table->foreignUuid('checked_by')->constrained('users')->onUpdate('cascade');
             $table->foreignUuid('approved1_by')->constrained('users')->onUpdate('cascade');

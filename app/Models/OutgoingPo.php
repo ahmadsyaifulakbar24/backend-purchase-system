@@ -13,15 +13,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class OutgoingPo extends Model
 {
     use HasFactory, HasUuids;
-    protected $table = 'catering_po';
+    protected $table = 'outgoing_po';
 
     protected $fillable = [
+        'serial_number',
         'po_number',
         'supplier_id',
         'attn_name',
         'request_date',
         'delivery_date',
-        'shipping_address',
+        'location_id',
         'discount_id',
         'term_condition',
         'prepared_by',
@@ -137,6 +138,11 @@ class OutgoingPo extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_id');
+    }
+
     public function discount(): BelongsTo
     {
         return $this->belongsTo(Discount::class, 'discount_id');
@@ -164,7 +170,7 @@ class OutgoingPo extends Model
 
     public function item_product(): HasMany
     {
-        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\PurchaseRequest');
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\OutgoingPo');
     }
     
     public function attachment_file(): HasMany

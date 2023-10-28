@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Resources\PurchaseRequest;
+namespace App\Http\Resources\PurchaseOrder\OutgoingPO;
 
+use App\Http\Resources\Discount\DiscountResource;
 use App\Http\Resources\File\FileResource;
 use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\SelectItemProduct\SelectItemProductResource;
+use App\Http\Resources\Supplier\SupplierResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PurchaseRequestDetailResource extends JsonResource
+class OutgoingPODetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,11 +21,14 @@ class PurchaseRequestDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'pr_number' => $this->pr_number,
+            'po_number' => $this->po_number,
+            'supplier' => new SupplierResource($this->supplier),
+            'attn_name' => $this->attn_name,
+            'request_date' => $this->request_date,
+            'delivery_date' => $this->delivery_date,
             'location' => new LocationResource($this->location),
-            'pr_date' => $this->pr_date,
-            'shipment_date' => $this->shipment_date,
-            'description' => $this->description,
+            'discount' => new DiscountResource($this->discount),
+            'term_condition' => $this->term_condition,
             'prepared_by' => [
                 'id' => $this->prepared_by_data->id,
                 'name' => $this->prepared_by_data->name,

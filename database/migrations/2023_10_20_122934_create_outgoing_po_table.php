@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('outgoing_po', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->bigInteger('serial_number');
             $table->string('po_number')->unique();
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
             $table->string('attn_name');
             $table->date('request_date');
             $table->date('delivery_date');       
-            $table->text('shipping_address');
+            $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->foreignUuid('discount_id')->constrained('discounts')->onUpdate('cascade');
             $table->text('term_condition');
             $table->foreignUuid('prepared_by')->constrained('users')->onUpdate('cascade');

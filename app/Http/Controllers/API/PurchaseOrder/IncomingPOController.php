@@ -62,7 +62,7 @@ class IncomingPOController extends Controller
 
         $incoming_po->update($input);
         return ResponseFormatter::success(
-            new IncomingPOResource($incoming_po),
+            new IncomingPODetailResource($incoming_po),
             'success update incoming po data'
         );
     }

@@ -12,6 +12,7 @@ use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PriceList\PriceListController;
 use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
 use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
+use App\Http\Controllers\API\PurchaseOrder\OutgoingPOContoller;
 use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\Supplier\SupplierController;
@@ -194,5 +195,15 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{catering_po:id}/update-approval-status', [CateringPOController::class, 'update_approval_status']);
         Route::patch('/{catering_po:id}/update-status', [CateringPOController::class, 'update_status']);
         Route::delete('/{catering_po:id}', [CateringPOController::class, 'destroy']);
+    });
+
+    Route::prefix('outgoing-po')->group(function () {
+        Route::get('/', [OutgoingPOContoller::class, 'get']);
+        Route::post('/', [OutgoingPOContoller::class, 'store']);
+        Route::get('/{outgoing_po:id}', [OutgoingPOContoller::class, 'show']);
+        Route::patch('/{outgoing_po:id}', [OutgoingPOContoller::class, 'update']);
+        Route::patch('/{outgoing_po:id}/update-approval-status', [OutgoingPOContoller::class, 'update_approval_status']);
+        Route::patch('/{outgoing_po:id}/update-status', [OutgoingPOContoller::class, 'update_status']);
+        Route::delete('/{outgoing_po:id}', [OutgoingPOContoller::class, 'destroy']);
     });
 });
