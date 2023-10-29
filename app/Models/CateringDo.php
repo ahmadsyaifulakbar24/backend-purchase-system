@@ -17,6 +17,7 @@ class CateringDo extends Model
     protected $table = 'catering_do';
     protected $fillable = [
         'purchase_request_id',
+        'serial_number',
         'do_number',
         'supplier_id',
         'attn_name',
@@ -176,7 +177,7 @@ class CateringDo extends Model
 
     public function item_product(): HasMany
     {
-        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\PurchaseRequest');
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\CateringDo');
     }
 
     public function attachment_file(): HasMany

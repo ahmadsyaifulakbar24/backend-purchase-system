@@ -208,13 +208,13 @@ class CateringPOController extends Controller
             // delete item product
             $catering_po->item_product()->delete();
 
-            // delete purchase request
+            // delete catering po
             $catering_po->delete();
         });
 
         return ResponseFormatter::success(
             null,
-            'success delete purchase request data'
+            'success delete catering po data'
         );
     }
 
