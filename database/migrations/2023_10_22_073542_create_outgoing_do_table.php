@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('outgoing_do', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->bigInteger('serial_number');
             $table->string('do_number')->unique();
             $table->foreignUuid('incoming_po_id')->constrained('incoming_po')->onUpdate('cascade');
             $table->foreignUuid('customer_id')->constrained('customers')->onUpdate('cascade');
@@ -20,14 +21,7 @@ return new class extends Migration
             $table->date('delivery_date');
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->foreignUuid('prepared_by')->constrained('users')->onUpdate('cascade');
-            $table->foreignUuid('checked_by')->constrained('users')->onUpdate('cascade');
-            $table->foreignUuid('approved1_by')->constrained('users')->onUpdate('cascade');
-            $table->foreignUuid('approved2_by')->constrained('users')->onUpdate('cascade');
-            $table->date('checked_date')->nullable();
-            $table->date('approved1_date')->nullable();
-            $table->date('approved2_date')->nullable();
-            $table->enum('status', ['draft', 'submit', 'reject', 'finish']);
-            $table->text('note')->nullable();
+            $table->foreignUuid('received_by')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }

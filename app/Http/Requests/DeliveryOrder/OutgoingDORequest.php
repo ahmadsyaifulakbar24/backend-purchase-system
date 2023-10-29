@@ -11,7 +11,7 @@ class OutgoingDORequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class OutgoingDORequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'incoming_po_id' => ['required', 'exists:incoming_po,id'],
+            'customer_id' => ['required', 'exists:customers,id'],
+            'address' => ['required', 'string'],
+            'delivery_date' => ['required', 'date'],
+            'location_id' => ['required', 'exists:locations,id'],
+            'prepared_by' => ['required', 'exists:users,id'],
+            'received_by' => ['required', 'exists:users,id'],
+
+            'item_product' => ['required', 'array'],
+            'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
+            'item_product.*.description' => ['required', 'string'],
+            'item_product.*.quantity' => ['required', 'string'],
         ];
     }
 }

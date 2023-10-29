@@ -101,7 +101,7 @@ class OutgoingPOContoller extends Controller
 
         // database transaction for outgoing po and item data
         $result = DB::transaction(function () use ($input, $request, $outgoing_po) {
-            // store outgoing po data
+            // update outgoing po data
             $outgoing_po->update($input);
 
             // delete outgoing po item product

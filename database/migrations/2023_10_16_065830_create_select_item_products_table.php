@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreignUuid('item_product_id')->constrained('item_products')->onUpdate('cascade');
             $table->string('description')->nullable();
             $table->integer('weight')->nullable();
-            $table->integer('quantity');
-            $table->decimal('item_price', 16, 2);
-            $table->integer('vat');
+            $table->integer('quantity')->nullable();
+            $table->decimal('item_price', 16, 2)->nullable();
+            $table->integer('vat')->nullable();
             $table->enum('tnt', ['T', 'NT'])->nullable();
             $table->text('remark')->nullable();
         });
