@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\API\Quotation;
 
 use App\Helpers\DateHelpers;
+use App\Helpers\ExcelHelper;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Quotation\QuotationRequest;
 use App\Http\Resources\Quotation\QuotationDetailResource;
 use App\Http\Resources\Quotation\QuotationResource;
+use App\Imports\Quotation\QuotationProductImport;
 use App\Models\Customer;
 use App\Models\Quotation;
 use App\Models\SelectItemProduct;
@@ -15,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuotationController extends Controller
 {
@@ -206,6 +209,16 @@ class QuotationController extends Controller
             null,
             'success delete quotation data'
         );
+    }
+
+    public function read_excel(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+        $file = $request->file;
+
+        return ExcelHelper::read($file);
     }
 
     public function last_number()

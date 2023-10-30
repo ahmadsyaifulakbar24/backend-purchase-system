@@ -165,11 +165,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('quotation')->group(function () {
         Route::get('/', [QuotationController::class, 'get']);
         Route::post('/', [QuotationController::class, 'store']);
+        
+        Route::post('/read-excel', [QuotationController::class, 'read_excel']);
+
         Route::get('/{quotation:id}', [QuotationController::class, 'show']);
         Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
         Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
         Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
         Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
+
     });
 
     Route::prefix('purchase-request')->group(function () {
