@@ -18,6 +18,7 @@ use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
 use App\Http\Controllers\API\PurchaseOrder\OutgoingPOContoller;
 use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
+use App\Http\Controllers\API\ReadExcel\ReadExcelController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
 use App\Http\Controllers\API\User\Auth\LoginController;
@@ -162,12 +163,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/{file:id}', [FileController::class, 'destroy']);
     });
     
+    Route::prefix('read-excel')->group(function() {
+        Route::post('product-price', [ReadExcelController::class, 'product_price_excel']);
+    });
+
     Route::prefix('quotation')->group(function () {
         Route::get('/', [QuotationController::class, 'get']);
         Route::post('/', [QuotationController::class, 'store']);
-        
-        Route::post('/read-excel', [QuotationController::class, 'read_excel']);
-
         Route::get('/{quotation:id}', [QuotationController::class, 'show']);
         Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
         Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
