@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->foreignUuid('unit_id')->nullable()->constrained('params')->onUpdate('cascade');
             $table->enum('tax', ['yes', 'no']);
+            
+            $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
+            $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
+            $table->decimal('price', 18, 2);
             $table->timestamps();
         });
     }

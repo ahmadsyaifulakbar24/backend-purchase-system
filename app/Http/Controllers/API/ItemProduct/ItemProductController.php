@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\ItemProduct;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ItemProduct\ItemProductResource;
+use App\Imports\CategoryProductPriceImport;
 use App\Imports\ItemProductImport;
 use App\Models\ItemProduct;
 use Illuminate\Http\Request;
@@ -68,7 +69,11 @@ class ItemProductController extends Controller
                     $query->where('category', 'unit');
                 })
             ],
-            'tax' => ['required', 'in:yes,no']
+            'tax' => ['required', 'in:yes,no'],
+
+            'location_id' => ['required', 'exists:locations,id'],
+            'supplier_id' => ['required', 'exists:suppliers,id'],
+            'price' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();
@@ -108,6 +113,32 @@ class ItemProductController extends Controller
 
     }
 
+    public function import_category_product_price(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx']
+        ]);
+        $file = $request->file;
+
+        try {
+            Excel::import(new CategoryProductPriceImport, $file);
+            return ResponseFormatter::success(
+                null,
+                'success import category, product and price list data'
+            );
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            foreach ($failures as $failure) {
+                $errors[] =  $failure->errors();
+            }
+            
+            return ResponseFormatter::errorValidation(
+                $errors,
+                'import category, product and price list data failed',
+            );
+        }        
+    }
+
     public function show(ItemProduct $item_product)
     {
         return ResponseFormatter::success(
@@ -142,7 +173,10 @@ class ItemProductController extends Controller
                     $query->where('category', 'unit');
                 })
             ],
-            'tax' => ['required', 'in:yes,no']
+            'tax' => ['required', 'in:yes,no'],
+            'location_id' => ['required', 'exists:locations,id'],
+            'supplier_id' => ['required', 'exists:suppliers,id'],
+            'price' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();

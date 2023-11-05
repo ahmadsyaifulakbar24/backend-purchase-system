@@ -11,7 +11,6 @@ class CategoryProductPriceImport implements WithMultipleSheets
         return [
             'Item Category' => new ItemCategoryImport(),
             'Item Product' => new ItemProductImport(),
-            'Price List' => new PriceListImport(),
         ];
     }
 }

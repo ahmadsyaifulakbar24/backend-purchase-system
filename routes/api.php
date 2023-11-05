@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\API\CostCenter\CostCenterController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\DeliveryOrder\CateringDOController;
 use App\Http\Controllers\API\DeliveryOrder\IncomingDOController;
@@ -12,7 +11,6 @@ use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\Param\ParamController;
-use App\Http\Controllers\API\PriceList\PriceListController;
 use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
 use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
 use App\Http\Controllers\API\PurchaseOrder\OutgoingPOContoller;
@@ -93,14 +91,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/{location:id}', [LocationController::class, 'destroy']);
     });
 
-    Route::prefix('cost-center')->group(function () {
-        Route::get('/', [CostCenterController::class, 'get']);
-        Route::post('/', [CostCenterController::class, 'store']);
-        Route::get('/{cost_center:id}', [CostCenterController::class, 'show']);
-        Route::patch('/{cost_center:id}', [CostCenterController::class, 'update']);
-        Route::delete('/{cost_center:id}', [CostCenterController::class, 'destroy']);
-    });
-
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SupplierController::class, 'get']);
         Route::post('/', [SupplierController::class, 'store']);
@@ -141,19 +131,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [ItemProductController::class, 'get']);
         Route::post('/', [ItemProductController::class, 'store']);
         Route::post('/import', [ItemProductController::class, 'import']);
+        Route::post('/import-category-product-price', [ItemProductController::class, 'import_category_product_price']);
         Route::get('/{item_product:id}', [ItemProductController::class, 'show']);
         Route::patch('/{item_product:id}', [ItemProductController::class, 'update']);
         Route::delete('/{item_product:id}', [ItemProductController::class, 'destroy']);
-    });
-
-    Route::prefix('price-list')->group(function () {
-        Route::get('/', [PriceListController::class, 'get']);
-        Route::post('/', [PriceListController::class, 'store']);
-        Route::post('/import', [PriceListController::class, 'import']);
-        Route::post('/import-category-product-price', [PriceListController::class, 'import_category_product_price']);
-        Route::get('/{price_list:id}', [PriceListController::class, 'show']);
-        Route::patch('/{price_list:id}', [PriceListController::class, 'update']);
-        Route::delete('/{price_list:id}', [PriceListController::class, 'destroy']);
     });
 
     Route::prefix('file')->group(function() {

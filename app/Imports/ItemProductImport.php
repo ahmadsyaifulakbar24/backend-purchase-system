@@ -4,7 +4,9 @@ namespace App\Imports;
 
 use App\Models\ItemCategory;
 use App\Models\ItemProduct;
+use App\Models\Location;
 use App\Models\Param;
+use App\Models\Supplier;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -56,7 +58,10 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                         $query->where('category', 'unit');
                     })
                 ],
-                'tax' => ['required', 'in:yes,no']
+                'tax' => ['required', 'in:yes,no'],
+                'location_code' => ['required', 'exists:locations,location_code'],
+                'supplier_code' => ['required', 'exists:suppliers,code'],
+                'price' => ['required', 'numeric'],
             ]);
             
             if ($validator->fails()) {
@@ -75,6 +80,8 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                 $sub_item_category_code_id = ItemCategory::where('category_code', $row['sub_item_category_code'])->first()->id;
                 $unit_id = Param::where('param', $row['unit'])->first()->id;
 
+                $location_id = Location::where('location_code', $row['location_code'])->first()->id;
+                $supplier_id = Supplier::where('code', $row['supplier_code'])->first()->id;
                 ItemProduct::create([
                     'code' => $row['code'],
                     'name' => $row['name'],
@@ -85,6 +92,9 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                     'size' => $row['size'],
                     'unit_id' => $unit_id,
                     'tax' => $row['tax'],
+                    'location_id' => $location_id,
+                    'supplier_id' => $supplier_id,
+                    'price' => $row['price'],
                 ]);
             }
         }

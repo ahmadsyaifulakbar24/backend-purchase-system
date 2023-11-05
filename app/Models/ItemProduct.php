@@ -23,7 +23,10 @@ class ItemProduct extends Model
         'description',
         'size',
         'unit_id',
-        'tax'
+        'tax',
+        'location_id',
+        'supplier_id',
+        'price'
     ];
 
     public function createdAt(): Attribute
@@ -61,5 +64,22 @@ class ItemProduct extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Param::class, 'unit_id');
+    }
+
+    public function price(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => intval($value),
+        );
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class, 'location_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 }

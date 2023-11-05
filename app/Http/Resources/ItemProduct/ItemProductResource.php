@@ -3,7 +3,9 @@
 namespace App\Http\Resources\ItemProduct;
 
 use App\Http\Resources\ItemCategory\ItemCategoryResource;
+use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Param\ParamResource;
+use App\Http\Resources\Supplier\SupplierResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +29,9 @@ class ItemProductResource extends JsonResource
             'size' => $this->size,
             'unit' => new ParamResource($this->unit),
             'tax' => $this->tax,
+            'location' => new LocationResource($this->location),
+            'supplier' => new SupplierResource($this->supplier),
+            'price' => $this->price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
