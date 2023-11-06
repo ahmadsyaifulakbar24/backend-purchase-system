@@ -53,8 +53,8 @@ class IncomingDo extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $date = Carbon::parse($value)->format('Y-m-d H:i:s');
-                $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                $date = Carbon::parse($value)->format('Y-m-d');
+                $date_timezone = Carbon::createFromFormat('Y-m-d', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d');
                 return $date_timezone;
             },
         );
@@ -64,8 +64,8 @@ class IncomingDo extends Model
     {
         return Attribute::make(
             get: function ($value) {
-                $date = Carbon::parse($value)->format('Y-m-d H:i:s');
-                $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                $date = Carbon::parse($value)->format('Y-m-d');
+                $date_timezone = Carbon::createFromFormat('Y-m-d', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d');
                 return $date_timezone;
             },
         );
