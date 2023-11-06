@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\DeliveryOrder\CateringDOController;
 use App\Http\Controllers\API\DeliveryOrder\IncomingDOController;
@@ -221,5 +222,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{outgoing_do:id}', [OutgoingDOController::class, 'show']);
         Route::patch('/{outgoing_do:id}', [OutgoingDOController::class, 'update']);
         Route::delete('/{outgoing_do:id}', [OutgoingDOController::class, 'destroy']);
+    });
+
+    Route::prefix('client')->group(function () {
+        Route::get('/', [ClientController::class, 'get']);
+        Route::post('/', [ClientController::class, 'store']);
+        Route::post('/import', [ClientController::class, 'import']);
+        Route::get('/{client:id}', [ClientController::class, 'show']);
+        Route::patch('/{client:id}', [ClientController::class, 'update']);
+        Route::delete('/{client:id}', [ClientController::class, 'destroy']);
     });
 });
