@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('meal_sheet_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('meal_sheet_day_id')->constrained('meal_sheet_days')->onUpdate('cascade');
+            $table->foreignUuid('meal_sheet_daily_id')->constrained('meal_sheet_daily')->onUpdate('cascade');
             $table->foreignUuid('client_id')->constrained('clients')->onUpdate('cascade');
             $table->integer('mandays');
             $table->integer('casual_breakfast');

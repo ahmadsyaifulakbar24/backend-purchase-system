@@ -91,7 +91,7 @@ class MealSheetGroupController extends Controller
     public function destroy(MealSheetGroup $meal_sheet_group)
     {
 
-        $check_data = $meal_sheet_group->meal_sheet_day()->count();
+        $check_data = $meal_sheet_group->meal_sheet_daily()->count();
         if($check_data < 1) {
             $meal_sheet_group->delete();
             return ResponseFormatter::success(

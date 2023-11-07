@@ -63,7 +63,7 @@ class MealSheetGroup extends Model
         return $this->belongsToMany(Client::class, 'meal_sheet_clients', 'meal_sheet_group_id', 'client_id');
     }
 
-    public function meal_sheet_day(): HasMany
+    public function meal_sheet_daily(): HasMany
     {
         return $this->hasMany(MealSheetDay::class, 'meal_sheet_group_id');
     }

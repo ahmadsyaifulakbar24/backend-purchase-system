@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meal_sheet_days', function (Blueprint $table) {
+        Schema::create('meal_sheet_daily', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('meal_sheet_group_id')->constrained('meal_sheet_groups');
             $table->date('meal_sheet_date');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meal_sheet_days');
+        Schema::dropIfExists('meal_sheet_daily');
     }
 };

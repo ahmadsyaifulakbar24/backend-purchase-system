@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class MealSheetDay extends Model
+class MealSheetDaily extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'meal_sheet_days';
+    protected $table = 'meal_sheet_daily';
     protected $fillable = [
         'meal_sheet_group_id',
         'meal_sheet_date',
@@ -47,8 +48,24 @@ class MealSheetDay extends Model
         );
     }
 
+    public function mealSheetDate(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $date = Carbon::parse($value)->format('Y-m-d');
+                $date_timezone = Carbon::createFromFormat('Y-m-d', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d');
+                return $date_timezone;
+            },
+        );
+    }
+
     public function meal_sheet_group(): BelongsTo
     {
         return $this->belongsTo(MealSheetGroup::class, 'meal_sheet_group_id');
+    }
+
+    public function meal_sheet_detail(): HasMany
+    {
+        return $this->hasMany(MealSheetDetail::class, 'meal_sheet_daily_id');
     }
 }
