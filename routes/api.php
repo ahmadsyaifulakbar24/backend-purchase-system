@@ -11,6 +11,7 @@ use App\Http\Controllers\API\File\FileController;
 use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
+use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
 use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
@@ -231,5 +232,17 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{client:id}', [ClientController::class, 'show']);
         Route::patch('/{client:id}', [ClientController::class, 'update']);
         Route::delete('/{client:id}', [ClientController::class, 'destroy']);
+    });
+
+    Route::prefix('meal-sheet')->group(function () {
+
+        Route::prefix('group')->group(function () {
+            Route::get('/', [MealSheetGroupController::class, 'get']);
+            Route::post('/', [MealSheetGroupController::class, 'store']);
+            Route::get('/{meal_sheet_group:id}', [MealSheetGroupController::class, 'show']);
+            Route::post('/{meal_sheet_group:id}', [MealSheetGroupController::class, 'update']);
+            Route::delete('/{meal_sheet_group:id}', [MealSheetGroupController::class, 'destroy']);
+        });
+        
     });
 });
