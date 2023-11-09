@@ -201,6 +201,16 @@ class MealSheetMonthlyController extends Controller
         }
     }
 
+    public function destroy(MealSheetMonthly $meal_sheet_monthly)
+    {
+        $meal_sheet_monthly->delete();
+
+        return ResponseFormatter::success(
+            null,
+            'success delete meal sheet monthly data'
+        );
+    }
+
     public function monthly_meal_sheet_pdf()
     {
         $data = [];
