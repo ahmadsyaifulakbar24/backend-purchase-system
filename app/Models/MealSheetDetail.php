@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MealSheetDetail extends Model
 {
@@ -14,7 +16,7 @@ class MealSheetDetail extends Model
 
     protected $table = 'meal_sheet_details';
     protected $fillable = [
-        'meal_sheet_day_id',
+        'meal_sheet_daily_id',
         'client_id',
         'mandays',
         'casual_breakfast',
@@ -53,4 +55,18 @@ class MealSheetDetail extends Model
         );
     }
     
+    public function meal_sheet_daily(): BelongsTo
+    {
+        return $this->belongsTo(MealSheetDaily::class, 'meal_sheet_daily_id');
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function meal_sheet_record(): HasMany
+    {
+        return $this->hasMany(MealSheetRecord::class, 'meal_sheet_detail_id');
+    }
 }

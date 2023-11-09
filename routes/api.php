@@ -12,6 +12,7 @@ use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyController;
+use App\Http\Controllers\API\MealSheet\MealSheetDailyRecordController;
 use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
@@ -251,6 +252,14 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'show']);
             Route::patch('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'update']);
             Route::delete('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'destroy']);
+        });
+
+        Route::prefix('daily-record')->group(function () {
+            Route::get('/', [MealSheetDailyRecordController::class, 'get']);
+            Route::post('/', [MealSheetDailyRecordController::class, 'store']);
+            Route::get('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'show']);
+            Route::post('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'update']);
+            Route::delete('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'destroy']);
         });
         
     });
