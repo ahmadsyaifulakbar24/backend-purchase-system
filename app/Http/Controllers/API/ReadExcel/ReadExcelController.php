@@ -34,4 +34,19 @@ class ReadExcelController extends Controller
             'success read data excel product price'
         );
     }
+
+    public function meal_sheet_record(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+        $file = $request->file;
+
+        $data = ExcelHelper::read($file);
+
+        return ResponseFormatter::success(
+            $data,
+            'success read data excel meal sheet record'
+        );
+    }
 }

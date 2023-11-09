@@ -150,6 +150,7 @@ Route::middleware(['auth:api'])->group(function () {
     
     Route::prefix('read-excel')->group(function() {
         Route::post('product-price', [ReadExcelController::class, 'product_price_excel']);
+        Route::post('meal-sheet-record', [ReadExcelController::class, 'meal_sheet_record']);
     });
 
     Route::prefix('quotation')->group(function () {
