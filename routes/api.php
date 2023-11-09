@@ -14,6 +14,7 @@ use App\Http\Controllers\API\Location\LocationController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyRecordController;
 use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
+use App\Http\Controllers\API\MealSheet\MealSheetMonthlyController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
 use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
@@ -261,6 +262,11 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'show']);
             Route::post('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'update']);
             Route::delete('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'destroy']);
+            Route::post('/{meal_sheet_detail:id}/daily-meal-sheet-pdf', [MealSheetDailyRecordController::class, 'daily_meal_sheet_pdf']);
+        });
+
+        Route::prefix('monthly-report')->group(function () {
+            Route::post('/monthly-meal-sheet-pdf', [MealSheetMonthlyController::class, 'monthly_meal_sheet_pdf']);
         });
         
     });

@@ -9,6 +9,7 @@ use App\Http\Requests\MealSheet\MealSheetDailyRecordUpdateRequest;
 use App\Http\Resources\MealSheet\MealSheetDailyRecordDetailResource;
 use App\Http\Resources\MealSheet\MealSheetDailyRecordResource;
 use App\Models\MealSheetDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -84,5 +85,13 @@ class MealSheetDailyRecordController extends Controller
             null,
             'success delete meal sheet daily record data'
         );
+    }
+
+    public function daily_meal_sheet_pdf()
+    {
+        $data = [];
+        $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
+        $file_name = 'daily_meal_sheet-.pdf';
+        return $pdf->download($file_name);
     }
 }
