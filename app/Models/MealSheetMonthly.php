@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class MealSheetGroup extends Model
+class MealSheetMonthly extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'meal_sheet_groups';
+    protected $table = 'meal_sheet_monthly';
     protected $fillable = [
-        'location_id',
+        'month',
+        'year',
+        'meal_sheet_group_id',
+        'recap_per_day',
         'prepared_by',
         'checked_by',
         'approved_by',
@@ -25,6 +26,7 @@ class MealSheetGroup extends Model
     ];
 
     protected $casts = [
+        'recap_per_day' => 'array',
         'prepared_by' => 'array',
         'checked_by' => 'array',
         'approved_by' => 'array',
@@ -53,24 +55,8 @@ class MealSheetGroup extends Model
         );
     }
 
-    public function location(): BelongsTo
+    public function meal_sheet_group(): BelongsTo
     {
-        return $this->belongsTo(Location::class, 'location_id');
+        return $this->belongsTo(MealSheetGroup::class, 'meal_sheet_group_id');
     }
-
-    public function meal_sheet_client(): BelongsToMany
-    {
-        return $this->belongsToMany(Client::class, 'meal_sheet_clients', 'meal_sheet_group_id', 'client_id');
-    }
-
-    public function meal_sheet_daily(): HasMany
-    {
-        return $this->hasMany(MealSheetDaily::class, 'meal_sheet_group_id');
-    }
-
-    public function meal_sheet_monthly(): HasMany
-    {
-        return $this->hasMany(MealSheetMonthly::class, 'meal_sheet_group_id');
-    }
-
 }
