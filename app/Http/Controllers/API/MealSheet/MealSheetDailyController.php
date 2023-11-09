@@ -18,17 +18,27 @@ class MealSheetDailyController extends Controller
         $request->validate([
             'meal_sheet_group_id' => ['required', 'exists:meal_sheet_groups,id'],
             'meal_sheet_date' => ['nullable', 'date'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date'],
             'limit' => ['nullable', 'integer'],
             'paginate' => ['nullable', 'in:0,1'],
         ]);
         $meal_sheet_group_id = $request->meal_sheet_group_id;
         $meal_sheet_date = $request->meal_sheet_date;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
         $meal_sheet_daily = MealSheetDaily::where('meal_sheet_group_id', $meal_sheet_group_id)
                                     ->when($meal_sheet_date, function ($query, string $meal_sheet_date) {
                                         $query->where('meal_sheet_date', $meal_sheet_date);
+                                    })
+                                    ->when($start_date, function ($query, string $start_date) {
+                                        $query->where('meal_sheet_date', '>=', $start_date);
+                                    })
+                                    ->when($end_date, function ($query, string $end_date) {
+                                        $query->where('meal_sheet_date', '<=', $end_date);
                                     })
                                     ->orderBy('meal_sheet_date', 'DESC');
 
