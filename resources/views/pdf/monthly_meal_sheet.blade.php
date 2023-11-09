@@ -135,15 +135,15 @@
                 </td>
             </tr>
             <tr>
-                <td class="tg-sn4r" colspan="3" style="border-right: none;"> Location : Kapal 1</td>
+                <td class="tg-sn4r" colspan="3" style="border-right: none;"> Location : {{ $meal_sheet_monthly->meal_sheet_group->location->location }}</td>
                 <td class="tg-de2y" style="border-left: none; border-right: none;"></td>
-                <td class="tg-dvpl" colspan="8" style="border-left: none;">MONTH: FEBRUARI 2023</td>
+                <td class="tg-dvpl" colspan="8" style="border-left: none;">MONTH: {{ $month }} {{ $meal_sheet_monthly->year }}</td>
             </tr>
 
             <!-- Header -->
             <tr>
                 <td class="tg-baqh" rowspan="2" style="vertical-align: middle;">Date</td>
-                <td class="tg-baqh" colspan="2">Client Group</td>
+                <td class="tg-baqh" colspan="{{ $meal_sheet_monthly->meal_sheet_group->meal_sheet_client()->count() }}">Client Group</td>
                 <td class="tg-0lax" colspan="2">Total Account</td>
                 <td class="tg-0lax" colspan="3">Casual Meals</td>
                 <td class="tg-0lax"></td>
@@ -151,8 +151,9 @@
                 <td class="tg-0lax" colspan="2" rowspan="2" style="vertical-align: middle; text-align: center;">Remark</td>
             </tr>
             <tr>
-                <td class="tg-0lax">PHE OSES</td>
-                <td class="tg-0lax">Andromeda</td>
+                @foreach ( $meal_sheet_monthly->meal_sheet_group->meal_sheet_client as $client)
+                    <td class="tg-0lax">{{ $client->client_name }}</td>
+                @endforeach
                 <td class="tg-0lax">Onboard Actual</td>
                 <td class="tg-0lax">As Per Contract</td>
                 <td class="tg-0lax">Breakfast</td>
@@ -163,46 +164,66 @@
             </tr>
 
             <!-- Content -->
-            <tr>
-                <td class="text-center">1</td>
-                <td class="text-center">13</td>
-                <td class="text-center">27</td>
-                <td class="text-center">40</td>
-                <td class="text-center">45</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">40</td>
-                <td class="text-center">Remark kiri</td>
-                <td class="text-center">Remark kanan</td>
-            </tr>
-            <tr>
-                <td class="text-center">2</td>
-                <td class="text-center">13</td>
-                <td class="text-center">27</td>
-                <td class="text-center">40</td>
-                <td class="text-center">45</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">15</td>
-                <td class="text-center">40</td>
-                <td class="text-center">Remark kiri</td>
-                <td class="text-center">Remark kanan</td>
-            </tr>
+            @php
+                $total_onboard_actual = 0;
+                $total_as_per_contract = 0;
+                $total_casual_breakfast = 0;
+                $total_casual_lunch = 0;
+                $total_casual_dinner = 0;
+                $total_super = 0;
+                $total_total = 0;
+                $total_client_group = [];
+            @endphp
+            @foreach ($meal_sheet_monthly->recap_per_day as $recap)
+                @php
+                    $client_group = Arr::keyBy($recap['client_group'], 'id');
+                    $total_onboard_actual += $recap['onboard_actual'];
+                    $total_as_per_contract += $recap['as_per_contract'];
+                    $total_casual_breakfast += $recap['casual_breakfast'];
+                    $total_casual_lunch += $recap['casual_lunch'];
+                    $total_casual_dinner += $recap['casual_dinner'];
+                    $total_super += $recap['super'];
+                    $total_total += $recap['total'];
 
+                    foreach ($recap['client_group'] as $client_data) {
+                        $id = $client_data['id'];
+                        $mandays = $client_data['mandays'];
+
+                        if (isset($total_client_group[$id])) {
+                            $total_client_group[$id] += $mandays;
+                        } else {
+                            $total_client_group[$id] = $mandays;
+                        }
+                    }
+                @endphp
+                <tr>
+                    <td class="text-center">{{ Carbon\Carbon::parse($recap['meal_sheet_date'])->format('j') }}</td>
+                    @foreach ( $meal_sheet_monthly->meal_sheet_group->meal_sheet_client as $client)
+                        <td class="text-center">{{ $client_group[$client->id]['mandays'] }}</td>
+                    @endforeach
+                    <td class="text-center">{{ $recap['onboard_actual'] }}</td>
+                    <td class="text-center">{{ $recap['as_per_contract'] }}</td>
+                    <td class="text-center">{{ $recap['casual_breakfast'] }}</td>
+                    <td class="text-center">{{ $recap['casual_lunch'] }}</td>
+                    <td class="text-center">{{ $recap['casual_dinner'] }}</td>
+                    <td class="text-center">{{ $recap['super'] }}</td>
+                    <td class="text-center">{{ $recap['total'] }}</td>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                </tr>
+            @endforeach
             <tr>
                 <td class="text-center">Total</td>
-                <td class="text-center">26</td>
-                <td class="text-center">54</td>
-                <td class="text-center">80</td>
-                <td class="text-center">90</td>
-                <td class="text-center">30</td>
-                <td class="text-center">30</td>
-                <td class="text-center">30</td>
-                <td class="text-center">30</td>
-                <td class="text-center">80</td>
+                @foreach ( $meal_sheet_monthly->meal_sheet_group->meal_sheet_client as $client)
+                    <td class="text-center">{{ $total_client_group[$client->id] }}</td>
+                @endforeach
+                <td class="text-center">{{ $total_onboard_actual }}</td>
+                <td class="text-center">{{ $total_as_per_contract }}</td>
+                <td class="text-center">{{ $total_casual_breakfast }}</td>
+                <td class="text-center">{{ $total_casual_lunch }}</td>
+                <td class="text-center">{{ $total_casual_dinner }}</td>
+                <td class="text-center">{{ $total_super }}</td>
+                <td class="text-center">{{ $total_total }}</td>
                 <td class="text-center">-</td>
                 <td class="text-center">-</td>
             </tr>
@@ -217,29 +238,29 @@
                 <td colspan="3" style="border-top: none; border-right: none;">
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Prepared By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_monthly->prepared_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->prepared_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-right: none; border-left: none;">
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Checked By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_monthly->checked_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->checked_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-right: none; border-left: none;">
                     <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Approved By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_monthly->approved_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->approved_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-left: none;">
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Acknowledge By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_monthly->acknowladge_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->acknowladge_by['position'] }}</p>
                     </div>
                 </td>
             </tr>

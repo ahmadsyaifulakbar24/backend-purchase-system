@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\MealSheet;
 
+use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MealSheet\MealSheetMonthlyDetailResource;
@@ -211,9 +212,12 @@ class MealSheetMonthlyController extends Controller
         );
     }
 
-    public function monthly_meal_sheet_pdf()
+    public function monthly_meal_sheet_pdf(MealSheetMonthly $meal_sheet_monthly)
     {
-        $data = [];
+        $data = [
+            'month' => DateHelpers::numericToMonth($meal_sheet_monthly->month),
+            'meal_sheet_monthly' => $meal_sheet_monthly
+        ];
         $pdf = Pdf::loadView('pdf.monthly_meal_sheet', $data);
         $file_name = 'monthly_meal_sheet-.pdf';
         return $pdf->download($file_name);
