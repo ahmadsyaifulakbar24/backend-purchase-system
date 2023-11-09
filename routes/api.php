@@ -265,7 +265,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/{meal_sheet_detail:id}/daily-meal-sheet-pdf', [MealSheetDailyRecordController::class, 'daily_meal_sheet_pdf']);
         });
 
-        Route::prefix('monthly-report')->group(function () {
+        Route::prefix('monthly')->group(function () {
             Route::post('/monthly-meal-sheet-pdf', [MealSheetMonthlyController::class, 'monthly_meal_sheet_pdf']);
         });
         

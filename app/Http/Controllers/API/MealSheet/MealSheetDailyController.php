@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MealSheet\MealSheetDailyRequest;
 use App\Http\Requests\MealSheet\MealSheetDailyUpdateRequest;
+use App\Http\Resources\MealSheet\MealSheetDailyDetailResource;
 use App\Http\Resources\MealSheet\MealSheetDailyResource;
 use App\Models\MealSheetDaily;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class MealSheetDailyController extends Controller
     public function show(MealSheetDaily $meal_sheet_daily)
     {
         return ResponseFormatter::success(
-            new MealSheetDailyResource($meal_sheet_daily),
+            new MealSheetDailyDetailResource($meal_sheet_daily),
             'success show meal sheet daily data'
         );
     }
