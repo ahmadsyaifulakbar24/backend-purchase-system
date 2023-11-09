@@ -87,9 +87,11 @@ class MealSheetDailyRecordController extends Controller
         );
     }
 
-    public function daily_meal_sheet_pdf()
+    public function daily_meal_sheet_pdf(MealSheetDetail $meal_sheet_detail)
     {
-        $data = [];
+        $data = [
+            'meal_sheet_detail' => $meal_sheet_detail
+        ];
         $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
         $file_name = 'daily_meal_sheet-.pdf';
         return $pdf->download($file_name);

@@ -130,9 +130,9 @@
                 <td class="tg-7btt" colspan="10" style="border-bottom: none">Meal Count Sheet and Accomodation Record</td>
             </tr>
             <tr>
-                <td class="tg-sn4r" colspan="3" style="border-right: none; border-top: none">Kapal 1</td>
-                <td class="tg-de2y" style="border-left: none; border-right: none; border-top: none">Andromeda</td>
-                <td class="tg-dvpl" colspan="6" style="border-left: none; border-top: none">DATE : 25 Februari 2023</td>
+                <td class="tg-sn4r" colspan="3" style="border-right: none; border-top: none">{{ $meal_sheet_detail->meal_sheet_daily->meal_sheet_group->location->location }}</td>
+                <td class="tg-de2y" style="border-left: none; border-right: none; border-top: none">{{ $meal_sheet_detail->client->client_name }}</td>
+                <td class="tg-dvpl" colspan="6" style="border-left: none; border-top: none">DATE : {{ Carbon\Carbon::parse($meal_sheet_detail->meal_sheet_daily->meal_sheet_date)->format('d F Y') }}</td>
             </tr>
             <tr>
                 <td class="tg-7btt" style="width: 10px;">NO</td>
@@ -146,48 +146,60 @@
                 <td class="tg-7btt">TOTAL</td>
                 <td class="tg-7btt">ACCOM</td>
             </tr>
-            <tr>
-                <td class="tg-7btt" style="width: 5px;">1</td>
-                <td class="text-center">Faldi Nur Ikhsan</td>
-                <td class="text-center">Teriminal Manager</td>
-                <td class="text-center">ANDROMEDA</td>
-                <td class="tg-0pky">1</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">1</td>
-                <td class="tg-0pky">0</td>
-                <td class="tg-0pky">2</td>
-                <td class="tg-0pky">1</td>
-            </tr>
-            <tr>
-                <td class="tg-7btt" style="width: 5px;">2</td>
-                <td class="text-center">Ahmad Syaiful Akbar</td>
-                <td class="text-center">Terminal Manager</td>
-                <td class="text-center">SILLO MARITIME</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">4</td>
-                <td class="tg-0lax">1</td>
-            </tr>
+            @php
+                $no = 1;
+                $total_breakfast = 0;
+                $total_lunch = 0;
+                $total_dinner = 0;
+                $total_super = 0;
+                $total_accomodation = 0;
+                $total_total = 0;
+            @endphp
+            @foreach ($meal_sheet_detail->meal_sheet_record as $record)
+                <tr>
+                    <td class="tg-7btt" style="width: 5px;">{{ $no++ }}</td>
+                    <td class="text-center">{{ $record->name }}</td>
+                    <td class="text-center">{{ $record->position }}</td>
+                    <td class="text-center">{{ $record->company }}</td>
+                    <td class="tg-0pky">{{ $record->breakfast }}</td>
+                    <td class="tg-0pky">{{ $record->lunch }}</td>
+                    <td class="tg-0pky">{{ $record->dinner }}</td>
+                    <td class="tg-0pky">{{ $record->super }}</td>
+                    @php
+                        $total = $record->breakfast + $record->lunch + $record->dinner + $record->super
+                    @endphp
+                    <td class="tg-0pky">{{ $total }}</td>
+                    <td class="tg-0pky">{{ $record->accomodation }}</td>
+
+                    @php
+                        $total_breakfast += $record->breakfast;
+                        $total_lunch += $record->lunch;
+                        $total_dinner += $record->dinner;
+                        $total_super += $record->super;
+                        $total_accomodation += $record->accomodation;
+                        $total_total += $total;
+                    @endphp
+                </tr>
+            @endforeach
             <tr>
                 <td class="tg-7btt" style="width: 5px;"></td>
                 <td class="tg-7btt">Total</td>
                 <td class="tg-0lax"></td>
                 <td class="tg-0lax"></td>
-                <td class="tg-0lax">2</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">2</td>
-                <td class="tg-0lax">1</td>
-                <td class="tg-0lax">6</td>
-                <td class="tg-0lax">2</td>
+                <td class="tg-0lax">{{ $total_breakfast }}</td>
+                <td class="tg-0lax">{{ $total_lunch }}</td>
+                <td class="tg-0lax">{{ $total_dinner }}</td>
+                <td class="tg-0lax">{{ $total_super }}</td>
+                <td class="tg-0lax">{{ $total_total }}</td>
+                <td class="tg-0lax">{{ $total_accomodation }}</td>
             </tr>
             <tr>
                 <td style="border-right: none; border-bottom: none;"></td>
                 <td style="border-left: none; border-right: none; border-bottom: none; text-align: right; font-weight: bold; font-size: 0.5rem">
-                    <div>Mandays : 27</div>
-                    <div>Casual B Fast : 3</div>
-                    <div>Casual Lunch : 3</div>
+                    <div>Mandays : {{ $meal_sheet_detail->mandays }}</div>
+                    <div>Casual B Fast : {{ $meal_sheet_detail->casual_breakfast }}</div>
+                    <div>Casual Lunch : {{ $meal_sheet_detail->casual_lunch }}</div>
+                    <div>Casual Diner : {{ $meal_sheet_detail->casual_dinner }}</div>
                 </td>
                 <td style="border-left: none; border-bottom: none;" colspan="8"></td>
             </tr>
@@ -195,22 +207,22 @@
                 <td colspan="2" style="border-top: none; border-right: none;">
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Prepared By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_detail->prepared_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->prepared_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="2" style="border-top: none; border-right: none; border-left: none;">
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Checked By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_detail->checked_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->checked_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="4" style="border-top: none; border-right: none; border-left: none;">
                     <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Approved By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
+                        <p style="margin-top: 60px;">{{ $meal_sheet_detail->approved_by['name'] }}</p>
+                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->approved_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="2" style="border-top: none; border-left: none;">

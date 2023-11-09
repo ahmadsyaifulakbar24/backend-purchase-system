@@ -268,9 +268,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::prefix('monthly')->group(function () {
             Route::get('/', [MealSheetMonthlyController::class, 'get']);
             Route::post('/upsert', [MealSheetMonthlyController::class, 'upsert']);
-            Route::post('/monthly-meal-sheet-pdf', [MealSheetMonthlyController::class, 'monthly_meal_sheet_pdf']);
             Route::get('/show-by-date', [MealSheetMonthlyController::class, 'show_by_date']);
             Route::get('/{meal_sheet_monthly:id}', [MealSheetMonthlyController::class, 'show']);
+            Route::post('/{meal_sheet_monthly:id}/monthly-meal-sheet-pdf', [MealSheetMonthlyController::class, 'monthly_meal_sheet_pdf']);
         });
         
     });
