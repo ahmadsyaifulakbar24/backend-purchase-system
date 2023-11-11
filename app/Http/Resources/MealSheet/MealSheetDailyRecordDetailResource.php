@@ -17,7 +17,7 @@ class MealSheetDailyRecordDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'meal_sheet_daily' => new MealSheetDailyResource($this->meal_sheet_daily),
+            'meal_sheet_daily' => new MealSheetDailyDetailResource($this->meal_sheet_daily),
             'client' => new ClientResource($this->client),
             'mandays' => $this->mandays,  
             'casual_breakfast' => $this->casual_breakfast,  
