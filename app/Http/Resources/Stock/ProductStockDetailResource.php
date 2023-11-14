@@ -19,7 +19,6 @@ class ProductStockDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'item_product' => new ItemProductResource($this->item_product),
-            'location' => new LocationResource($this->location),
             'stock' => !empty($this->stock) ? $this->stock : 0,
             'updated_at' => $this->updated_at,
         ];

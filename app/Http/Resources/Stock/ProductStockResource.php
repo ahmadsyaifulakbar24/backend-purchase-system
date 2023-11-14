@@ -27,7 +27,6 @@ class ProductStockResource extends JsonResource
                 'location' => new LocationResource($this->item_product->location),
                 'price' => $this->item_product->price,
             ],
-            'location' => new LocationResource($this->location),
             'stock' => !empty($this->stock) ? $this->stock : 0,
             'updated_at' => $this->updated_at,
         ];

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API\Stock;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Stock\ProductStockDetailResource;
 use App\Http\Resources\Stock\ProductStockHistoryResource;
 use App\Http\Resources\Stock\ProductStockResource;
+use App\Models\Location;
 use App\Models\ProductStock;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,7 @@ class ProductStockController extends Controller
     public function get(Request $request)
     {
         $request->validate([
-            'location_id' => ['nullable', 'exists:locations,id'],
+            'location_id' => ['required', 'exists:locations,id'],
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
@@ -38,13 +40,11 @@ class ProductStockController extends Controller
                 $sub_query->where('item_products.name', 'like', '%'. $search .'%')
                     ->orWhere('item_products.code', 'like', '%'. $search .'%');
             });
+        })
+        ->where(function ($query) use ($location_id) {
+            $query->where('product_stocks.location_id', $location_id)
+                ->orWhereNull('product_stocks.location_id');
         });
-        
-        if(!empty($location_id)) {
-            $product_stock->where('product_stocks.location_id', $location_id);
-        } else {
-            $product_stock->whereNull('product_stocks.location_id');
-        }
 
         $result = $paginate ? $product_stock->paginate($limit) : $product_stock->get();
 
@@ -58,7 +58,7 @@ class ProductStockController extends Controller
     {
         $request->validate([
             'item_product_id' => ['required', 'exists:item_products,id'],
-            'location_id' => ['nullable', 'exists:locations,id'],
+            'location_id' => ['required', 'exists:locations,id'],
             'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);
@@ -67,14 +67,10 @@ class ProductStockController extends Controller
         $quantity = $request->quantity;
         $description = $request->description;
 
-        if(!empty($location_id)) {
-            $query_product_stock = ProductStock::where([
-                ['item_product_id', $item_product_id],
-                ['location_id', $location_id],
-            ]);
-        } else {
-            $query_product_stock = ProductStock::where('item_product_id', $item_product_id);
-        }
+        $query_product_stock = ProductStock::where([
+            ['item_product_id', $item_product_id],
+            ['location_id', $location_id],
+        ]);
 
         if($query_product_stock->count() > 0) {
             $product_stock = $query_product_stock->first();
@@ -107,23 +103,31 @@ class ProductStockController extends Controller
     {
         $request->validate([
             'item_product_id' => ['required', 'exists:item_products,id'],
-            'location_id' => ['nullable', 'exists:locations,id'],
+            'location_id' => ['required', 'exists:locations,id'],
         ]);
         $item_product_id = $request->item_product_id;
         $location_id = $request->location_id;
 
-        if(!empty($location_id)) {
-            $query_product_stock = ProductStock::where([
-                ['item_product_id', $item_product_id],
-                ['location_id', $location_id],
-            ]);
-        } else {
-            $query_product_stock = ProductStock::where('item_product_id', $item_product_id);
-        }
+        $product_stock = ProductStock::select(
+            'product_stocks.id as id', 
+            'item_products.id as item_product_id',
+            'stock',
+            'product_stocks.location_id',
+            'product_stocks.updated_at as updated_at',
+        )
+        ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
+        ->where(function ($query) use ($location_id) {
+            $query->where('product_stocks.location_id', $location_id)
+                ->orWhereNull('product_stocks.location_id');
+        })
+        ->where('item_products.id', $item_product_id)
+        ->first();
 
-        $product_stock = $query_product_stock->first();
         return ResponseFormatter::success(
-            new ProductStockDetailResource($product_stock),
+            [
+                'product_stock' => new ProductStockDetailResource($product_stock),
+                'location' => new LocationResource(Location::find($location_id)),
+            ],
             'success show product stock data',
         );
     }

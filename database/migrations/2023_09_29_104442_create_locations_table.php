@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('location_code')->unique();
             $table->string('location');
             $table->uuid('parent_location_id')->nullable();
+            $table->boolean('main')->default('0');
         });
 
         Schema::table('locations', function (Blueprint $table) {

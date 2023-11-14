@@ -29,6 +29,7 @@ class LocationResource extends JsonResource
             'location_code' => $this->location_code,
             'location' => $this->location,
             'parent_location' => $parent_location,
+            'main' => $this->main,
         ];
     }
 }

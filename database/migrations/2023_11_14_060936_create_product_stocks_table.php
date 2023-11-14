@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('item_product_id')->constrained('item_products')->onUpdate('cascade')->onDelete('cascade');
             $table->bigInteger('stock');
-            $table->foreignUuid('location_id')->nullable()->constrained('locations')->onUpdate('cascade');
+            $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->timestamps();
         });
     }

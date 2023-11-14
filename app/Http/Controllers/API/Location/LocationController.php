@@ -45,6 +45,7 @@ class LocationController extends Controller
                             ->when($only_parent, function($query) {
                                 $query->whereNull('parent_location_id');
                             })
+                            ->orderby('main', 'DESC')
                             ->orderBy('location', 'ASC');
         
         $result = $paginate ? $location->paginate($limit) : $location->get();
