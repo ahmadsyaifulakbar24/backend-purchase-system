@@ -11,6 +11,7 @@ use App\Http\Resources\Stock\ProductStockResource;
 use App\Models\Location;
 use App\Models\ProductStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductStockController extends Controller
 {
@@ -62,39 +63,44 @@ class ProductStockController extends Controller
             'quantity' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);
-        $item_product_id = $request->item_product_id;
-        $location_id = $request->location_id;
-        $quantity = $request->quantity;
-        $description = $request->description;
 
-        $query_product_stock = ProductStock::where([
-            ['item_product_id', $item_product_id],
-            ['location_id', $location_id],
-        ]);
-
-        if($query_product_stock->count() > 0) {
-            $product_stock = $query_product_stock->first();
-
-            $product_stock->update([
-                'item_product_id' => $item_product_id,
-                'location_id' => $location_id,
-                'stock' => $product_stock->stock + $quantity,
+        $result = DB::transaction(function () use ($request) {
+            $item_product_id = $request->item_product_id;
+            $location_id = $request->location_id;
+            $quantity = $request->quantity;
+            $description = $request->description;
+    
+            $query_product_stock = ProductStock::where([
+                ['item_product_id', $item_product_id],
+                ['location_id', $location_id],
             ]);
-        } else {
-            $product_stock = ProductStock::create([
-                'item_product_id' => $item_product_id,
-                'location_id' => $location_id,
-                'stock' => $quantity,
+    
+            if($query_product_stock->count() > 0) {
+                $product_stock = $query_product_stock->first();
+    
+                $product_stock->update([
+                    'item_product_id' => $item_product_id,
+                    'location_id' => $location_id,
+                    'stock' => $product_stock->stock + $quantity,
+                ]);
+            } else {
+                $product_stock = ProductStock::create([
+                    'item_product_id' => $item_product_id,
+                    'location_id' => $location_id,
+                    'stock' => $quantity,
+                ]);
+            }
+    
+            $product_stock->product_stock_history()->create([
+                'quantity' => $quantity,
+                'description' => $description,
             ]);
-        }
 
-        $product_stock->product_stock_history()->create([
-            'quantity' => $quantity,
-            'description' => $description,
-        ]);
+            return $product_stock;
+        });
 
         return ResponseFormatter::success(
-            new ProductStockDetailResource($product_stock),
+            new ProductStockDetailResource($result),
             'success update product stock data'
         );
     }
@@ -132,11 +138,21 @@ class ProductStockController extends Controller
         );
     }
 
-    public function history(ProductStock $product_stock)
+    public function history(Request $request, ProductStock $product_stock)
     {
-        $product_stock_history = $product_stock->product_stock_history;
+        $request->validate([
+            'limit' => ['nullable', 'integer'],
+            'paginate' => ['nullable', 'in:0,1'],
+        ]);
+        $paginate = $request->input('paginate', 1);
+        $limit = $request->input('limit', 10);
+
+        $product_stock_history = $paginate ? 
+                                $product_stock->product_stock_history()->paginate($limit) :  
+                                $product_stock->product_stock_history;
+
         return ResponseFormatter::success(
-            ProductStockHistoryResource::collection($product_stock_history),
+            ProductStockHistoryResource::collection($product_stock_history)->response()->getData(true),
             'success get prodduct stock history data'
         );
     }
