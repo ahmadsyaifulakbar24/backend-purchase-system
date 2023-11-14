@@ -52,7 +52,7 @@ class PurchaseRequestController extends Controller
 
     public function store(PurchaseRequestRequest $request, PurchaseRequest $purchase_request)
     {
-        $input = $request->except([
+        $input = $request->safe()->except([
             'item_product'
         ]);
 

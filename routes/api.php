@@ -22,6 +22,7 @@ use App\Http\Controllers\API\PurchaseOrder\OutgoingPOContoller;
 use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
 use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\ReadExcel\ReadExcelController;
+use App\Http\Controllers\API\Stock\MorController;
 use App\Http\Controllers\API\Stock\ProductStockController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
@@ -282,5 +283,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('upsert', [ProductStockController::class, 'upsert']);
         Route::get('/show', [ProductStockController::class, 'show']);
         Route::get('/{product_stock:id}/history', [ProductStockController::class, 'history']);
+    });
+
+    Route::prefix('mor')->group(function () {
+        Route::post('/upsert', [MorController::class, 'upsert']);
     });
 });
