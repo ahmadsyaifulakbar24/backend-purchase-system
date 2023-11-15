@@ -50,10 +50,9 @@ class ProductStockController extends Controller
             'item_products.unit_id as unit_id',
             'item_products.price as price',
         )
-        ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
-        // ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
-        //     $join->on('product_stocks.item_product_id', '=', 'item_products.id');
-        // })
+        ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
+            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        })
         ->when($search, function ($query, $search) {
             $query->where(function($sub_query) use ($search) {
                 $sub_query->where('item_products.name', 'like', '%'. $search .'%')
