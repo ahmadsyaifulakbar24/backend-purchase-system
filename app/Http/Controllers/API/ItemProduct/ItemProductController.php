@@ -9,7 +9,6 @@ use App\Imports\CategoryProductPriceImport;
 use App\Imports\ItemProductImport;
 use App\Models\ItemProduct;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
@@ -22,8 +21,10 @@ class ItemProductController extends Controller
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
+            'location_id' => ['nullable', 'exists:locations,id'],
         ]);
         $search = $request->search;
+        $location_id = $request->location_id;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
@@ -32,6 +33,9 @@ class ItemProductController extends Controller
                 $sub_query->where('code', 'like', '%'. $search. '%')
                     ->orWhere('name', 'like', '%'. $search. '%');
             });
+        })
+        ->when($location_id, function ($query, $location_id) {
+            $query->where('location_id', $location_id);
         })
         ->orderBy('name', 'ASC');
         
