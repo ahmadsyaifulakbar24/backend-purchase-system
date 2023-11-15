@@ -31,18 +31,29 @@ class ProductStockController extends Controller
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
-        $query_item_product = ItemProduct::where('location_id', $location_id);
-        $product_stock = ProductStock::select(
+        $sub_query_item_product = ItemProduct::where('location_id', $location_id);
+        $sub_query_product_stock = ProductStock::where('location_id', $location_id);
+
+        $product_stock = DB::table(DB::raw("({$sub_query_product_stock->toSql()}) as product_stocks"))
+        ->mergeBindings($sub_query_product_stock->getQuery())
+        ->select(
             'product_stocks.id as id', 
-            'item_products.id as item_product_id',
             'stock',
             'product_stocks.location_id',
             'product_stocks.updated_at as updated_at',
+
+            'item_products.id as item_product_id',
+            'item_products.code as code',
+            'item_products.name as name',
+            'item_products.brand as brand',
+            'item_products.size as size',
+            'item_products.unit_id as unit_id',
+            'item_products.price as price',
         )
-        // ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
-        ->rightJoinSub($query_item_product, 'item_products', function (JoinClause $join) {
-            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
-        })
+        ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
+        // ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
+        //     $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        // })
         ->when($search, function ($query, $search) {
             $query->where(function($sub_query) use ($search) {
                 $sub_query->where('item_products.name', 'like', '%'. $search .'%')
@@ -53,9 +64,8 @@ class ProductStockController extends Controller
             $query->where('product_stocks.location_id', $location_id)
                 ->orWhereNull('product_stocks.location_id');
         });
-
         $result = $paginate ? $product_stock->paginate($limit) : $product_stock->get();
-
+        
         return ResponseFormatter::success(
             ProductStockResource::collection($result)->response()->getData(true),
             'success get product stock data',
