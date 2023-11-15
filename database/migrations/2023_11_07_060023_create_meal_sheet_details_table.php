@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('prepared_by');
             $table->json('checked_by');
             $table->json('approved_by');
+            $table->json('acknowladge_by')->nullable();
             $table->timestamps();
         });
     }

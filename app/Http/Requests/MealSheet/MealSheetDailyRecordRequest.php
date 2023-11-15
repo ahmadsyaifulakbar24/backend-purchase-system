@@ -52,6 +52,10 @@ class MealSheetDailyRecordRequest extends FormRequest
             'approved_by.name' => ['required', 'string'],
             'approved_by.position' => ['required', 'string'],
 
+            'acknowladge_by' => ['nullable', 'array'],
+            'acknowladge_by.name' => ['required_with:acknowladge_by', 'string'],
+            'acknowladge_by.position' => ['required_with:acknowladge_by', 'string'],
+
             'meal_sheet_record' => ['required', 'array'],
             'meal_sheet_record.*.name' => ['required', 'string'],
             'meal_sheet_record.*.position' => ['required', 'string'],

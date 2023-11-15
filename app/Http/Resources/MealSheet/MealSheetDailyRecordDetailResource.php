@@ -26,6 +26,7 @@ class MealSheetDailyRecordDetailResource extends JsonResource
             'prepared_by' => $this->prepared_by,  
             'checked_by' => $this->checked_by,  
             'approved_by' => $this->approved_by,  
+            'acknowladge_by' => $this->acknowladge_by,  
             'meal_sheet_record' => MealSheetRecordResource::collection($this->meal_sheet_record),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

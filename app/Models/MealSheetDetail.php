@@ -24,13 +24,15 @@ class MealSheetDetail extends Model
         'casual_dinner',
         'prepared_by',
         'checked_by',
-        'approved_by'
+        'approved_by',
+        'acknowladge_by',
     ];
 
     protected $casts = [
         'prepared_by' => 'array',
         'checked_by' => 'array',
         'approved_by' => 'array',
+        'acknowladge_by' => 'array',
     ];
 
     public function createdAt(): Attribute

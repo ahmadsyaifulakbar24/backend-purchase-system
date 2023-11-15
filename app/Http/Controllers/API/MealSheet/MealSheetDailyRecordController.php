@@ -60,6 +60,9 @@ class MealSheetDailyRecordController extends Controller
     {
         $input = $request->safe()->except(['meal_sheet_record']);
         $record = $request->meal_sheet_record;
+        if(empty($request->acknowladge_by)) {
+            $input['acknowladge_by'] = null;
+        }
 
         $result = DB::transaction(function () use ($meal_sheet_detail, $input, $record) {
             $meal_sheet_detail->update($input);
