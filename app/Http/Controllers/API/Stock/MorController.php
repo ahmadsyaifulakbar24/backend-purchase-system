@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API\Stock;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\MorRequest;
+use App\Http\Resources\Stock\MorDailyResource;
+use App\Http\Resources\Stock\MorResource;
 use App\Models\Mor;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
@@ -13,9 +15,62 @@ use Illuminate\Support\Facades\DB;
 
 class MorController extends Controller
 {
+    public function daily (Request $request)
+    {
+        $request->validate([
+            'location_id' => ['required', 'exists:locations,id'],
+            'limit' => ['nullable', 'integer'],
+            'paginate' => ['nullable', 'in:0,1'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date'],
+        ]);
+        $location_id = $request->location_id;
+        $paginate = $request->input('paginate', 1);
+        $limit = $request->input('limit', 10);
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+
+        
+        $mor_daily = Mor::where('location_id', $location_id)
+                        ->when($start_date, function ($query, $start_date) {
+                            $query->where('date', '>=', $start_date);
+                        })
+                        ->when($end_date, function ($query, $end_date) {
+                            $query->where('date', '<=', $end_date);
+                        })
+                        ->groupBy('date');
+
+        $result = $paginate ? $mor_daily->paginate($limit) : $mor_daily->get();
+        return ResponseFormatter::success(
+            MorDailyResource::collection($result)->response()->getData(true),
+            'success get mor daily data'
+        );
+    }
+
     public function get (Request $request)
     {
+        $request->validate([
+            'location_id' => ['required', 'exists:locations,id'],
+            'date' => ['required', 'date'],
+            'limit' => ['nullable', 'integer'],
+            'paginate' => ['nullable', 'in:0,1'],
+        ]);
+        $location_id = $request->location_id;
+        $date = $request->date;
+        $paginate = $request->input('paginate', 1);
+        $limit = $request->input('limit', 10);
 
+        $mor = Mor::where([
+                        ['location_id', $location_id],
+                        ['date', $date]
+                    ]);
+
+        $result = $paginate ? $mor->paginate($limit) : $mor->get();
+        
+        return ResponseFormatter::success(
+            MorResource::collection($result)->response()->getData(true),
+            'success get mor data'
+        );
     }
 
     public function upsert(MorRequest $request)

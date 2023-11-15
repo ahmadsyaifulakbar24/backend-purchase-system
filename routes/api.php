@@ -286,6 +286,8 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('mor')->group(function () {
+        Route::get('/daily', [MorController::class, 'daily']);
+        Route::get('/', [MorController::class, 'get']);
         Route::post('/upsert', [MorController::class, 'upsert']);
     });
 });
