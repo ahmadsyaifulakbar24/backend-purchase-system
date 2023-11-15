@@ -135,14 +135,34 @@ class ProductStockController extends Controller
         $item_product_id = $request->item_product_id;
         $location_id = $request->location_id;
 
-        $product_stock = ProductStock::select(
+        $sub_query_item_product = ItemProduct::where('location_id', $location_id);
+        $sub_query_product_stock = ProductStock::where('location_id', $location_id);
+
+        $product_stock = DB::table(DB::raw("({$sub_query_product_stock->toSql()}) as product_stocks"))
+        ->mergeBindings($sub_query_product_stock->getQuery())
+        ->select(
             'product_stocks.id as id', 
-            'item_products.id as item_product_id',
             'stock',
             'product_stocks.location_id',
             'product_stocks.updated_at as updated_at',
+
+            'item_products.id as item_product_id',
+            'item_products.code as code',
+            'item_products.name as name',
+            'item_products.item_category_id as item_category_id',
+            'item_products.sub_item_category_id as sub_item_category_id',
+            'item_products.brand as brand',
+            'item_products.description as description',
+            'item_products.size as size',
+            'item_products.unit_id as unit_id',
+            'item_products.tax as tax',
+            'item_products.location_id as location_id',
+            'item_products.supplier_id as supplier_id',
+            'item_products.price as price',
         )
-        ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
+        ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
+            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        })
         ->where(function ($query) use ($location_id) {
             $query->where('product_stocks.location_id', $location_id)
                 ->orWhereNull('product_stocks.location_id');
@@ -150,13 +170,19 @@ class ProductStockController extends Controller
         ->where('item_products.id', $item_product_id)
         ->first();
 
-        return ResponseFormatter::success(
-            [
-                'product_stock' => new ProductStockDetailResource($product_stock),
-                'location' => new LocationResource(Location::find($location_id)),
-            ],
-            'success show product stock data',
-        );
+        if(!empty($product_stock)) {
+            return ResponseFormatter::success(
+                [
+                    'product_stock' => new ProductStockDetailResource($product_stock),
+                    'location' => new LocationResource(Location::find($location_id)),
+                ],
+                'success show product stock data',
+            );
+        } else {
+            return ResponseFormatter::errorValidation([
+                'item_product' => ['item product not found']
+            ], 'show product stock failed', 404);
+        }
     }
 
     public function history(Request $request, ProductStock $product_stock)
