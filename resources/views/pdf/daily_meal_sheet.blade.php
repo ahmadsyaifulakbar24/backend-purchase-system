@@ -116,7 +116,7 @@
 </head>
 
 <body>
-    <table class="tg" style="width: 700px;">
+    <table class="tg" style="width: 700px;" >
         <thead>
             <tr>
                 <th class="tg-c3ow" colspan="10">
@@ -211,27 +211,43 @@
                         <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->prepared_by['position'] }}</p>
                     </div>
                 </td>
-                <td colspan="2" style="border-top: none; border-right: none; border-left: none;">
+                <td colspan="{{ !empty($meal_sheet_detail->acknowladge_by) ? 2 : 4 }}" 
+                    style="
+                        border-top: none; 
+                        border-right: none; 
+                        border-left: none; 
+                        {{ !empty($meal_sheet_detail->acknowladge_by) ? 'padding-right: 50px;' : '' }}
+                    "
+                >
                     <div style="min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Checked By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_detail->checked_by['name'] }}</p>
                         <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->checked_by['position'] }}</p>
                     </div>
                 </td>
-                <td colspan="4" style="border-top: none; border-right: none; border-left: none;">
+                <td colspan="{{ !empty($meal_sheet_detail->acknowladge_by) ? 2 : 4 }}" 
+                    style="
+                        border-top: none; 
+                        border-left: none; 
+                        padding-left: 35px;
+                        {{ !empty($meal_sheet_detail->acknowladge_by) ? 'border-right: none;' : '' }}
+                    "
+                >
                     <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -15px;">
                         <p>Approved By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_detail->approved_by['name'] }}</p>
                         <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->approved_by['position'] }}</p>
                     </div>
                 </td>
-                <td colspan="2" style="border-top: none; border-left: none;">
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
-                        <p>Acknowledge By,</p>
-                        <p style="margin-top: 60px;">Name</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">Position</p>
-                    </div>
-                </td>
+                @if(!empty($meal_sheet_detail->acknowladge_by))
+                    <td colspan="4" style="border-top: none; border-left: none;">
+                        <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                            <p>Acknowledge By,</p>
+                            <p style="margin-top: 60px;">{{ $meal_sheet_detail->acknowladge_by['name'] }}</p>
+                            <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->acknowladge_by['position'] }}</p>
+                        </div>
+                    </td>
+                @endif
             </tr>
             <tr style="line-height: 10px; padding: 0;">
                 <td colspan="10" style="text-align: center; background-color: #bcbcbc;">
