@@ -8,9 +8,11 @@ use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Stock\ProductStockDetailResource;
 use App\Http\Resources\Stock\ProductStockHistoryResource;
 use App\Http\Resources\Stock\ProductStockResource;
+use App\Models\ItemProduct;
 use App\Models\Location;
 use App\Models\ProductStock;
 use App\Repository\ProductStockRepository;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +31,7 @@ class ProductStockController extends Controller
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
+        $query_item_product = ItemProduct::where('location_id', $location_id);
         $product_stock = ProductStock::select(
             'product_stocks.id as id', 
             'item_products.id as item_product_id',
@@ -36,7 +39,10 @@ class ProductStockController extends Controller
             'product_stocks.location_id',
             'product_stocks.updated_at as updated_at',
         )
-        ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
+        // ->rightJoin('item_products', 'product_stocks.item_product_id', 'item_products.id')
+        ->rightJoinSub($query_item_product, 'item_products', function (JoinClause $join) {
+            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        })
         ->when($search, function ($query, $search) {
             $query->where(function($sub_query) use ($search) {
                 $sub_query->where('item_products.name', 'like', '%'. $search .'%')
