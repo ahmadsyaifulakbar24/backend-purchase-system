@@ -10,6 +10,7 @@ use App\Http\Resources\Stock\ProductStockHistoryResource;
 use App\Http\Resources\Stock\ProductStockResource;
 use App\Models\Location;
 use App\Models\ProductStock;
+use App\Repository\ProductStockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -64,45 +65,50 @@ class ProductStockController extends Controller
             'description' => ['required', 'string'],
         ]);
 
-        $result = DB::transaction(function () use ($request) {
-            $item_product_id = $request->item_product_id;
-            $location_id = $request->location_id;
-            $quantity = $request->quantity;
-            $description = $request->description;
-    
-            $query_product_stock = ProductStock::where([
-                ['item_product_id', $item_product_id],
-                ['location_id', $location_id],
-            ]);
-    
-            if($query_product_stock->count() > 0) {
-                $product_stock = $query_product_stock->first();
-    
-                $product_stock->update([
+        try {
+            DB::beginTransaction();
+            $result = DB::transaction(function () use ($request) {
+                $item_product_id = $request->item_product_id;
+                $location_id = $request->location_id;
+                $quantity = $request->quantity;
+                $description = $request->description;
+        
+                $data = [
                     'item_product_id' => $item_product_id,
-                    'location_id' => $location_id,
-                    'stock' => $product_stock->stock + $quantity,
-                ]);
-            } else {
-                $product_stock = ProductStock::create([
-                    'item_product_id' => $item_product_id,
-                    'location_id' => $location_id,
-                    'stock' => $quantity,
-                ]);
-            }
+                    'location_id'  => $location_id,
+                    'quantity'  => $quantity,
+                    'description'  => $description,
+                ];
+                
+                
+                $product_stock = ProductStockRepository::find($data);
+        
+                if(!empty($product_stock)) {
+                    $data['stock'] = $product_stock->stock + $quantity;
+                } else {
+                    $data['stock'] = $quantity;
+                }
     
-            $product_stock->product_stock_history()->create([
-                'quantity' => $quantity,
-                'description' => $description,
-            ]);
+                $new_product_stock = ProductStockRepository::upsertProductStock($data, $product_stock);
+    
+                return $new_product_stock;
+            });
+            
+            DB::commit();
+            
+            return ResponseFormatter::success(
+                new ProductStockDetailResource($result),
+                'success update product stock data'
+            );
 
-            return $product_stock;
-        });
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        return ResponseFormatter::success(
-            new ProductStockDetailResource($result),
-            'success update product stock data'
-        );
+            return ResponseFormatter::errorValidation([
+                'product_stock' => [$e->getMessage()],
+            ], 'upsert product stock success');
+        }
+        
     }
 
     public function show(Request $request)
@@ -147,12 +153,11 @@ class ProductStockController extends Controller
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
-        $product_stock_history = $paginate ? 
-                                $product_stock->product_stock_history()->paginate($limit) :  
-                                $product_stock->product_stock_history;
+        $product_stock_history = $product_stock->product_stock_history()->orderBy('created_at', 'DESC');
+        $result = $paginate ? $product_stock_history->paginate($limit) : $product_stock_history->get();
 
         return ResponseFormatter::success(
-            ProductStockHistoryResource::collection($product_stock_history)->response()->getData(true),
+            ProductStockHistoryResource::collection($result)->response()->getData(true),
             'success get prodduct stock history data'
         );
     }
