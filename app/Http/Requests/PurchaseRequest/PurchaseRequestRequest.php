@@ -27,6 +27,7 @@ class PurchaseRequestRequest extends FormRequest
             'shipment_date' => ['required', 'date'],
             'description' => ['nullable', 'string'],
             'prepared_by' => ['required', 'exists:users,id'],
+            'checked_by' => ['required', 'exists:users,id'],
             'approved1_by' => ['required', 'exists:users,id'],
             'approved2_by' => ['required', 'exists:users,id'],
 
