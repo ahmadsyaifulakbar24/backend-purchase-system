@@ -8,6 +8,7 @@ use App\Http\Requests\Stock\MorRequest;
 use App\Http\Resources\Stock\MorDailyResource;
 use App\Http\Resources\Stock\MorResource;
 use App\Models\Mor;
+use App\Repository\ProductStockRepository;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -83,18 +84,47 @@ class MorController extends Controller
                 $location_id = $request->location_id;
             
                 foreach ($item_products as $item_product) {
+                    $quantity = intval(-$item_product['quantity']);
+
                     $mor = Mor::where([
                         ['location_id', $location_id],
                         ['item_product_id', $item_product['item_product_id']],
                         ['date', $item_product['date']],
                     ])->first();
         
-                    if (!empty($mor)) {
-                        throw new \Exception('data with these location, item product, and date already exists');
+                    $data = [
+                        'item_product_id' => $item_product['item_product_id'],
+                        'location_id' => $location_id,
+                        'quantity' => $quantity,
+                        'description'  => 'Update From MOR',
+                    ];
+
+                    // perhitungan stock
+                    $product_stock = ProductStockRepository::find($data);
+                    if(!empty($product_stock)) {
+                        $data['stock'] = $product_stock->stock + $quantity;
+                    } else {
+                        $data['stock'] = $quantity;
                     }
+
+                    if (!empty($mor)) {
+                        // throw new \Exception('data with these location, item product, and date already exists');
+
+                        $data['stock'] = $product_stock->stock + $mor->quantity + $quantity;
+                        $data['description']  = 'Edit Quantity MOR from ' . $mor->quantity . ' to ' . $item_product['quantity'];
+
+                        $mor->update([
+                            'quantity' => $item_product['quantity'],
+                            'item_price' => $item_product['item_price']
+                        ]);
+                    } else {
+                        $input = Arr::prepend($item_product, $location_id, 'location_id');
+                        Mor::create($input);
+                    }
+
+                    ProductStockRepository::upsertProductStock($data, $product_stock);
         
-                    $input = Arr::prepend($item_product, $location_id, 'location_id');
-                    Mor::create($input);
+
                 }
                 
                 return ResponseFormatter::success(
