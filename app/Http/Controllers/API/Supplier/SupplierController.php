@@ -30,7 +30,7 @@ class SupplierController extends Controller
                                         ->orWhere('code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('created_at', 'DESC');
+                            ->orderBy('code', 'DESC');
             
         $result = $paginate ? $supplier->paginate($limit) : $supplier->get();
 

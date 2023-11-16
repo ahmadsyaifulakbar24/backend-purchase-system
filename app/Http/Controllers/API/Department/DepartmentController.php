@@ -29,7 +29,7 @@ class DepartmentController extends Controller
                                         ->orWhere('department_code', 'like', '%'. $search. '%');
                                 });
                             })
-                            ->orderBy('department', 'ASC');
+                            ->orderBy('department_code', 'ASC');
                             
         $result = $paginate ? $department->paginate($limit) : $department->get();
 

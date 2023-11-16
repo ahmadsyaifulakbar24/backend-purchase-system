@@ -37,7 +37,7 @@ class ItemProductController extends Controller
         ->when($location_id, function ($query, $location_id) {
             $query->where('location_id', $location_id);
         })
-        ->orderBy('name', 'ASC');
+        ->orderBy('code', 'ASC');
         
         $result = $paginate ? $item_product->paginate($limit) : $item_product->get();
 
