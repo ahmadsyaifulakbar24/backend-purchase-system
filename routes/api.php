@@ -156,81 +156,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('meal-sheet-record', [ReadExcelController::class, 'meal_sheet_record']);
     });
 
-    Route::prefix('quotation')->group(function () {
-        Route::get('/', [QuotationController::class, 'get']);
-        Route::post('/', [QuotationController::class, 'store']);
-        Route::get('/{quotation:id}', [QuotationController::class, 'show']);
-        Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
-        Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
-        Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
-        Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
-
-    });
-
-    Route::prefix('purchase-request')->group(function () {
-        Route::get('/', [PurchaseRequestController::class, 'get']);
-        Route::post('/', [PurchaseRequestController::class, 'store']);
-        Route::get('/{purchase_request:id}', [PurchaseRequestController::class, 'show']);
-        Route::patch('/{purchase_request:id}', [PurchaseRequestController::class, 'update']);
-        Route::patch('/{purchase_request:id}/update-approval-status', [PurchaseRequestController::class, 'update_approval_status']);
-        Route::patch('/{purchase_request:id}/update-status', [PurchaseRequestController::class, 'update_status']);
-        Route::delete('/{purchase_request:id}', [PurchaseRequestController::class, 'destroy']);
-    });
-
-    Route::prefix('incoming-po')->group(function () {
-        Route::get('/', [IncomingPOController::class, 'get']);
-        Route::post('/', [IncomingPOController::class, 'store']);
-        Route::get('/{incoming_po:id}', [IncomingPOController::class, 'show']);
-        Route::patch('/{incoming_po:id}', [IncomingPOController::class, 'update']);
-        Route::delete('/{incoming_po:id}', [IncomingPOController::class, 'destroy']);
-    });
-
-    Route::prefix('catering-po')->group(function () {
-        Route::get('/', [CateringPOController::class, 'get']);
-        Route::post('/', [CateringPOController::class, 'store']);
-        Route::get('/{catering_po:id}', [CateringPOController::class, 'show']);
-        Route::patch('/{catering_po:id}', [CateringPOController::class, 'update']);
-        Route::patch('/{catering_po:id}/update-approval-status', [CateringPOController::class, 'update_approval_status']);
-        Route::patch('/{catering_po:id}/update-status', [CateringPOController::class, 'update_status']);
-        Route::delete('/{catering_po:id}', [CateringPOController::class, 'destroy']);
-    });
-
-    Route::prefix('outgoing-po')->group(function () {
-        Route::get('/', [OutgoingPOContoller::class, 'get']);
-        Route::post('/', [OutgoingPOContoller::class, 'store']);
-        Route::get('/{outgoing_po:id}', [OutgoingPOContoller::class, 'show']);
-        Route::patch('/{outgoing_po:id}', [OutgoingPOContoller::class, 'update']);
-        Route::patch('/{outgoing_po:id}/update-approval-status', [OutgoingPOContoller::class, 'update_approval_status']);
-        Route::patch('/{outgoing_po:id}/update-status', [OutgoingPOContoller::class, 'update_status']);
-        Route::delete('/{outgoing_po:id}', [OutgoingPOContoller::class, 'destroy']);
-    });
-
-    Route::prefix('incoming-do')->group(function () {
-        Route::get('/', [IncomingDOController::class, 'get']);
-        Route::post('/', [IncomingDOController::class, 'store']);
-        Route::get('/{incoming_do:id}', [IncomingDOController::class, 'show']);
-        Route::patch('/{incoming_do:id}', [IncomingDOController::class, 'update']);
-        Route::delete('/{incoming_do:id}', [IncomingDOController::class, 'destroy']);
-    });
-
-    Route::prefix('catering-do')->group(function () {
-        Route::get('/', [CateringDOController::class, 'get']);
-        Route::post('/', [CateringDOController::class, 'store']);
-        Route::get('/{catering_do:id}', [CateringDOController::class, 'show']);
-        Route::patch('/{catering_do:id}', [CateringDOController::class, 'update']);
-        Route::patch('/{catering_do:id}/update-approval-status', [CateringDOController::class, 'update_approval_status']);
-        Route::patch('/{catering_do:id}/update-status', [CateringDOController::class, 'update_status']);
-        Route::delete('/{catering_do:id}', [CateringDOController::class, 'destroy']);
-    });
-
-    Route::prefix('outgoing-do')->group(function () {
-        Route::get('/', [OutgoingDOController::class, 'get']);
-        Route::post('/', [OutgoingDOController::class, 'store']);
-        Route::get('/{outgoing_do:id}', [OutgoingDOController::class, 'show']);
-        Route::patch('/{outgoing_do:id}', [OutgoingDOController::class, 'update']);
-        Route::delete('/{outgoing_do:id}', [OutgoingDOController::class, 'destroy']);
-    });
-
     Route::prefix('client')->group(function () {
         Route::get('/', [ClientController::class, 'get']);
         Route::post('/', [ClientController::class, 'store']);
@@ -241,7 +166,6 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('meal-sheet')->group(function () {
-
         Route::prefix('group')->group(function () {
             Route::get('/', [MealSheetGroupController::class, 'get']);
             Route::post('/', [MealSheetGroupController::class, 'store']);
