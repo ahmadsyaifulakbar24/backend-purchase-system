@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\InternalOrder;
+namespace App\Http\Resources\InternalOrder\PRCatering;
 
 use App\Http\Resources\File\FileResource;
 use App\Http\Resources\Location\LocationResource;
