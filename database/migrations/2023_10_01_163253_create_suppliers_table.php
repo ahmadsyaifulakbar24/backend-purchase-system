@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('address');
             $table->string('email');
             $table->string('phone');
+            $table->boolean('main')->default('0');
             $table->timestamps();
         });
     }

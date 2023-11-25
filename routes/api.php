@@ -8,6 +8,7 @@ use App\Http\Controllers\API\DeliveryOrder\OutgoingDOController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\File\FileController;
+use App\Http\Controllers\API\InternalOrder\PRCateringController;
 use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
@@ -163,6 +164,16 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{client:id}', [ClientController::class, 'show']);
         Route::patch('/{client:id}', [ClientController::class, 'update']);
         Route::delete('/{client:id}', [ClientController::class, 'destroy']);
+    });
+
+
+    // purchasing menu
+    Route::prefix('pr-catering')->group(function () {
+        Route::get('/', [PRCateringController::class, 'get']);
+        Route::post('/', [PRCateringController::class, 'store']);
+        Route::get('/{pr_catering:id}', [PRCateringController::class, 'show']);
+        Route::patch('/{pr_catering:id}', [PRCateringController::class, 'update']);
+        Route::delete('/{pr_catering:id}', [PRCateringController::class, 'destroy']);
     });
 
     Route::prefix('meal-sheet')->group(function () {
