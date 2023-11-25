@@ -19,8 +19,8 @@ class PRCateringResource extends JsonResource
             'id' => $this->id,
             'pr_number' => $this->pr_number,
             'location' => new LocationResource($this->location),
-            'pr_date' => $this->pr_date,
-            'shipment_date' => $this->shipment_date,
+            'request_date' => $this->request_date,
+            'delivery_date' => $this->delivery_date,
             'prepared_by' => [
                 'id' => $this->prepared_by_data->id,
                 'name' => $this->prepared_by_data->name,

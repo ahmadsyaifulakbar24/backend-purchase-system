@@ -19,15 +19,15 @@ class PRCatering extends Model
         'serial_number',
         'pr_number',
         'location_id',
-        'pr_date',
-        'shipment_date',
+        'request_date',
+        'delivery_date',
         'description',
         'prepared_by',
     ];
 
     protected $casts = [
-        'pr_date' => 'date',
-        'shipment_date' => 'date',
+        'request_date' => 'date',
+        'delivery_date' => 'date',
     ];
 
     public function createdAt(): Attribute
@@ -52,7 +52,7 @@ class PRCatering extends Model
         );
     }
 
-    public function prDate(): Attribute
+    public function requestDate(): Attribute
     {
         return Attribute::make(
             get: function($value) {
@@ -63,7 +63,7 @@ class PRCatering extends Model
         );
     }
 
-    public function shipmentDate(): Attribute
+    public function deliveryDate(): Attribute
     {
         return Attribute::make(
             get: function($value) {

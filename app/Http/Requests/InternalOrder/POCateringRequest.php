@@ -4,7 +4,7 @@ namespace App\Http\Requests\InternalOrder;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PRCateringRequest extends FormRequest
+class POCateringRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,14 @@ class PRCateringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'location_id' => ['required', 'exists:locations,id'],
-            'request_date' => ['required', 'date'],
-            'delivery_date' => ['required', 'date'],
-            'description' => ['nullable', 'string'],
+            'pr_catering_id' => ['required', 'exists:pr_caterings,id'],
+            'discount_id' => ['required', 'exists:discounts,id'],
+            'term_condition' => ['required', 'string'],
+            'term_payment' => ['required', 'string'],
             'prepared_by' => ['required', 'exists:users,id'],
+            'checked_by' => ['required', 'exists:users,id'],
+            'approved1_by' => ['required', 'exists:users,id'],
+            'approved2_by' => ['required', 'exists:users,id'],
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],

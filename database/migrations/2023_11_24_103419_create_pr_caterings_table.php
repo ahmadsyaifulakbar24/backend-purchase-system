@@ -16,8 +16,8 @@ return new class extends Migration
             $table->bigInteger('serial_number');
             $table->string('pr_number')->unique();
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
-            $table->date('pr_date');
-            $table->date('shipment_date');
+            $table->date('request_date');
+            $table->date('delivery_date');
             $table->text('description')->nullable();
             $table->foreignUuid('prepared_by')->constrained('users')->onUpdate('cascade');
             $table->timestamps();

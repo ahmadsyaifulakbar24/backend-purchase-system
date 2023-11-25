@@ -2,12 +2,10 @@
 
 use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
-use App\Http\Controllers\API\DeliveryOrder\CateringDOController;
-use App\Http\Controllers\API\DeliveryOrder\IncomingDOController;
-use App\Http\Controllers\API\DeliveryOrder\OutgoingDOController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\File\FileController;
+use App\Http\Controllers\API\InternalOrder\POCateringController;
 use App\Http\Controllers\API\InternalOrder\PRCateringController;
 use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
@@ -17,11 +15,6 @@ use App\Http\Controllers\API\MealSheet\MealSheetDailyRecordController;
 use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
 use App\Http\Controllers\API\MealSheet\MealSheetMonthlyController;
 use App\Http\Controllers\API\Param\ParamController;
-use App\Http\Controllers\API\PurchaseOrder\CateringPOController;
-use App\Http\Controllers\API\PurchaseOrder\IncomingPOController;
-use App\Http\Controllers\API\PurchaseOrder\OutgoingPOContoller;
-use App\Http\Controllers\API\PurchaseRequest\PurchaseRequestController;
-use App\Http\Controllers\API\Quotation\QuotationController;
 use App\Http\Controllers\API\ReadExcel\ReadExcelController;
 use App\Http\Controllers\API\Stock\MorController;
 use App\Http\Controllers\API\Stock\ProductStockController;
@@ -175,6 +168,18 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{pr_catering:id}', [PRCateringController::class, 'update']);
         Route::delete('/{pr_catering:id}', [PRCateringController::class, 'destroy']);
     });
+
+    Route::prefix('po-catering')->group(function () {
+        Route::get('/', [POCateringController::class, 'get']);
+        Route::post('/', [POCateringController::class, 'store']);
+        Route::get('/{po_catering:id}', [POCateringController::class, 'show']);
+        Route::patch('/{po_catering:id}', [POCateringController::class, 'update']);
+        Route::patch('/{po_catering:id}/update-status', [POCateringController::class, 'update_status']);
+        Route::patch('/{po_catering:id}/update-approval-status', [POCateringController::class, 'update_approval_status']);
+        Route::delete('/{po_catering:id}', [POCateringController::class, 'destroy']);
+    });
+
+    // end purchasing menu
 
     Route::prefix('meal-sheet')->group(function () {
         Route::prefix('group')->group(function () {
