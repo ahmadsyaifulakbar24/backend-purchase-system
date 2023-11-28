@@ -45,7 +45,7 @@ class ItemCategoryController extends Controller
                             ->when($only_parent, function($query) {
                                 $query->whereNull('parent_category_id');
                             })
-                            ->orderBy('category_id', 'ASC');
+                            ->orderBy('category_code', 'ASC');
                         
         $result = $paginate ? $item_category->paginate($limit) : $item_category->get();
 
