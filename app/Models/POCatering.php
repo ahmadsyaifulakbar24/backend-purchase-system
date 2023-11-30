@@ -35,8 +35,6 @@ class POCatering extends Model
     ];
 
     protected $casts = [
-        'request_date' => 'date',
-        'delivery_date' => 'date',
         'checked_date' => 'date', 
         'approved1_date' => 'date',  
         'approved2_date' => 'date',  

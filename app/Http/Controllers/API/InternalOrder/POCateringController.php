@@ -57,7 +57,7 @@ class POCateringController extends Controller
 
         $last_number = $this->last_number();
         $input['serial_number'] = $last_number;
-        $input['po_number'] = $last_number .'/SBL/PRC/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input['po_number'] = $last_number .'/SBL/POC/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
         $input['status'] = 'draft';
 
         // database transaction for po catering and item data
