@@ -21,12 +21,15 @@ class POSupplierCateringDetailResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'po_catering' => [
-                'id' => $this->po_catering->id,
-                'po_number' => $this->po_catering->po_number,
+            'pr_catering' => [
+                'id' => $this->po_catering->pr_catering->id,
                 'request_date' => $this->po_catering->pr_catering->request_date,
                 'delivery_date' => $this->po_catering->pr_catering->delivery_date,
                 'location' => new LocationResource($this->po_catering->pr_catering->location),
+            ],
+            'po_catering' => [
+                'id' => $this->po_catering->id,
+                'po_number' => $this->po_catering->po_number,
             ],
             'po_number' => $this->po_number,
             'supplier' => new SupplierResource($this->supplier),

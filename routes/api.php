@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\File\FileController;
+use App\Http\Controllers\API\InternalOrder\DOCateringController;
 use App\Http\Controllers\API\InternalOrder\POCateringController;
 use App\Http\Controllers\API\InternalOrder\POSupplierCateringController;
 use App\Http\Controllers\API\InternalOrder\PRCateringController;
@@ -188,6 +189,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::patch('/{po_supplier_catering:id}/update-status', [POSupplierCateringController::class, 'update_status']);
         Route::patch('/{po_supplier_catering:id}/update-approval-status', [POSupplierCateringController::class, 'update_approval_status']);
         Route::delete('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'destroy']);
+    });
+
+    Route::prefix('do-catering')->group(function () {
+        Route::get('/', [DOCateringController::class, 'get']);
+        Route::post('/', [DOCateringController::class, 'store']);
+        Route::get('/{do_catering:id}', [DOCateringController::class, 'show']);
+        Route::patch('/{do_catering:id}', [DOCateringController::class, 'update']);
+        Route::delete('/{do_catering:id}', [DOCateringController::class, 'destroy']);
     });
 
     // end purchasing menu

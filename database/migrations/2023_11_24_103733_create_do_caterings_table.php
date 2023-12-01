@@ -12,7 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('do_caterings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('created_by')->constrained('users')->onUpdate('cascade');
+            $table->foreignUuid('po_supplier_catering_id')->constrained('po_supplier_caterings')->onUpdate('cascade');
+            $table->bigInteger('serial_number');
+            $table->string('do_number')->unique();
             $table->timestamps();
         });
     }
