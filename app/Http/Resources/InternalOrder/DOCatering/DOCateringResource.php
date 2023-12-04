@@ -39,6 +39,7 @@ class DOCateringResource extends JsonResource
                 'status' => $this->po_supplier_catering->status,
             ],
             'do_number' => $this->do_number,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
