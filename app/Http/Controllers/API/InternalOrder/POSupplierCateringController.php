@@ -5,7 +5,8 @@ namespace App\Http\Controllers\API\InternalOrder;
 use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InternalOrder\POSupplierCateringRequest;
+use App\Http\Requests\InternalOrder\POSupplierCatering\POSupplierCateringRequest;
+use App\Http\Requests\InternalOrder\POSupplierCatering\POSupplierCateringUpdateRequest;
 use App\Http\Resources\InternalOrder\POSupplierCatering\POSupplierCateringDetailResource;
 use App\Http\Resources\InternalOrder\POSupplierCatering\POSupplierCateringResource;
 use App\Models\DOCatering;
@@ -95,7 +96,7 @@ class POSupplierCateringController extends Controller
         );
     }    
 
-    public function update(POSupplierCateringRequest $request, POSupplierCatering $po_supplier_catering)
+    public function update(POSupplierCateringUpdateRequest $request, POSupplierCatering $po_supplier_catering)
     {
         $input = $request->except([
             'item_product'

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\InternalOrder;
+namespace App\Http\Requests\InternalOrder\POSupplierCatering;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -29,7 +29,13 @@ class POSupplierCateringRequest extends FormRequest
                     return $query->where('status', 'finish');
                 })
             ],
-            'supplier_id' => ['required', 'exists:suppliers,id'],
+            'supplier_id' => [
+                'required', 
+                'exists:suppliers,id',
+                Rule::unique('po_supplier_caterings', 'supplier_id')->where(function($query) {
+                    $query->where('po_catering_id', $this->po_catering_id);
+                })
+            ],
             'discount_id' => ['required', 'exists:discounts,id'],
             'term_condition' => ['required', 'string'],
             'status' => ['required', 'in:draft,submit'],
