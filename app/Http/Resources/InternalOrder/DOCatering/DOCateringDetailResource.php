@@ -37,6 +37,8 @@ class DOCateringDetailResource extends JsonResource
                 'id' => $this->po_supplier_catering->id,
                 'po_number' => $this->po_supplier_catering->po_number,
                 'supplier' => new SupplierResource($this->po_supplier_catering->supplier),
+                'discount' => new DiscountResource($this->po_supplier_catering->discount),
+                'term_condition' => $this->po_supplier_catering->term_condition,
                 'status' => $this->po_supplier_catering->status,
             ],
             'do_number' => $this->do_number,
