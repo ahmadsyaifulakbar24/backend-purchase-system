@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class POSupplierCatering extends Model
 {
@@ -22,20 +23,7 @@ class POSupplierCatering extends Model
         'supplier_id',
         'discount_id',
         'term_condition',
-        'checked_by',
-        'approved1_by',
-        'approved2_by',
-        'checked_date',
-        'approved1_date',
-        'approved2_date',
         'status',
-        'note',
-    ];
-
-    protected $casts = [
-        'checked_date' => 'date', 
-        'approved1_date' => 'date',  
-        'approved2_date' => 'date',  
     ];
 
     public function createdAt(): Attribute
@@ -60,54 +48,14 @@ class POSupplierCatering extends Model
         );
     }
 
-    public function checkedDate(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if(!empty($value)) {
-                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
-                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-                    return $date_timezone;
-                } else {
-                    return $value;
-                }
-            },
-        );
-    }
-
-    public function approved1Date(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if(!empty($value)) {
-                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
-                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-                    return $date_timezone;
-                } else {
-                    return $value;
-                }
-            },
-        );
-    }
-
-    public function approved2Date(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                if(!empty($value)) {
-                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
-                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
-                    return $date_timezone;
-                } else {
-                    return $value;
-                }
-            },
-        );
-    }
-
     public function po_catering(): BelongsTo
     {
         return $this->belongsTo(POCatering::class, 'po_catering_id');
+    }
+
+    public function do_catering(): HasOne
+    {
+        return $this->hasOne(DOCatering::class, 'po_supplier_catering_id');
     }
 
     public function supplier(): BelongsTo
@@ -122,21 +70,6 @@ class POSupplierCatering extends Model
     public function created_by_data(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function checked_by_data(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'checked_by');
-    }
-
-    public function approved1_by_data(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'approved1_by');
-    }
-
-    public function approved2_by_data(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'approved2_by');
     }
 
     public function item_product(): HasMany

@@ -187,16 +187,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'show']);
         Route::patch('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'update']);
         Route::patch('/{po_supplier_catering:id}/update-status', [POSupplierCateringController::class, 'update_status']);
-        Route::patch('/{po_supplier_catering:id}/update-approval-status', [POSupplierCateringController::class, 'update_approval_status']);
         Route::delete('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'destroy']);
     });
 
     Route::prefix('do-catering')->group(function () {
         Route::get('/', [DOCateringController::class, 'get']);
-        Route::post('/', [DOCateringController::class, 'store']);
         Route::get('/{do_catering:id}', [DOCateringController::class, 'show']);
+        Route::patch('/{do_catering:id}/update-status', [DOCateringController::class, 'update_status']);
         Route::patch('/{do_catering:id}', [DOCateringController::class, 'update']);
-        Route::delete('/{do_catering:id}', [DOCateringController::class, 'destroy']);
     });
 
     // end purchasing menu

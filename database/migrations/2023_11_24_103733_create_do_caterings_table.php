@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignUuid('po_supplier_catering_id')->constrained('po_supplier_caterings')->onUpdate('cascade');
             $table->bigInteger('serial_number');
             $table->string('do_number')->unique();
+            $table->enum('status', ['draft', 'submit']);
             $table->timestamps();
         });
     }

@@ -20,14 +20,7 @@ return new class extends Migration
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
             $table->foreignUuid('discount_id')->constrained('discounts')->onUpdate('cascade');
             $table->text('term_condition');
-            $table->foreignUuid('checked_by')->constrained('users')->onUpdate('cascade');
-            $table->foreignUuid('approved1_by')->constrained('users')->onUpdate('cascade');
-            $table->foreignUuid('approved2_by')->constrained('users')->onUpdate('cascade');
-            $table->date('checked_date')->nullable();
-            $table->date('approved1_date')->nullable();
-            $table->date('approved2_date')->nullable();
-            $table->enum('status', ['draft', 'submit', 'reject', 'finish']);
-            $table->text('note')->nullable();
+            $table->enum('status', ['draft', 'submit']);
             $table->timestamps();
         });
     }

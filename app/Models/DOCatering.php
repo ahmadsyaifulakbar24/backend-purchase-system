@@ -19,7 +19,8 @@ class DOCatering extends Model
         'created_by',
         'po_supplier_catering_id',
         'serial_number',
-        'do_number'
+        'do_number',
+        'status',
     ];
 
     public function createdAt(): Attribute

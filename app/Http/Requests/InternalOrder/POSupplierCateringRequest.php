@@ -26,15 +26,13 @@ class POSupplierCateringRequest extends FormRequest
             'po_catering_id' => [
                 'required', 
                 Rule::exists('po_caterings', 'id')->where(function ($query) {
-                    return $query->where('status', 'submit');
+                    return $query->where('status', 'finish');
                 })
             ],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'discount_id' => ['required', 'exists:discounts,id'],
             'term_condition' => ['required', 'string'],
-            'checked_by' => ['required', 'exists:users,id'],
-            'approved1_by' => ['required', 'exists:users,id'],
-            'approved2_by' => ['required', 'exists:users,id'],
+            'status' => ['required', 'in:draft,submit'],
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],

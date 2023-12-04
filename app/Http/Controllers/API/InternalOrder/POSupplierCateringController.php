@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InternalOrder\POSupplierCateringRequest;
 use App\Http\Resources\InternalOrder\POSupplierCatering\POSupplierCateringDetailResource;
 use App\Http\Resources\InternalOrder\POSupplierCatering\POSupplierCateringResource;
+use App\Models\DOCatering;
 use App\Models\POSupplierCatering;
 use App\Models\SelectItemProduct;
 use Carbon\Carbon;
@@ -27,7 +28,7 @@ class POSupplierCateringController extends Controller
             'paginate' => ['nullable', 'in:0,1'],
 
             'status' => ['nullable', 'array'],
-            'status.*' => ['nullable', 'in:draft,submit,reject,finish']
+            'status.*' => ['nullable', 'in:draft,submit']
         ]);
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
@@ -56,11 +57,11 @@ class POSupplierCateringController extends Controller
             'item_product'
         ]);
         
+        // create variable for po supllier caterint
         $last_number = $this->last_number();
         $input['created_by'] = Auth::user()->id;
         $input['serial_number'] = $last_number;
         $input['po_number'] = $last_number .'/SBL/POSC/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
-        $input['status'] = 'draft';
 
         // database transaction for po supplier catering and item data
         $result = DB::transaction(function () use ($input, $request) {
@@ -73,6 +74,9 @@ class POSupplierCateringController extends Controller
                 $item_product['reference_id'] = $po_supplier_catering->id;
                 SelectItemProduct::create($item_product);
             }
+
+            // store do catering
+            $this->store_do_catering($po_supplier_catering, $request);
 
             return $po_supplier_catering;
         });
@@ -97,6 +101,12 @@ class POSupplierCateringController extends Controller
             'item_product'
         ]);
 
+        if ($po_supplier_catering->status == 'submit') {
+            return ResponseFormatter::errorValidation([
+                'po_supplier_catering_id' => ['cannot update this data because the status has already been submitted']
+            ], 'update po supplier cateirng data failed', 422);
+        }
+
         // database transaction for po supplier catering and item data
         $result = DB::transaction(function () use ($input, $request, $po_supplier_catering) {
             // store po supplier catering data
@@ -112,6 +122,9 @@ class POSupplierCateringController extends Controller
                 SelectItemProduct::create($item_product);
             }
 
+            // update do catering data
+            $this->update_do_catering($po_supplier_catering, $request);
+
             return $po_supplier_catering;
         });
 
@@ -124,23 +137,10 @@ class POSupplierCateringController extends Controller
     public function update_status(Request $request, POSupplierCatering $po_supplier_catering)
     {
         $request->validate([
-            'status' => ['required', 'in:submit,reject'],
-            'note' => [
-                Rule::requiredIf($request->status == 'reject')
-            ]
+            'status' => ['required', 'in:draft,submit'],
         ]);
-        $status = $request->status;
 
         $input = $request->only('status');
-        if($status == 'reject') {
-            $input['note'] = $request->note;
-            $input['checked_date'] = NULL;
-            $input['approved1_date'] = NULL;
-            $input['approved2_date'] = NULL;
-        } else {
-            $input['note'] = NULL;
-        }
-        // return $input;
         $po_supplier_catering->update($input);
 
         return ResponseFormatter::success(
@@ -149,66 +149,41 @@ class POSupplierCateringController extends Controller
         );
     }
 
-    public function update_approval_status(Request $request, POSupplierCatering $po_supplier_catering)
-    {
-        $request->validate([
-            'status' => ['required', 'in:checked,approved1,approved2']
-        ]);
-        $status = $request->status;
-
-        $data = [
-            'checked' => 'checked_date',
-            'approved1' => 'approved1_date',
-            'approved2' => 'approved2_date',
-        ];
-
-        $update = false;
-        if ($status == 'checked') {
-            $update = $po_supplier_catering->status == 'submit' ? true : false;
-        } else if (in_array($status, ['approved1','approved2'])) {
-            $update = !empty($po_supplier_catering->checked_date) ? true : false;
-        }
-
-        if($update) {
-
-            DB::transaction(function () use ($po_supplier_catering, $data, $status) {
-                $po_supplier_catering->update([
-                    $data[$status] => Carbon::now()
-                ]);
-
-                if(
-                    !empty($po_supplier_catering->checked_date) && 
-                    !empty($po_supplier_catering->approved1_date) && 
-                    !empty($po_supplier_catering->approved2_date)
-                ) {
-                    $po_supplier_catering->update([ 'status' => 'finish' ]);
-                }
-            });
-
-            return ResponseFormatter::success(
-                new POSupplierCateringDetailResource($po_supplier_catering),
-                'success update approval status po supplier catering data'
-            );
-        } else {
-            return ResponseFormatter::errorValidation([
-                'po_catering_id' => 'Cannot update this po supplier catering because the status does not match'
-            ], 'update status po supplier catering failed', 422);
-        }
-    }
-
     public function destroy(POSupplierCatering $po_supplier_catering)
     {
+        if ($po_supplier_catering->status == 'submit') {
+            return ResponseFormatter::errorValidation([
+                'po_supplier_catering_id' => ['cannot update this data because the status has already been submitted']
+            ], 'update po supplier cateirng data failed', 422);
+        }
+        
         DB::transaction(function () use ($po_supplier_catering) {
-            // delete attachment file
-            $files = $po_supplier_catering->attachment_file()->pluck('file')->toArray();
-            Storage::disk('local')->delete($files);    
-            $po_supplier_catering->attachment_file()->delete();
 
-            // delete item product
-            $po_supplier_catering->item_product()->delete();
+            // delete do catering data 
+                // delete attachament file do catering 
+                $files = $po_supplier_catering->do_catering->attachment_file()->pluck('file')->toArray();
+                Storage::disk('local')->delete($files);
+                $po_supplier_catering->do_catering->attachment_file()->delete();
 
-            // delete catering po
-            $po_supplier_catering->delete();
+                // delete item product do catering
+                $po_supplier_catering->do_catering->item_product()->delete();
+
+                // delete do catering
+                $po_supplier_catering->do_catering()->delete();
+            // end delete do catering data
+
+            // delete po supploer catering data 
+                // delete attachment file
+                $files = $po_supplier_catering->attachment_file()->pluck('file')->toArray();
+                Storage::disk('local')->delete($files);    
+                $po_supplier_catering->attachment_file()->delete();
+
+                // delete item product
+                $po_supplier_catering->item_product()->delete();
+
+                // delete catering po
+                $po_supplier_catering->delete();
+            // end delete po supploer catering data 
         });
 
         return ResponseFormatter::success(
@@ -217,9 +192,52 @@ class POSupplierCateringController extends Controller
         );
     }
 
+    public function store_do_catering(POSupplierCatering $po_supplier_catering, $request)
+    {
+        // create variable for do catering
+        $last_number_do_catering = $this->last_number_do_catering();
+        $input_do_catering['created_by'] = Auth::user()->id;
+        $input_do_catering['serial_number'] = $last_number_do_catering;
+        $input_do_catering['do_number'] = $last_number_do_catering .'/SBL/DOC/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input_do_catering['status'] = 'draft';
+
+        // store do catering data
+        $do_catering = $po_supplier_catering->do_catering()->create($input_do_catering);
+
+        // store item product data
+        foreach($request->item_product as $item_product) {
+            $item_product['reference_type'] = 'App\Models\DOCatering';
+            $item_product['reference_id'] = $do_catering->id;
+            SelectItemProduct::create($item_product);
+        }
+    }
+
+
+    public function update_do_catering(POSupplierCatering $po_supplier_catering, $request)
+    {
+        $do_catering = $po_supplier_catering->do_catering;
+        // delete do catering item product
+        $do_catering->item_product()->delete();
+
+        // store item product data
+        foreach($request->item_product as $item_product) {
+            $item_product['reference_type'] = 'App\Models\DOCatering';
+            $item_product['reference_id'] = $do_catering->id;
+            SelectItemProduct::create($item_product);
+        }
+    }
+
     public function last_number()
     {
          $last_number = POSupplierCatering::whereYear('created_at', Carbon::now()->year)
+                                ->whereMonth('created_at', Carbon::now()->month)
+                                ->max('serial_number');
+        return $last_number + 1;
+    }
+
+    public function last_number_do_catering()
+    {
+         $last_number = DOCatering::whereYear('created_at', Carbon::now()->year)
                                 ->whereMonth('created_at', Carbon::now()->month)
                                 ->max('serial_number');
         return $last_number + 1;
