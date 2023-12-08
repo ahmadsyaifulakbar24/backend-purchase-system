@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\ExternalOrder\PRCustomerController;
 use App\Http\Controllers\API\File\FileController;
 use App\Http\Controllers\API\InternalOrder\DOCateringController;
 use App\Http\Controllers\API\InternalOrder\POCateringController;
@@ -163,39 +164,47 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     // purchasing menu
-    Route::prefix('pr-catering')->group(function () {
-        Route::get('/', [PRCateringController::class, 'get']);
-        Route::post('/', [PRCateringController::class, 'store']);
-        Route::get('/{pr_catering:id}', [PRCateringController::class, 'show']);
-        Route::patch('/{pr_catering:id}', [PRCateringController::class, 'update']);
-        Route::delete('/{pr_catering:id}', [PRCateringController::class, 'destroy']);
-    });
+        Route::prefix('pr-catering')->group(function () {
+            Route::get('/', [PRCateringController::class, 'get']);
+            Route::post('/', [PRCateringController::class, 'store']);
+            Route::get('/{pr_catering:id}', [PRCateringController::class, 'show']);
+            Route::patch('/{pr_catering:id}', [PRCateringController::class, 'update']);
+            Route::delete('/{pr_catering:id}', [PRCateringController::class, 'destroy']);
+        });
 
-    Route::prefix('po-catering')->group(function () {
-        Route::get('/', [POCateringController::class, 'get']);
-        Route::post('/', [POCateringController::class, 'store']);
-        Route::get('/{po_catering:id}', [POCateringController::class, 'show']);
-        Route::patch('/{po_catering:id}', [POCateringController::class, 'update']);
-        Route::patch('/{po_catering:id}/update-status', [POCateringController::class, 'update_status']);
-        Route::patch('/{po_catering:id}/update-approval-status', [POCateringController::class, 'update_approval_status']);
-        Route::delete('/{po_catering:id}', [POCateringController::class, 'destroy']);
-    });
+        Route::prefix('po-catering')->group(function () {
+            Route::get('/', [POCateringController::class, 'get']);
+            Route::post('/', [POCateringController::class, 'store']);
+            Route::get('/{po_catering:id}', [POCateringController::class, 'show']);
+            Route::patch('/{po_catering:id}', [POCateringController::class, 'update']);
+            Route::patch('/{po_catering:id}/update-status', [POCateringController::class, 'update_status']);
+            Route::patch('/{po_catering:id}/update-approval-status', [POCateringController::class, 'update_approval_status']);
+            Route::delete('/{po_catering:id}', [POCateringController::class, 'destroy']);
+        });
 
-    Route::prefix('po-supplier-catering')->group(function () {
-        Route::get('/', [POSupplierCateringController::class, 'get']);
-        Route::post('/', [POSupplierCateringController::class, 'store']);
-        Route::get('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'show']);
-        Route::patch('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'update']);
-        Route::patch('/{po_supplier_catering:id}/update-status', [POSupplierCateringController::class, 'update_status']);
-        Route::delete('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'destroy']);
-    });
+        Route::prefix('po-supplier-catering')->group(function () {
+            Route::get('/', [POSupplierCateringController::class, 'get']);
+            Route::post('/', [POSupplierCateringController::class, 'store']);
+            Route::get('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'show']);
+            Route::patch('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'update']);
+            Route::patch('/{po_supplier_catering:id}/update-status', [POSupplierCateringController::class, 'update_status']);
+            Route::delete('/{po_supplier_catering:id}', [POSupplierCateringController::class, 'destroy']);
+        });
 
-    Route::prefix('do-catering')->group(function () {
-        Route::get('/', [DOCateringController::class, 'get']);
-        Route::get('/{do_catering:id}', [DOCateringController::class, 'show']);
-        Route::patch('/{do_catering:id}/update-status', [DOCateringController::class, 'update_status']);
-        Route::patch('/{do_catering:id}', [DOCateringController::class, 'update']);
-    });
+        Route::prefix('do-catering')->group(function () {
+            Route::get('/', [DOCateringController::class, 'get']);
+            Route::get('/{do_catering:id}', [DOCateringController::class, 'show']);
+            Route::patch('/{do_catering:id}/update-status', [DOCateringController::class, 'update_status']);
+            Route::patch('/{do_catering:id}', [DOCateringController::class, 'update']);
+        });
+
+        Route::prefix('pr-customer')->group(function () {
+            Route::get('/', [PRCustomerController::class, 'get']);
+            Route::post('/', [PRCustomerController::class, 'store']);
+            Route::get('/{pr_customer:id}', [PRCustomerController::class, 'show']);
+            Route::patch('/{pr_customer:id}', [PRCustomerController::class, 'update']);
+            Route::delete('/{pr_customer:id}', [PRCustomerController::class, 'destroy']);
+        });
 
     // end purchasing menu
 
