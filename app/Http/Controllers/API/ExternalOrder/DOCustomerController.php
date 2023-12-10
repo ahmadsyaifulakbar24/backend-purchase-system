@@ -6,12 +6,14 @@ use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExternalOrder\DOCustomer\DOCustomerRequest;
+use App\Http\Requests\ExternalOrder\DOCustomer\DOCustomerUpdateRequest;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerDetailResource;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerResource;
 use App\Models\DOCustomer;
 use App\Models\SelectItemProduct;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -56,6 +58,7 @@ class DOCustomerController extends Controller
         ]);
 
         $last_number = $this->last_number();
+        $input['created_by'] = Auth::user()->id;
         $input['serial_number'] = $last_number;
         $input['do_number'] = $last_number .'/SBL/DO/CUSTOMER/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
         $input['status'] = 'draft';
@@ -89,7 +92,7 @@ class DOCustomerController extends Controller
         );
     }    
 
-    public function update(DOCustomerRequest $request, DOCustomer $do_customer)
+    public function update(DOCustomerUpdateRequest $request, DOCustomer $do_customer)
     {
         $input = $request->except([
             'item_product'

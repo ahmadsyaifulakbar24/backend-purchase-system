@@ -60,7 +60,7 @@ class POSupplierCustomerController extends Controller
         $last_number = $this->last_number();
         $input['created_by'] = Auth::user()->id;
         $input['serial_number'] = $last_number;
-        $input['po_number'] = $last_number .'/SBL/PO/CUSTOMER' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
+        $input['po_number'] = $last_number .'/SBL/PO/CUSTOMER/' . DateHelpers::monthToRoman(Carbon::now()->month) .'/'. Carbon::now()->year;
 
         // database transaction for po supplier customer and item data
         $result = DB::transaction(function () use ($input, $request) {

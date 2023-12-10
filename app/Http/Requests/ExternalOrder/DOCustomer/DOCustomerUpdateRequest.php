@@ -22,6 +22,8 @@ class DOCustomerUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'approved_by' => ['required', 'exists:users,id'],
+            
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
             'item_product.*.description' => ['required', 'string'],

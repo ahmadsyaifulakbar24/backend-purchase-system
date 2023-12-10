@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\ExternalOrder\DOCustomerController;
 use App\Http\Controllers\API\ExternalOrder\POCustomerController;
 use App\Http\Controllers\API\ExternalOrder\POSupplierCustomerController;
 use App\Http\Controllers\API\ExternalOrder\PRCustomerController;
@@ -235,6 +236,16 @@ Route::middleware(['auth:api'])->group(function () {
             Route::patch('/{po_supplier_customer:id}', [POSupplierCustomerController::class, 'update']);
             Route::patch('/{po_supplier_customer:id}/update-status', [POSupplierCustomerController::class, 'update_status']);
             Route::delete('/{po_supplier_customer:id}', [POSupplierCustomerController::class, 'destroy']);
+        });
+
+        Route::prefix('do-customer')->group(function () {
+            Route::get('/', [DOCustomerController::class, 'get']);
+            Route::post('/', [DOCustomerController::class, 'store']);
+            Route::get('/{do_customer:id}', [DOCustomerController::class, 'show']);
+            Route::patch('/{do_customer:id}', [DOCustomerController::class, 'update']);
+            Route::patch('/{do_customer:id}/update-status', [DOCustomerController::class, 'update_status']);
+            Route::patch('/{do_customer:id}/update-approval-status', [DOCustomerController::class, 'update_approval_status']);
+            Route::delete('/{do_customer:id}', [DOCustomerController::class, 'destroy']);
         });
 
     // end purchasing menu

@@ -26,11 +26,11 @@ class DOCustomerRequest extends FormRequest
             'po_customer_id' => [
                 'required', 
                 'unique:do_customers,po_customer_id',
-                Rule::exists('po_customer', 'id')->where(function ($query) {
+                Rule::exists('po_customers', 'id')->where(function ($query) {
                     return $query->where('status', 'submit');
                 })
             ],
-
+            'approved_by' => ['required', 'exists:users,id'],
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
             'item_product.*.description' => ['required', 'string'],
