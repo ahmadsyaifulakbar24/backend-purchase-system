@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Resources\ExternalOrder\POSupplierCustomer;
+namespace App\Http\Resources\ExternalOrder\DOCustomer;
 
-use App\Http\Resources\Discount\DiscountResource;
 use App\Http\Resources\Location\LocationResource;
-use App\Http\Resources\Supplier\SupplierResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class POSupplierCustomerResource extends JsonResource
+class DOCustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -32,13 +30,16 @@ class POSupplierCustomerResource extends JsonResource
             ],
             'po_customer' => [
                 'id' => $this->po_customer->id,
-                'po_number' => $this->po_customer->po_number,
+                'quotation_number' => $this->po_customer->quotation_number,
             ],
-            'po_number' => $this->po_number,
-            'supplier' => new SupplierResource($this->supplier),
-            'discount' => new DiscountResource($this->discount),
-            'term_condition' => $this->term_condition,
+            'do_number' => $this->do_number,
+            'approved_by' => [
+                'id' => $this->approved_by_data->id,
+                'name' => $this->approved_by_data->name,
+            ],
+            'approve_date' => $this->approve_date,
             'status' => $this->status,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

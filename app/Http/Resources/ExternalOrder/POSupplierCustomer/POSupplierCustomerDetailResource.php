@@ -34,7 +34,7 @@ class POSupplierCustomerDetailResource extends JsonResource
             ],
             'po_customer' => [
                 'id' => $this->po_customer->id,
-                'quotation_number' => $this->po_customer->quotation_number,
+                'po_number' => $this->po_customer->po_number,
             ],
             'po_number' => $this->po_number,
             'supplier' => new SupplierResource($this->supplier),
