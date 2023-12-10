@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
 use App\Http\Controllers\API\ExternalOrder\PRCustomerController;
+use App\Http\Controllers\API\ExternalOrder\QuotationController;
 use App\Http\Controllers\API\File\FileController;
 use App\Http\Controllers\API\InternalOrder\DOCateringController;
 use App\Http\Controllers\API\InternalOrder\POCateringController;
@@ -204,6 +205,16 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{pr_customer:id}', [PRCustomerController::class, 'show']);
             Route::patch('/{pr_customer:id}', [PRCustomerController::class, 'update']);
             Route::delete('/{pr_customer:id}', [PRCustomerController::class, 'destroy']);
+        });
+
+        Route::prefix('quotation')->group(function () {
+            Route::get('/', [QuotationController::class, 'get']);
+            Route::post('/', [QuotationController::class, 'store']);
+            Route::get('/{quotation:id}', [QuotationController::class, 'show']);
+            Route::patch('/{quotation:id}', [QuotationController::class, 'update']);
+            Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
+            Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
+            Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
         });
 
     // end purchasing menu
