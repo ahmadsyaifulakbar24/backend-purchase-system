@@ -94,7 +94,6 @@ class QuotationController extends Controller
     public function update(QuotationUpdateRequest $request, Quotation $quotation)
     {
         $input = $request->except([
-            'pr_customer_id',
             'item_product'
         ]);
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\ExternalOrder\POCustomerController;
 use App\Http\Controllers\API\ExternalOrder\PRCustomerController;
 use App\Http\Controllers\API\ExternalOrder\QuotationController;
 use App\Http\Controllers\API\File\FileController;
@@ -215,6 +216,15 @@ Route::middleware(['auth:api'])->group(function () {
             Route::patch('/{quotation:id}/update-status', [QuotationController::class, 'update_status']);
             Route::patch('/{quotation:id}/update-approval-status', [QuotationController::class, 'update_approval_status']);
             Route::delete('/{quotation:id}', [QuotationController::class, 'destroy']);
+        });
+
+        Route::prefix('po-customer')->group(function () {
+            Route::get('/', [POCustomerController::class, 'get']);
+            Route::post('/', [POCustomerController::class, 'store']);
+            Route::get('/{po_customer:id}', [POCustomerController::class, 'show']);
+            Route::patch('/{po_customer:id}', [POCustomerController::class, 'update']);
+            Route::patch('/{po_customer:id}/update-status', [POCustomerController::class, 'update_status']);
+            Route::delete('/{po_customer:id}', [POCustomerController::class, 'destroy']);
         });
 
     // end purchasing menu
