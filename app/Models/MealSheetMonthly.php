@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+use hisorange\BrowserDetect\Parser as Browser;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class MealSheetMonthly extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, LogsActivity;
 
     protected $table = 'meal_sheet_monthly';
     protected $fillable = [
@@ -32,6 +36,22 @@ class MealSheetMonthly extends Model
         'approved_by' => 'array',
         'acknowladge_by' => 'array',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*'])
+        ->useLogName('meal sheet monthly')
+        ->setDescriptionForEvent(fn(string $eventName) => "{$eventName} meal sheet monthly data")
+        ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->ip = request()->ip();
+        $activity->browser = Browser::browserName();
+        $activity->os = Browser::platformName();
+    }
 
     public function createdAt(): Attribute
     {

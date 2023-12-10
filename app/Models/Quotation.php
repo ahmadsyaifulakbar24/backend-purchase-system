@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+use hisorange\BrowserDetect\Parser as Browser;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Quotation extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, LogsActivity;
     
     protected $table = 'quotations';
 
@@ -35,6 +39,22 @@ class Quotation extends Model
     protected $casts = [
         'checked_date' => 'date', 
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*'])
+        ->useLogName('quotation')
+        ->setDescriptionForEvent(fn(string $eventName) => "{$eventName} quotation data")
+        ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->ip = request()->ip();
+        $activity->browser = Browser::browserName();
+        $activity->os = Browser::platformName();
+    }
 
     public function createdAt(): Attribute
     {

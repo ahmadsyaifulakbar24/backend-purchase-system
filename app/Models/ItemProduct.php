@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+use hisorange\BrowserDetect\Parser as Browser;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ItemProduct extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, LogsActivity;
 
     protected $table  = 'item_products';
     protected $fillable = [
@@ -28,6 +32,22 @@ class ItemProduct extends Model
         'supplier_id',
         'price'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*'])
+        ->useLogName('item product')
+        ->setDescriptionForEvent(fn(string $eventName) => "{$eventName} item product data")
+        ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->ip = request()->ip();
+        $activity->browser = Browser::browserName();
+        $activity->os = Browser::platformName();
+    }
 
     public function createdAt(): Attribute
     {

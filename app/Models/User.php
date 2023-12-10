@@ -14,11 +14,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Traits\HasRoles;
+use hisorange\BrowserDetect\Parser as Browser;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids, LogsActivity;
 
     protected $guard_name = 'api';
 
@@ -60,6 +64,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*'])
+        ->dontLogIfAttributesChangedOnly(['password', 'email_verified_at', 'remember_token', 'updated_at'])
+        ->useLogName('user')
+        ->setDescriptionForEvent(fn(string $eventName) => "{$eventName} user data")
+        ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->ip = request()->ip();
+        $activity->browser = Browser::browserName();
+        $activity->os = Browser::platformName();
+    }
 
     public function sendPasswordResetNotification($token): void
     {

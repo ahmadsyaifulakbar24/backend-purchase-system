@@ -10,10 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Contracts\Activity;
+use Spatie\Activitylog\LogOptions;
+use hisorange\BrowserDetect\Parser as Browser;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class MealSheetGroup extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, LogsActivity;
 
     protected $table = 'meal_sheet_groups';
     protected $fillable = [
@@ -30,6 +34,22 @@ class MealSheetGroup extends Model
         'approved_by' => 'array',
         'acknowladge_by' => 'array',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*'])
+        ->useLogName('meal sheet group')
+        ->setDescriptionForEvent(fn(string $eventName) => "{$eventName} meal sheet group data")
+        ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->ip = request()->ip();
+        $activity->browser = Browser::browserName();
+        $activity->os = Browser::platformName();
+    }
 
     public function createdAt(): Attribute
     {

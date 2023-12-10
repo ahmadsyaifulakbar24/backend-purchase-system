@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ActivityLog\ActivityLogController;
 use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
@@ -298,5 +299,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/daily', [MorController::class, 'daily']);
         Route::get('/', [MorController::class, 'get']);
         Route::post('/upsert', [MorController::class, 'upsert']);
+    });
+
+    Route::prefix('activity-log')->group(function () {
+        Route::get('/', [ActivityLogController::class, 'index']);
     });
 });
