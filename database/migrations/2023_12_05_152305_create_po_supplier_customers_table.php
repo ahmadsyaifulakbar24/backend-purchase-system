@@ -12,7 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('po_supplier_customers', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('created_by')->constrained('users')->onUpdate('cascade');
+            $table->foreignUuid('po_customer_id')->constrained('po_customers')->onUpdate('cascade');
+            $table->bigInteger('serial_number');
+            $table->string('po_number')->unique();
+            $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
+            $table->foreignUuid('discount_id')->constrained('discounts')->onUpdate('cascade');
+            $table->text('term_condition');
+            $table->enum('status', ['draft', 'submit']);
             $table->timestamps();
         });
     }
