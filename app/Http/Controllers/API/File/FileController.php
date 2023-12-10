@@ -24,7 +24,13 @@ class FileController extends Controller
             'pr_catering',
             'po_catering',
             'po_supplier_catering',
-            'do_catering'
+            'do_catering',
+
+            'pr_customer',
+            'quotation',
+            'po_customer',
+            'po_supplier_customer',
+            'do_customer'
         ];
 
         $this->reference_type = [
@@ -32,6 +38,12 @@ class FileController extends Controller
             'po_catering' => 'App\Models\POCatering',
             'po_supplier_catering' => 'App\Models\POSupplierCatering',
             'do_catering' => 'App\Models\DOCatering',
+
+            'pr_customer' => 'App\Models\PRCustomer',
+            'quotation' => 'App\Models\Quotation',
+            'po_customer' => 'App\Models\POCustomer',
+            'po_supplier_customer' => 'App\Models\POSupplierCustomer',
+            'do_customer' => 'App\Models\DOCustomer',
         ];
 
         $this->type = [
