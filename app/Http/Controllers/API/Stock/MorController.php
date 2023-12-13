@@ -9,7 +9,6 @@ use App\Http\Resources\Stock\MorDailyResource;
 use App\Http\Resources\Stock\MorResource;
 use App\Models\Mor;
 use App\Repository\ProductStockRepository;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
