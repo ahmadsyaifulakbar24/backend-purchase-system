@@ -10,7 +10,9 @@ use App\Http\Requests\ExternalOrder\DOCustomer\DOCustomerUpdateRequest;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerDetailResource;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerResource;
 use App\Models\DOCustomer;
+use App\Models\Location;
 use App\Models\SelectItemProduct;
+use App\Repository\ProductStockRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +134,12 @@ class DOCustomerController extends Controller
         ]);
         $status = $request->status;
 
+        if($do_customer->status == 'finish') {
+            return ResponseFormatter::errorValidation([
+                'do_customer_id' => 'The data has been approved',
+            ], 'update status do customer failed');
+        }
+
         $input = $request->only('status');
         if($status == 'reject') {
             $input['note'] = $request->note;
@@ -154,17 +162,35 @@ class DOCustomerController extends Controller
             'status' => ['required', 'in:approved']
         ]);
 
-        DB::transaction(function () use ($do_customer) {
+        try {
+            DB::beginTransaction();
+
+            if($do_customer->status != 'submit') {
+                return ResponseFormatter::errorValidation([
+                    'do_customer_id' => 'Cannot approve data with this status',
+                ], 'approve do customer failed');
+            }
+
+            // kurangi stock pusat jika product berasal dari supllier pusat
+            $this->update_to_stock($do_customer);
+
             $do_customer->update([
                 'approved_date' => Carbon::now()
             ]);
             $do_customer->update([ 'status' => 'finish' ]);
-        });
 
-        return ResponseFormatter::success(
-            new DOCustomerDetailResource($do_customer),
-            'success update approval status do customer data'
-        );
+            DB::commit();
+            return ResponseFormatter::success(
+                new DOCustomerDetailResource($do_customer),
+                'success update approval status do customer data'
+            );
+        } catch (\Exception $e) {
+            DB::rollBack();
+        
+            return ResponseFormatter::errorValidation([
+                'error_message' => [$e->getMessage()],
+            ], 'update status do catering failed');
+        }
     }
 
     public function destroy(DOCustomer $do_customer)
@@ -194,5 +220,36 @@ class DOCustomerController extends Controller
                                 ->whereMonth('created_at', Carbon::now()->month)
                                 ->max('serial_number');
         return $last_number + 1;
+    }
+
+    public function update_to_stock(DOCustomer $do_customer)
+    {
+        $item_products = $do_customer->item_product;
+        $pusat_location = Location::where('main', '1')->first();
+
+        // kurangi product berdasarkan supplier pusat
+            foreach ($item_products as $item_product) {
+                $supplier = $item_product->item_product->supplier;
+                if ($supplier->main == '1') {
+                    $quantity = intval(-$item_product['quantity']);
+
+                    $data = [
+                        'item_product_id' => $item_product['item_product_id'],
+                        'location_id' => $pusat_location->id,
+                        'quantity' => $quantity,
+                        'description'  => 'Product reduction from DO Customer',
+                    ];
+
+                    // perhitungan stock
+                    $product_stock = ProductStockRepository::find($data);
+                    if(!empty($product_stock)) {
+                        $data['stock'] = $product_stock->stock + $quantity;
+                    } else {
+                        $data['stock'] = $quantity;
+                    }
+                    ProductStockRepository::upsertProductStock($data, $product_stock);   
+                }
+            }
+        // end
     }
 }
