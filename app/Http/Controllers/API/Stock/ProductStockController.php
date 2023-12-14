@@ -31,7 +31,7 @@ class ProductStockController extends Controller
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
 
-        $sub_query_item_product = ItemProduct::where('location_id', $location_id);
+        // $sub_query_item_product = ItemProduct::where('location_id', $location_id);
         $sub_query_product_stock = ProductStock::where('location_id', $location_id);
 
         $product_stock = DB::table(DB::raw("({$sub_query_product_stock->toSql()}) as product_stocks"))
@@ -50,9 +50,10 @@ class ProductStockController extends Controller
             'item_products.unit_id as unit_id',
             'item_products.price as price',
         )
-        ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
-            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
-        })
+        ->rightJoin('item_products', 'product_stocks.item_product_id', '=', 'item_products.id')
+        // ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
+        //     $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        // })
         ->when($search, function ($query, $search) {
             $query->where(function($sub_query) use ($search) {
                 $sub_query->where('item_products.name', 'like', '%'. $search .'%')
