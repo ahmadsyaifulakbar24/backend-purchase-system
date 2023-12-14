@@ -161,9 +161,10 @@ class ProductStockController extends Controller
             'item_products.supplier_id as supplier_id',
             'item_products.price as price',
         )
-        ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
-            $join->on('product_stocks.item_product_id', '=', 'item_products.id');
-        })
+        ->rightJoin('item_products', 'product_stocks.item_product_id', '=', 'item_products.id')
+        // ->rightJoinSub($sub_query_item_product, 'item_products', function (JoinClause $join) {
+        //     $join->on('product_stocks.item_product_id', '=', 'item_products.id');
+        // })
         ->where(function ($query) use ($location_id) {
             $query->where('product_stocks.location_id', $location_id)
                 ->orWhereNull('product_stocks.location_id');
