@@ -20,7 +20,12 @@ return new class extends Migration
             $table->text('term_condition');
             $table->text('term_payment');
             $table->foreignUuid('prepared_by')->constrained('users')->onUpdate('cascade');
-            $table->enum('status', ['draft', 'submit']);
+            $table->foreignUuid('approved1_by')->constrained('users')->onUpdate('cascade');
+            $table->foreignUuid('approved2_by')->constrained('users')->onUpdate('cascade');
+            $table->date('approved1_date')->nullable();
+            $table->date('approved2_date')->nullable();
+            $table->enum('status', ['draft', 'submit', 'reject', 'finish']);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

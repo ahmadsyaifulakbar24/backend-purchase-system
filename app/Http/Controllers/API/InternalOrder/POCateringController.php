@@ -163,7 +163,6 @@ class POCateringController extends Controller
         $update = false;
         if ($status == 'checked') {
             $update = $po_catering->status == 'submit' ? true : false;
-        // } else if (in_array($status, ['approved1','approved2'])) {
         } else if ($status == 'approved1') {
             $update = !empty($po_catering->checked_date) ? true : false;
         } else if ($status == 'approved2') {

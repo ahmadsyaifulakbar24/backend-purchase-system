@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class POCustomerController extends Controller
 {
@@ -122,16 +123,72 @@ class POCustomerController extends Controller
     public function update_status(Request $request, POCustomer $po_customer)
     {
         $request->validate([
-            'status' => ['required', 'in:draft,submit'],
+            'status' => ['required', 'in:submit,reject'],
+            'note' => [
+                Rule::requiredIf($request->status == 'reject')
+            ]
         ]);
+        $status = $request->status;
 
         $input = $request->only('status');
+        if($status == 'reject') {
+            $input['note'] = $request->note;
+            $input['approved1_date'] = NULL;
+            $input['approved2_date'] = NULL;
+        } else {
+            $input['note'] = NULL;
+        }
         $po_customer->update($input);
 
         return ResponseFormatter::success(
             new POCustomerDetailResource($po_customer),
             'success update status po customer data'
         );
+    }
+
+    public function update_approval_status(Request $request, POCustomer $po_customer)
+    {
+        $request->validate([
+            'status' => ['required', 'in:approved1,approved2']
+        ]);
+        $status = $request->status;
+
+        $data = [
+            'approved1' => 'approved1_date',
+            'approved2' => 'approved2_date',
+        ];
+
+        $update = false;
+        if ($status == 'approved1') {
+            $update = $po_customer->status == 'submit' ? true : false;
+        } else if ($status == 'approved2') {
+            $update = !empty($po_customer->approved1_date) ? true : false;
+        }
+
+        if($update) {
+
+            DB::transaction(function () use ($po_customer, $data, $status) {
+                $po_customer->update([
+                    $data[$status] => Carbon::now()
+                ]);
+
+                if(
+                    !empty($po_customer->approved1_date) && 
+                    !empty($po_customer->approved2_date)
+                ) {
+                    $po_customer->update([ 'status' => 'finish' ]);
+                }
+            });
+
+            return ResponseFormatter::success(
+                new POCustomerDetailResource($po_customer),
+                'success update approval status po customer data'
+            );
+        } else {
+            return ResponseFormatter::errorValidation([
+                'po_customer_id' => 'Cannot update this po customer because the status does not match'
+            ], 'update status po customer failed', 422);
+        }
     }
 
     public function destroy(POCustomer $po_customer)

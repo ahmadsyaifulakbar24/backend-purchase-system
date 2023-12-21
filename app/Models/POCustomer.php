@@ -28,7 +28,17 @@ class POCustomer extends Model
         'term_condition',
         'term_payment',
         'prepared_by',
+        'approved1_by',
+        'approved2_by',
+        'approved1_date',
+        'approved2_date',
         'status',
+        'note',
+    ];
+
+    protected $casts = [
+        'approved1_date' => 'date',  
+        'approved2_date' => 'date',  
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -69,6 +79,36 @@ class POCustomer extends Model
         );
     }
 
+    public function approved1Date(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if(!empty($value)) {
+                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
+                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                    return $date_timezone;
+                } else {
+                    return $value;
+                }
+            },
+        );
+    }
+
+    public function approved2Date(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if(!empty($value)) {
+                    $date = Carbon::parse($value)->format('Y-m-d H:i:s');
+                    $date_timezone = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'UTC')->setTimezone(config('app.timezone'))->format('Y-m-d H:i:s');
+                    return $date_timezone;
+                } else {
+                    return $value;
+                }
+            },
+        );
+    }
+
     public function quotation(): BelongsTo
     {
         return $this->belongsTo(Quotation::class, 'quotation_id');
@@ -82,6 +122,16 @@ class POCustomer extends Model
     public function prepared_by_data(): BelongsTo
     {
         return $this->belongsTo(User::class, 'prepared_by');
+    }
+
+    public function approved1_by_data(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved1_by');
+    }
+
+    public function approved2_by_data(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved2_by');
     }
 
     public function item_product(): HasMany

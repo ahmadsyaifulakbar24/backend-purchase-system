@@ -34,6 +34,8 @@ class POCustomerRequest extends FormRequest
             'term_condition' => ['required', 'string'],
             'term_payment' => ['required', 'string'],
             'prepared_by' => ['required', 'exists:users,id'],
+            'approved1_by' => ['required', 'exists:users,id'],
+            'approved2_by' => ['required', 'exists:users,id'],
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],

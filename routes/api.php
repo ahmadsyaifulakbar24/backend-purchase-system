@@ -227,6 +227,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{po_customer:id}', [POCustomerController::class, 'show']);
             Route::patch('/{po_customer:id}', [POCustomerController::class, 'update']);
             Route::patch('/{po_customer:id}/update-status', [POCustomerController::class, 'update_status']);
+            Route::patch('/{po_customer:id}/update-approval-status', [POCustomerController::class, 'update_approval_status']);
             Route::delete('/{po_customer:id}', [POCustomerController::class, 'destroy']);
         });
 
