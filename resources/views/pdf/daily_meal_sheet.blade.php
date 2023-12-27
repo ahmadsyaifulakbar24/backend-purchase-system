@@ -17,9 +17,9 @@
             border-style: solid;
             border-width: 1px;
             font-family: Arial, sans-serif;
-            font-size: 11px;
+            font-size: 10px;
             overflow: hidden;
-            padding: 5px 5px;
+            padding: 2px 2px;
             font-weight: bold;
             word-break: normal;
         }
@@ -32,7 +32,7 @@
             font-size: 14px;
             font-weight: normal;
             overflow: hidden;
-            padding: 5px 5px;
+            padding: 2px 2px;
             word-break: normal;
         }
 
@@ -120,7 +120,7 @@
         <tbody>
             <tr>
                 <th class="tg-c3ow" colspan="10">
-                    <h1>PT.Surya Buana Lestarijaya</h1>
+                    <h2>PT.Surya Buana Lestarijaya Daily</h2>
                     <b>Catering and Accomodation Service</b>
                 </th>
             </tr>
@@ -203,10 +203,10 @@
             </tr>
             <tr>
                 <td colspan="2" style="border-top: none; border-right: none;">
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Prepared By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_detail->prepared_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->prepared_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_detail->prepared_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="{{ !empty($meal_sheet_detail->acknowladge_by) ? 2 : 4 }}" 
@@ -217,10 +217,10 @@
                         {{ !empty($meal_sheet_detail->acknowladge_by) ? 'padding-right: 50px;' : '' }}
                     "
                 >
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Checked By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_detail->checked_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->checked_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_detail->checked_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="{{ !empty($meal_sheet_detail->acknowladge_by) ? 2 : 4 }}" 
@@ -231,18 +231,18 @@
                         {{ !empty($meal_sheet_detail->acknowladge_by) ? 'border-right: none;' : '' }}
                     "
                 >
-                    <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Approved By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_detail->approved_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->approved_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_detail->approved_by['position'] }}</p>
                     </div>
                 </td>
                 @if(!empty($meal_sheet_detail->acknowladge_by))
                     <td colspan="4" style="border-top: none; border-left: none;">
-                        <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                        <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                             <p>Acknowledge By,</p>
                             <p style="margin-top: 60px;">{{ $meal_sheet_detail->acknowladge_by['name'] }}</p>
-                            <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_detail->acknowladge_by['position'] }}</p>
+                            <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_detail->acknowladge_by['position'] }}</p>
                         </div>
                     </td>
                 @endif
