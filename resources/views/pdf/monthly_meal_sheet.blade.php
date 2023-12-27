@@ -19,7 +19,7 @@
             font-family: Arial, sans-serif;
             font-size: 11px;
             overflow: hidden;
-            padding: 5px 5px;
+            padding: 2px 2px;
             font-weight: bold;
             word-break: normal;
         }
@@ -51,7 +51,8 @@
             border-color: inherit;
             font-weight: bold;
             text-align: center;
-            vertical-align: top
+            vertical-align: top;
+            padding: 2px 2px;
         }
 
         .tg .tg-sn4r {
@@ -87,8 +88,9 @@
         }
 
         .tg .tg-0lax {
-            text-align: left;
-            vertical-align: top
+            text-align: center;
+            vertical-align: middle;
+            max-width: 60px;
         }
         .tg .text-left {
             text-align: center;
@@ -145,8 +147,7 @@
                 <td class="tg-baqh" rowspan="2" style="vertical-align: middle;">Date</td>
                 <td class="tg-baqh" colspan="{{ $meal_sheet_monthly->meal_sheet_group->meal_sheet_client()->count() }}">Client Group</td>
                 <td class="tg-0lax" colspan="2">Total Account</td>
-                <td class="tg-0lax" colspan="3">Casual Meals</td>
-                <td class="tg-0lax"></td>
+                <td class="tg-0lax" colspan="4">Casual Meals</td>
                 <td class="tg-0lax"></td>
                 <td class="tg-0lax" colspan="2" rowspan="2" style="vertical-align: middle; text-align: center;">Remark</td>
             </tr>
@@ -229,38 +230,38 @@
             </tr>
 
             <!-- Divider -->
-            <tr style="line-height: 10px; padding: 0;">
+            <tr style="line-height: 15px; padding: 0;">
                 <td colspan="12"></td>
             </tr>
             
             <!-- Footer -->
             <tr>
                 <td colspan="3" style="border-top: none; border-right: none;">
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Prepared By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_monthly->prepared_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->prepared_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_monthly->prepared_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-right: none; border-left: none;">
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Checked By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_monthly->checked_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->checked_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_monthly->checked_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-right: none; border-left: none;">
-                    <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="margin-left: -50px; min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Approved By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_monthly->approved_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->approved_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_monthly->approved_by['position'] }}</p>
                     </div>
                 </td>
                 <td colspan="3" style="border-top: none; border-left: none;">
-                    <div style="min-height: 100px; text-align: center; margin-top: -15px;">
+                    <div style="min-height: 100px; text-align: center; margin-top: -10px;">
                         <p>Acknowledge By,</p>
                         <p style="margin-top: 60px;">{{ $meal_sheet_monthly->acknowladge_by['name'] }}</p>
-                        <p style="margin-top: -15px; margin-bottom: 0px;">{{ $meal_sheet_monthly->acknowladge_by['position'] }}</p>
+                        <p style="margin-top: -10px; margin-bottom: 0px;">{{ $meal_sheet_monthly->acknowladge_by['position'] }}</p>
                     </div>
                 </td>
             </tr>
