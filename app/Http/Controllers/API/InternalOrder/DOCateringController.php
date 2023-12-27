@@ -139,6 +139,10 @@ class DOCateringController extends Controller
         $item_products = $do_catering->item_product;
         $location_id = $do_catering->po_supplier_catering->po_catering->pr_catering->location_id;
         $supplier = $do_catering->po_supplier_catering->supplier;
+        $from = $supplier->name;
+        $to = $do_catering->po_supplier_catering->po_catering->pr_catering->location->location;
+        $purchase_order = $do_catering->po_supplier_catering->po_catering->po_number;
+        $delivery_date = $do_catering->po_supplier_catering->po_catering->pr_catering->delivery_date;
 
         // update product berdasarkan lokasi 
             foreach ($item_products as $item_product) {
@@ -149,6 +153,9 @@ class DOCateringController extends Controller
                     'item_product_id' => $item_product['item_product_id'],
                     'location_id' => $location_id,
                     'quantity' => $quantity,
+                    'from_to' => $from,
+                    'purchase_order' => $purchase_order,
+                    'delivery_date' => $delivery_date,
                     'description'  => $message,
                 ];
 
@@ -174,6 +181,9 @@ class DOCateringController extends Controller
                     $data_sup = [
                         'item_product_id' => $item_product_sup['item_product_id'],
                         'location_id' => $pusat_location->id,
+                        'from_to' => $to,
+                        'purchase_order' => $purchase_order,
+                        'delivery_date' => $delivery_date,
                         'quantity' => $quantity_sup,
                         'description'  => $message_sup,
                     ];

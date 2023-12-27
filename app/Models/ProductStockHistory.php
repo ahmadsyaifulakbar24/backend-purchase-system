@@ -16,7 +16,9 @@ class ProductStockHistory extends Model
     protected $fillable = [
         'product_stock_id',
         'quantity',
-        'type',
+        'from_to',
+        'purchase_order',
+        'delivery_date',
         'description'
     ];
 

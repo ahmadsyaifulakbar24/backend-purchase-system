@@ -25,7 +25,10 @@ class ProductStockRepository {
         $location_id = $data['location_id'];
         $stock = $data['stock'];
         $quantity = $data['quantity'];
-        $description = $data['description'];
+        $from_to = !empty($data['from_to']) ? $data['from_to'] : null;
+        $purchase_order = !empty($data['purchase_order']) ? $data['purchase_order'] : null;
+        $delivery_date = !empty($data['delivery_date']) ? $data['delivery_date'] : null;
+        $description = !empty($data['description']) ? $data['description'] : null;
 
         if(!empty($product_stock)) {
             $product_stock->update([
@@ -43,6 +46,9 @@ class ProductStockRepository {
 
         $product_stock->product_stock_history()->create([
             'quantity' => $quantity,
+            'from_to' => $from_to,
+            'purchase_order' => $purchase_order,
+            'delivery_date' => $delivery_date,
             'description' => $description,
         ]);
 

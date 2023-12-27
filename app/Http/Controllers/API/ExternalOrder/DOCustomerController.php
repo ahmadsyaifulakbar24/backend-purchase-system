@@ -226,7 +226,10 @@ class DOCustomerController extends Controller
     {
         $item_products = $do_customer->item_product;
         $pusat_location = Location::where('main', '1')->first();
-
+        $to = $do_customer->po_customer->quotation->pr_customer->location->location;
+        $purchase_order = $do_customer->po_customer->po_number;
+        $delivery_date = $do_customer->po_customer->quotation->pr_customer->delivery_date;
+        
         // kurangi product berdasarkan supplier pusat
             foreach ($item_products as $item_product) {
                 $supplier = $item_product->item_product->supplier;
@@ -237,6 +240,9 @@ class DOCustomerController extends Controller
                         'item_product_id' => $item_product['item_product_id'],
                         'location_id' => $pusat_location->id,
                         'quantity' => $quantity,
+                        'from_to' => $to,
+                        'purchase_order' => $purchase_order,
+                        'delivery_date' => $delivery_date,
                         'description'  => 'Product reduction from DO Customer',
                     ];
 

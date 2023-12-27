@@ -27,7 +27,7 @@ class DOCustomerRequest extends FormRequest
                 'required', 
                 'unique:do_customers,po_customer_id',
                 Rule::exists('po_customers', 'id')->where(function ($query) {
-                    return $query->where('status', 'submit');
+                    return $query->where('status', 'finish');
                 })
             ],
             'approved_by' => ['required', 'exists:users,id'],
