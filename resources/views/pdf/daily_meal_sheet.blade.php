@@ -117,15 +117,13 @@
 
 <body>
     <table class="tg" style="width: 700px;" >
-        <thead>
+        <tbody>
             <tr>
                 <th class="tg-c3ow" colspan="10">
                     <h1>PT.Surya Buana Lestarijaya</h1>
                     <b>Catering and Accomodation Service</b>
                 </th>
             </tr>
-        </thead>
-        <tbody>
             <tr>
                 <td class="tg-7btt" colspan="10" style="border-bottom: none">Meal Count Sheet and Accomodation Record</td>
             </tr>
