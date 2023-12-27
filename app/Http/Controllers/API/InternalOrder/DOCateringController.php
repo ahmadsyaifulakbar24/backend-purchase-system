@@ -156,7 +156,7 @@ class DOCateringController extends Controller
                     'from_to' => $from,
                     'purchase_order' => $purchase_order,
                     'delivery_date' => $delivery_date,
-                    'description'  => $message,
+                    'description'  => '-',
                 ];
 
                 // perhitungan stock
@@ -185,7 +185,7 @@ class DOCateringController extends Controller
                         'purchase_order' => $purchase_order,
                         'delivery_date' => $delivery_date,
                         'quantity' => $quantity_sup,
-                        'description'  => $message_sup,
+                        'description'  => '-',
                     ];
     
                     // perhitungan stock

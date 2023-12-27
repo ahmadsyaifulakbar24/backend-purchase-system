@@ -243,7 +243,8 @@ class DOCustomerController extends Controller
                         'from_to' => $to,
                         'purchase_order' => $purchase_order,
                         'delivery_date' => $delivery_date,
-                        'description'  => 'Product reduction from DO Customer',
+                        // 'description'  => 'Product reduction from DO Customer',
+                        'description'  => '-',
                     ];
 
                     // perhitungan stock
