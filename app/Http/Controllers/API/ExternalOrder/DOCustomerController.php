@@ -240,7 +240,7 @@ class DOCustomerController extends Controller
                         'item_product_id' => $item_product['item_product_id'],
                         'location_id' => $pusat_location->id,
                         'quantity' => $quantity,
-                        'from_to' => $to,
+                        'to' => $to,
                         'purchase_order' => $purchase_order,
                         'delivery_date' => $delivery_date,
                         // 'description'  => 'Product reduction from DO Customer',

@@ -17,7 +17,8 @@ class ProductStockHistoryResource extends JsonResource
         return [
             'id' => $this->id,
             'quantity' => $this->quantity,
-            'from_to' => $this->from_to,
+            'from' => $this->from,
+            'to' => $this->to,
             'purchase_order' => $this->purchase_order,
             'delivery_date' => $this->delivery_date,
             'description' => $this->description,

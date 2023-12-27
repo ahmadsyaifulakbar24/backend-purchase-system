@@ -153,7 +153,7 @@ class DOCateringController extends Controller
                     'item_product_id' => $item_product['item_product_id'],
                     'location_id' => $location_id,
                     'quantity' => $quantity,
-                    'from_to' => $from,
+                    'from' => $from,
                     'purchase_order' => $purchase_order,
                     'delivery_date' => $delivery_date,
                     'description'  => '-',
@@ -181,7 +181,7 @@ class DOCateringController extends Controller
                     $data_sup = [
                         'item_product_id' => $item_product_sup['item_product_id'],
                         'location_id' => $pusat_location->id,
-                        'from_to' => $to,
+                        'to' => $to,
                         'purchase_order' => $purchase_order,
                         'delivery_date' => $delivery_date,
                         'quantity' => $quantity_sup,

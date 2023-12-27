@@ -15,7 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('product_stock_id')->constrained('product_stocks')->onUpdate('cascade');
             $table->bigInteger('quantity');
-            $table->string('from_to')->nullable();
+            $table->string('from')->nullable();
+            $table->string('to')->nullable();
             $table->string('purchase_order')->nullable();
             $table->date('delivery_date')->nullable();
             $table->text('description')->nullable();
