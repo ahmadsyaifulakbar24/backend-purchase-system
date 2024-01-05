@@ -94,7 +94,7 @@ class ItemProduct extends Model
         );
     }
 
-    public function sell_price(): Attribute
+    public function sellPrice(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => intval($value),
