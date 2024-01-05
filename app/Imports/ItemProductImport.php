@@ -62,6 +62,7 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                 'location_code' => ['required', 'exists:locations,location_code'],
                 'supplier_code' => ['required', 'exists:suppliers,code'],
                 'price' => ['required', 'numeric'],
+                'sell_price' => ['required', 'numeric'],
             ]);
             
             if ($validator->fails()) {
@@ -95,6 +96,7 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                     'location_id' => $location_id,
                     'supplier_id' => $supplier_id,
                     'price' => $row['price'],
+                    'sell_price' => $row['sell_price'],
                 ]);
             }
         }

@@ -32,6 +32,7 @@ class ItemProductResource extends JsonResource
             'location' => new LocationResource($this->location),
             'supplier' => new SupplierResource($this->supplier),
             'price' => $this->price,
+            'sell_price' => $this->sell_price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

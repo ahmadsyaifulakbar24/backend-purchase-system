@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
             $table->foreignUuid('supplier_id')->constrained('suppliers')->onUpdate('cascade');
             $table->decimal('price', 18, 2);
+            $table->decimal('sell_price', 18, 2);
             $table->timestamps();
         });
     }

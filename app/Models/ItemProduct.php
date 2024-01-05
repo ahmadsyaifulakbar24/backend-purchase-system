@@ -30,7 +30,8 @@ class ItemProduct extends Model
         'tax',
         'location_id',
         'supplier_id',
-        'price'
+        'price',
+        'sell_price',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -87,6 +88,13 @@ class ItemProduct extends Model
     }
 
     public function price(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => intval($value),
+        );
+    }
+
+    public function sell_price(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => intval($value),

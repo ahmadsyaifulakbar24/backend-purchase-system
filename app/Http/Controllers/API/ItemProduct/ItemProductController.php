@@ -78,6 +78,7 @@ class ItemProductController extends Controller
             'location_id' => ['required', 'exists:locations,id'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'price' => ['required', 'numeric'],
+            'sell_price' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();
@@ -181,6 +182,7 @@ class ItemProductController extends Controller
             'location_id' => ['required', 'exists:locations,id'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'price' => ['required', 'numeric'],
+            'sell_price' => ['required', 'numeric'],
         ]);
 
         $input = $request->all();
