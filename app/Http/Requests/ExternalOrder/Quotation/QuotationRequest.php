@@ -40,8 +40,10 @@ class QuotationRequest extends FormRequest
             'item_product.*.weight' => ['required', 'integer'],
             'item_product.*.quantity' => ['required', 'string'],
             'item_product.*.item_price' => ['required', 'numeric'],
+            'item_product.*.markup_value' => ['required', 'numeric'],
             'item_product.*.vat' => ['required', 'integer'],
             'item_product.*.tnt' => ['required', 'in:T,NT'],
+            'item_product.*.markup_vat' => ['required', 'integer'],
             'item_product.*.remark' => ['required', 'string'],
         ];
     }

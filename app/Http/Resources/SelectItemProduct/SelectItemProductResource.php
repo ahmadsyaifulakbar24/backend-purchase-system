@@ -22,8 +22,10 @@ class SelectItemProductResource extends JsonResource
             'weight' => $this->weight,
             'quantity' => $this->quantity,
             'item_price' => $this->item_price,
+            'markup_value' => $this->markup_value,
             'vat' => $this->vat,
             'tnt' => $this->tnt,
+            'markup_vat' => $this->markup_vat,
             'remark' => $this->remark,
         ];
     }

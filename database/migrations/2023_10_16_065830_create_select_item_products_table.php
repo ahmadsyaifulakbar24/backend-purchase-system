@@ -21,8 +21,10 @@ return new class extends Migration
             $table->integer('weight')->nullable();
             $table->integer('quantity')->nullable();
             $table->decimal('item_price', 16, 2)->nullable();
+            $table->decimal('markup_value', 16, 2)->nullable();
             $table->integer('vat')->nullable();
             $table->enum('tnt', ['T', 'NT'])->nullable();
+            $table->integer('markup_vat')->nullable();
             $table->text('remark')->nullable();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,8 +21,10 @@ class SelectItemProduct extends Model
         'weight',
         'quantity',
         'item_price',
+        'markup_value',
         'vat',
         'tnt',
+        'markup_vat',
         'remark'
     ];
 
@@ -30,5 +33,19 @@ class SelectItemProduct extends Model
     public function item_product(): BelongsTo
     {
         return $this->belongsTo(ItemProduct::class, 'item_product_id');
+    }
+
+    public function itemPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => intval($value),
+        );
+    }
+
+    public function markupValue(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => intval($value),
+        );
     }
 }
