@@ -300,9 +300,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/daily', [MorController::class, 'daily']);
         Route::get('/', [MorController::class, 'get']);
         Route::post('/upsert', [MorController::class, 'upsert']);
+        // Route::get('/export', [MorController::class, 'export']);
     });
 
     Route::prefix('activity-log')->group(function () {
         Route::get('/', [ActivityLogController::class, 'index']);
     });
 });
+
+Route::get('mor/export', [MorController::class, 'export']);

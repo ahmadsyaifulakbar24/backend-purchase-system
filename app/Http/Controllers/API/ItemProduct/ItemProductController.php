@@ -8,7 +8,10 @@ use App\Http\Resources\ItemProduct\ItemProductResource;
 use App\Imports\CategoryProductPriceImport;
 use App\Imports\ItemProductImport;
 use App\Models\ItemProduct;
+use App\Models\Location;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
@@ -49,7 +52,7 @@ class ItemProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'unique:item_products,code'],
             'name' => ['required', 'string'],
             'item_category_id' => [
@@ -74,14 +77,37 @@ class ItemProductController extends Controller
                 })
             ],
             'tax' => ['required', 'in:yes,no'],
-
             'location_id' => ['required', 'exists:locations,id'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'price' => ['required', 'numeric'],
             'sell_price' => ['required', 'numeric'],
         ]);
 
-        $input = $request->all();
+        
+        $validator->after(function($validator) use ($request) {
+            $location = Location::find($request->location_id);
+            $supplier = Supplier::find($request->supplier_id);
+
+            if($supplier->main == '1') {
+                $item_product_check = ItemProduct::where([['location_id', $location->id], ['name', $request->name]])->count();
+                if($item_product_check < 1) {
+                    $validator->errors()->add(
+                        'name', 'Product name not found on this supplier'
+                    );
+                }
+            }
+
+            if($location->main == '1') {
+                if($supplier->main == '1') {
+                    $validator->errors()->add(
+                        'supplier_id', 'Suppliers cannot come from the center'
+                    );
+                }
+            }    
+        });
+        $validator->validate();
+
+        $input = $validator->safe()->all();
         $item_product = ItemProduct::create($input);
 
         return ResponseFormatter::success(
@@ -154,7 +180,7 @@ class ItemProductController extends Controller
 
     public function update(Request $request, ItemProduct $item_product)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => ['required', 'string', 'unique:item_products,code,' . $item_product->id],
             'name' => ['required', 'string'],
             'item_category_id' => [
@@ -184,8 +210,30 @@ class ItemProductController extends Controller
             'price' => ['required', 'numeric'],
             'sell_price' => ['required', 'numeric'],
         ]);
+        $validator->after(function($validator) use ($request) {
+            $location = Location::find($request->location_id);
+            $supplier = Supplier::find($request->supplier_id);
 
-        $input = $request->all();
+            if($supplier->main == '1') {
+                $item_product_check = ItemProduct::where([['location_id', $location->id], ['name', $request->name]])->count();
+                if($item_product_check < 1) {
+                    $validator->errors()->add(
+                        'name', 'Product name not found on this supplier'
+                    );
+                }
+            }
+
+            if($location->main == '1') {
+                if($supplier->main == '1') {
+                    $validator->errors()->add(
+                        'supplier_id', 'Suppliers cannot come from the center'
+                    );
+                }
+            }    
+        });
+        $validator->validate();
+
+        $input = $validator->safe()->all();
         $item_product->update($input);
 
         return ResponseFormatter::success(

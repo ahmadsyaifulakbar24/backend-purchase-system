@@ -156,6 +156,13 @@ class POCatering extends Model
         return $this->belongsTo(User::class, 'approved2_by');
     }
 
+    public function join_item_product(): HasMany
+    {
+        return $this->hasMany(SelectItemProduct::class, 'reference_id')
+                ->join('item_products', 'select_item_products.item_product_id', 'item_products.id')
+                ->where('reference_type', 'App\Models\POCatering');
+    }
+
     public function item_product(): HasMany
     {
         return $this->hasMany(SelectItemProduct::class, 'reference_id')->where('reference_type', 'App\Models\POCatering');

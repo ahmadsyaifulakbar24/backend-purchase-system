@@ -65,6 +65,28 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                 'sell_price' => ['required', 'numeric'],
             ]);
             
+            $validator->after(function($validator) use ($row) {
+                $location = Location::where('location_code', $row['location_code'])->first();
+                $supplier = Supplier::where('code', $row['supplier_code'])->first();
+
+                if($supplier->main == '1') {
+                    $item_product_check = ItemProduct::where([['location_id', $location->id], ['name', $row['name']]])->count();
+                    if($item_product_check < 1) {
+                        $validator->errors()->add(
+                            'name', 'The product name not found on this supplier'
+                        );
+                    } 
+                }
+                
+                if($location->main == '1') {
+                    if($supplier->main == '1') {
+                        $validator->errors()->add(
+                            'supplier_id', 'The suppliers cannot come from the center'
+                        );
+                    }
+                }    
+            });
+
             if ($validator->fails()) {
                 $errors = $validator->errors()->toArray();
                 foreach ($errors as $fieldName => $errorMessages) {

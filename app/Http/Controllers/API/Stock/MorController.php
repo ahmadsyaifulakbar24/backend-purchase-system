@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Stock;
 
+use App\Exports\MorExport;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\MorRequest;
@@ -12,6 +13,7 @@ use App\Repository\ProductStockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MorController extends Controller
 {
@@ -143,5 +145,11 @@ class MorController extends Controller
             ], 'create mor data failed');
         }
         
+    }
+
+    public function export(Request $request)
+    {
+        return view('exports.mor');
+        // return Excel::download(new MorExport, 'MOR.xlsx');
     }
 }
