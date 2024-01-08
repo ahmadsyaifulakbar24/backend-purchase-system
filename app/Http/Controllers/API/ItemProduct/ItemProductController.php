@@ -83,13 +83,13 @@ class ItemProductController extends Controller
             'sell_price' => ['required', 'numeric'],
         ]);
 
-        
         $validator->after(function($validator) use ($request) {
             $location = Location::find($request->location_id);
+            $main_location = Location::where('main', 1)->first();
             $supplier = Supplier::find($request->supplier_id);
 
             if($supplier->main == '1') {
-                $item_product_check = ItemProduct::where([['location_id', $location->id], ['name', $request->name]])->count();
+                $item_product_check = ItemProduct::where([['location_id', $main_location->id], ['name', $request->name]])->count();
                 if($item_product_check < 1) {
                     $validator->errors()->add(
                         'name', 'Product name not found on this supplier'
@@ -212,10 +212,11 @@ class ItemProductController extends Controller
         ]);
         $validator->after(function($validator) use ($request) {
             $location = Location::find($request->location_id);
+            $main_location = Location::where('main', 1)->first();
             $supplier = Supplier::find($request->supplier_id);
 
             if($supplier->main == '1') {
-                $item_product_check = ItemProduct::where([['location_id', $location->id], ['name', $request->name]])->count();
+                $item_product_check = ItemProduct::where([['location_id', $main_location->id], ['name', $request->name]])->count();
                 if($item_product_check < 1) {
                     $validator->errors()->add(
                         'name', 'Product name not found on this supplier'
