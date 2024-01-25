@@ -9,6 +9,7 @@ use App\Http\Requests\InternalOrder\DOCateringRequest;
 use App\Http\Resources\InternalOrder\DOCatering\DOCateringDetailResource;
 use App\Http\Resources\InternalOrder\DOCatering\DOCateringResource;
 use App\Models\DOCatering;
+use App\Models\ItemProduct;
 use App\Models\Location;
 use App\Models\SelectItemProduct;
 use App\Repository\ProductStockRepository;
@@ -98,16 +99,16 @@ class DOCateringController extends Controller
             'status' => ['required', 'in:draft,submit'],
         ]);
         $status = $request->status;
-
+        
         try {
             DB::beginTransaction();
-
+    
             if(($do_catering->status == 'submit' && $status == 'submit') || ($do_catering->status == 'draft' && $status == 'draft')) {
                 return ResponseFormatter::errorValidation([
                     'do_catering_id' => 'status is the same',
                 ], 'update status do catering failed');
             }
-
+    
             if ($status == 'submit') {
                 // add product stock berdasarkan lokasi pr catering
                 $this->update_to_stock($do_catering, 'plus');
@@ -115,7 +116,7 @@ class DOCateringController extends Controller
                 // rollback product stock berdasarkan lokasi pr catering
                 $this->update_to_stock($do_catering, 'minus');
             }
-
+    
             $do_catering->update([
                 'status' => $status
             ]);
@@ -147,7 +148,7 @@ class DOCateringController extends Controller
         // update product berdasarkan lokasi 
             foreach ($item_products as $item_product) {
                 $quantity = $type == 'minus' ? intval(-$item_product['quantity']) : $item_product['quantity'];
-                $message = $type == 'minus' ? 'Rollback stock product from do catering' : 'Added product from DO Catering';
+                // $message = $type == 'minus' ? 'Rollback stock product from do catering' : 'Added product from DO Catering';
 
                 $data = [
                     'item_product_id' => $item_product['item_product_id'],
@@ -176,10 +177,12 @@ class DOCateringController extends Controller
 
                 foreach ($item_products as $item_product_sup) {
                     $quantity_sup = $type == 'minus' ? $item_product_sup['quantity'] : intval(-$item_product_sup['quantity']);
-                    $message_sup = $type == 'minus' ? 'Rollback stock product from do catering' : 'Product reduction from DO Catering';
-    
+                    $item_product_center = ItemProduct::where([['location_id', $pusat_location->id], ['name', $item_product_sup->item_product->name]])->first();
+                    // $message_sup = $type == 'minus' ? 'Rollback stock product from do catering' : 'Product reduction from DO Catering';
+                    
                     $data_sup = [
-                        'item_product_id' => $item_product_sup['item_product_id'],
+                        // 'item_product_id' => $item_product_sup['item_product_id'],
+                        'item_product_id' => $item_product_center->id,
                         'location_id' => $pusat_location->id,
                         'to' => $to,
                         'purchase_order' => $purchase_order,
