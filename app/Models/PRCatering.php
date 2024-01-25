@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 use hisorange\BrowserDetect\Parser as Browser;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class PRCatering extends Model
@@ -92,6 +93,11 @@ class PRCatering extends Model
                 return $date_timezone;
             },
         );
+    }
+
+    public function po_catering(): HasOne
+    {
+        return $this->hasOne(POCatering::class, 'pr_catering_id');
     }
 
     public function location(): BelongsTo
