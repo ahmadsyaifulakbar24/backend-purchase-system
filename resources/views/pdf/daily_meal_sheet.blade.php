@@ -159,15 +159,35 @@
                     <td class="text-center">{{ $record->name }}</td>
                     <td class="text-center">{{ $record->position }}</td>
                     <td class="text-center">{{ $record->company }}</td>
-                    <td class="tg-0pky">{{ $record->breakfast }}</td>
-                    <td class="tg-0pky">{{ $record->lunch }}</td>
-                    <td class="tg-0pky">{{ $record->dinner }}</td>
-                    <td class="tg-0pky">{{ $record->super }}</td>
+                    <td class="tg-0pky">
+                        @if($record->breakfast == 1)
+                            <img src="{{ $checklist_image }}" alt="checklist">
+                        @endif
+                    </td>
+                    <td class="tg-0pky">
+                        @if($record->lunch == 1)
+                            <img src="{{ $checklist_image }}" alt="checklist">
+                        @endif
+                    </td>
+                    <td class="tg-0pky">
+                        @if($record->dinner == 1)
+                            <img src="{{ $checklist_image }}" alt="checklist">
+                        @endif
+                    </td>
+                    <td class="tg-0pky">
+                        @if($record->super == 1)
+                            <img src="{{ $checklist_image }}" alt="checklist">
+                        @endif
+                    </td>
                     @php
                         $total = $record->breakfast + $record->lunch + $record->dinner + $record->super
                     @endphp
                     <td class="tg-0pky">{{ $total }}</td>
-                    <td class="tg-0pky">{{ $record->accomodation }}</td>
+                    <td class="tg-0pky">
+                        @if($record->accomodation == 1)
+                            <img src="{{ $checklist_image }}" alt="checklist">
+                        @endif
+                    </td>
 
                     @php
                         $total_breakfast += $record->breakfast;
