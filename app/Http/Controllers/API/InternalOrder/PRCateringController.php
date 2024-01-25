@@ -24,17 +24,26 @@ class PRCateringController extends Controller
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
+            'po_catering' => ['nullable', 'in:yes,no'],
         ]);
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
         $status = $request->status;
+        $po_catering = $request->po_catering;
 
         $pr_catering = PRCatering::when($search, function ($query, string $search) {
                                     $query->where('pr_number', 'like', '%'.$search.'%');
                                 })
                                 ->when($status, function ($query, array $status) {
                                     $query->whereIn('status', $status);
+                                })
+                                ->when($po_catering, function ($query, $po_catering) {
+                                    if ($po_catering == 'yes') {
+                                        $query->has('po_catering');
+                                    } else if ($po_catering == 'no') {
+                                        $query->doesntHave('po_catering');
+                                    }
                                 })
                                 ->orderBy('created_at', 'DESC');
 
