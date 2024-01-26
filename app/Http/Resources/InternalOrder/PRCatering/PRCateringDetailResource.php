@@ -28,6 +28,7 @@ class PRCateringDetailResource extends JsonResource
                 'id' => $this->prepared_by_data->id,
                 'name' => $this->prepared_by_data->name,
             ],
+            'po_catering' => !empty($this->po_catering) ? true : false,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'item_product' => SelectItemProductResource::collection($this->item_product),
