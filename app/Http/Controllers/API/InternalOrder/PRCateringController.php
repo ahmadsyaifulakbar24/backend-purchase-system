@@ -5,12 +5,14 @@ namespace App\Http\Controllers\API\InternalOrder;
 use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InternalOrder\PRCateringRequest;
+use App\Http\Requests\InternalOrder\PRCatering\PRCateringRequest;
+use App\Http\Requests\InternalOrder\PRCatering\PRCateringUpdateRequest;
 use App\Http\Resources\InternalOrder\PRCatering\PRCateringDetailResource;
 use App\Http\Resources\InternalOrder\PRCatering\PRCateringResource;
 use App\Models\Location;
 use App\Models\PRCatering;
 use App\Models\SelectItemProduct;
+use App\Repository\OrderHistoryRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,14 +97,27 @@ class PRCateringController extends Controller
         );
     }
 
-    public function update(PRCateringRequest $request, PRCatering $pr_catering) 
+    public function update(PRCateringUpdateRequest $request, PRCatering $pr_catering) 
     {
         $input = $request->except([
             'item_product'
         ]);
-
+        
         // database transaction for create pr catering an product
         $result = DB::transaction(function () use ($input, $request, $pr_catering) {
+            // create history if history == yes
+            $history = $request->history;
+            if($history == 'yes') {
+                $new_data = [
+                    'reference_id' => $pr_catering->id,
+                    'reference_type' => 'App\Models\PRCatering',
+                    'order_number' => $pr_catering->pr_number,
+                    'data' => new PRCateringDetailResource($pr_catering),
+                ];
+
+                OrderHistoryRepository::store($new_data);
+            }
+
             // update pr catering data
             $pr_catering->update($input);
 

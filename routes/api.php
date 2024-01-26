@@ -22,6 +22,7 @@ use App\Http\Controllers\API\MealSheet\MealSheetDailyController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyRecordController;
 use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
 use App\Http\Controllers\API\MealSheet\MealSheetMonthlyController;
+use App\Http\Controllers\API\OrderHistory\OrderHistoryController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\ReadExcel\ReadExcelController;
 use App\Http\Controllers\API\Stock\MorController;
@@ -306,6 +307,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('activity-log')->group(function () {
         Route::get('/', [ActivityLogController::class, 'index']);
     });
+
+    Route::prefix('order-history')->group(function () {
+        Route::get('/', [OrderHistoryController::class, 'get']);
+        Route::get('/{order_history:id}', [OrderHistoryController::class, 'show']);
+    });
+
 });
 
 Route::get('mor/export', [MorController::class, 'export']);

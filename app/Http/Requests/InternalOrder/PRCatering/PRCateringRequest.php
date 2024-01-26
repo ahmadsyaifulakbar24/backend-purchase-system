@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\InternalOrder;
+namespace App\Http\Requests\InternalOrder\PRCatering;
 
 use Illuminate\Foundation\Http\FormRequest;
 

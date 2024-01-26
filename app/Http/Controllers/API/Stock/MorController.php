@@ -149,6 +149,9 @@ class MorController extends Controller
 
     public function export(Request $request)
     {
+        $request->validate([
+            'location_id' => ['required', 'exists:locations,id'],
+        ]);
         return view('exports.mor');
         // return Excel::download(new MorExport, 'MOR.xlsx');
     }
