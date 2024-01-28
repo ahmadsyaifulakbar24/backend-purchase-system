@@ -153,11 +153,11 @@ class POSupplierCateringController extends Controller
 
     public function destroy(POSupplierCatering $po_supplier_catering)
     {
-        if ($po_supplier_catering->status == 'submit') {
-            return ResponseFormatter::errorValidation([
-                'po_supplier_catering_id' => ['cannot update this data because the status has already been submitted']
-            ], 'update po supplier cateirng data failed', 422);
-        }
+        // if ($po_supplier_catering->status == 'submit') {
+        //     return ResponseFormatter::errorValidation([
+        //         'po_supplier_catering_id' => ['cannot update this data because the status has already been submitted']
+        //     ], 'update po supplier cateirng data failed', 422);
+        // }
         
         DB::transaction(function () use ($po_supplier_catering) {
 

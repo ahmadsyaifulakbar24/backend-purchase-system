@@ -145,11 +145,11 @@ class POSupplierCustomerController extends Controller
 
     public function destroy(POSupplierCustomer $po_supplier_customer)
     {
-        if ($po_supplier_customer->status == 'submit') {
-            return ResponseFormatter::errorValidation([
-                'po_supplier_customer_id' => ['cannot update this data because the status has already been submitted']
-            ], 'update po supplier customer data failed', 422);
-        }
+        // if ($po_supplier_customer->status == 'submit') {
+        //     return ResponseFormatter::errorValidation([
+        //         'po_supplier_customer_id' => ['cannot update this data because the status has already been submitted']
+        //     ], 'update po supplier customer data failed', 422);
+        // }
         
         DB::transaction(function () use ($po_supplier_customer) {
 
