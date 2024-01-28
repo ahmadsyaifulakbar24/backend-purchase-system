@@ -34,6 +34,7 @@ class POSupplierCustomerUpdateRequest extends FormRequest
             'discount_id' => ['required', 'exists:discounts,id'],
             'term_condition' => ['required', 'string'],
             'status' => ['required', 'in:draft,submit'],
+            'hard_edit' => ['required', 'in:yes,no'],
 
             'item_product' => ['required', 'array'],
             'item_product.*.item_product_id' => ['required', 'exists:item_products,id', 'distinct'],
