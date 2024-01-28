@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 use hisorange\BrowserDetect\Parser as Browser;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class PRCustomer extends Model
@@ -92,6 +93,11 @@ class PRCustomer extends Model
                 return $date_timezone;
             },
         );
+    }
+
+    public function quotation(): HasOne
+    {
+        return $this->hasOne(Quotation::class, 'pr_customer_id');
     }
 
     public function location(): BelongsTo

@@ -26,7 +26,7 @@ class POSupplierCustomerRequest extends FormRequest
             'po_customer_id' => [
                 'required', 
                 Rule::exists('po_customers', 'id')->where(function ($query) {
-                    return $query->where('status', 'submit');
+                    return $query->where('status', 'finish');
                 })
             ],
             'supplier_id' => [

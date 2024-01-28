@@ -30,6 +30,7 @@ class PRCustomerDetailResource extends JsonResource
             ],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'quotation' => !empty($this->quotation) ? true : false,
             'item_product' => SelectItemProductResource::collection($this->item_product),
             'attachment_file' => FileResource::collection($this->attachment_file)
         ];

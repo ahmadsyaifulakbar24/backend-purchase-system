@@ -10,6 +10,7 @@ use App\Http\Requests\ExternalOrder\DOCustomer\DOCustomerUpdateRequest;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerDetailResource;
 use App\Http\Resources\ExternalOrder\DOCustomer\DOCustomerResource;
 use App\Models\DOCustomer;
+use App\Models\ItemProduct;
 use App\Models\Location;
 use App\Models\SelectItemProduct;
 use App\Repository\ProductStockRepository;
@@ -147,7 +148,7 @@ class DOCustomerController extends Controller
         } else {
             $input['note'] = NULL;
         }
-        // return $input;
+        
         $do_customer->update($input);
 
         return ResponseFormatter::success(
@@ -235,9 +236,11 @@ class DOCustomerController extends Controller
                 $supplier = $item_product->item_product->supplier;
                 if ($supplier->main == '1') {
                     $quantity = intval(-$item_product['quantity']);
-
+                    $item_product_center = ItemProduct::where([['location_id', $pusat_location->id], ['name', $item_product->item_product->name]])->first();
+                    
                     $data = [
-                        'item_product_id' => $item_product['item_product_id'],
+                        // 'item_product_id' => $item_product['item_product_id'],
+                        'item_product_id' => $item_product_center->id,
                         'location_id' => $pusat_location->id,
                         'quantity' => $quantity,
                         'to' => $to,

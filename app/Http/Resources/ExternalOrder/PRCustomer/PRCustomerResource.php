@@ -27,6 +27,7 @@ class PRCustomerResource extends JsonResource
             ],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'quotation' => !empty($this->quotation) ? true : false,
         ];
     }
 }

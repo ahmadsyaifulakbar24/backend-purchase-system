@@ -54,7 +54,7 @@ class OrderHistoryController extends Controller
     }
 
     public function show(OrderHistory $order_history)
-    {
+    {   
         return ResponseFormatter::success(
             new OrderHistoryDetailResource($order_history),
             'success show order history data',
