@@ -101,8 +101,9 @@ class POSupplierCateringController extends Controller
         $input = $request->except([
             'item_product'
         ]);
+        $hard_edit = $request->hard_edit;
 
-        if ($po_supplier_catering->status == 'submit') {
+        if ($po_supplier_catering->status == 'submit' && $hard_edit == 'no') {
             return ResponseFormatter::errorValidation([
                 'po_supplier_catering_id' => ['cannot update this data because the status has already been submitted']
             ], 'update po supplier cateirng data failed', 422);
