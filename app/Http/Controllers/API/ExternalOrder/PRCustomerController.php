@@ -11,6 +11,7 @@ use App\Http\Resources\ExternalOrder\PRCustomer\PRCustomerResource;
 use App\Models\Location;
 use App\Models\PRCustomer;
 use App\Models\SelectItemProduct;
+use App\Repository\OrderHistoryRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +104,21 @@ class PRCustomerController extends Controller
 
         // database transaction for create pr customer an product
         $result = DB::transaction(function () use ($input, $request, $pr_customer) {
+
+            // create history if history == yes
+            $history = $request->history;
+            if($history == 'yes') {
+                $new_data = [
+                    'reference_id' => $pr_customer->id,
+                    'reference_type' => 'App\Models\PRCustomer',
+                    'order_number' => $pr_customer->pr_number,
+                    'data' => new PRCustomerDetailResource($pr_customer),
+                ];
+
+                OrderHistoryRepository::store($new_data);
+            }
+
+
             // update pr customer data
             $pr_customer->update($input);
 
