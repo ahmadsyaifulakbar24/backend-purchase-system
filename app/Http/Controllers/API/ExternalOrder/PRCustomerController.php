@@ -24,17 +24,26 @@ class PRCustomerController extends Controller
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
             'paginate' => ['nullable', 'in:0,1'],
+            'quotation' => ['nullable', 'in:yes,no'],
         ]);
         $search = $request->search;
         $paginate = $request->input('paginate', 1);
         $limit = $request->input('limit', 10);
         $status = $request->status;
+        $quotation = $request->quotation;
 
         $pr_customer = PRCustomer::when($search, function ($query, string $search) {
                                     $query->where('pr_number', 'like', '%'.$search.'%');
                                 })
                                 ->when($status, function ($query, array $status) {
                                     $query->whereIn('status', $status);
+                                })
+                                ->when($quotation, function ($query, $quotation) {
+                                    if ($quotation == 'yes') {
+                                        $query->has('quotation');
+                                    } else if ($quotation == 'no') {
+                                        $query->doesntHave('quotation');
+                                    }
                                 })
                                 ->orderBy('created_at', 'DESC');
 
