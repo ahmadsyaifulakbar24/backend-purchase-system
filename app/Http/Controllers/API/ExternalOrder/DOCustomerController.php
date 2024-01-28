@@ -100,6 +100,13 @@ class DOCustomerController extends Controller
         $input = $request->except([
             'item_product'
         ]);
+        $hard_edit = $request->hard_edit;
+        if(in_array($do_customer->status, ['submit', 'finish']) && $hard_edit == 'no')
+        {
+            return ResponseFormatter::errorValidation([
+                'do_customer_id' => ['cannot update this data because the status has already been submited or finish']
+            ], 'update do customer data failed', 422);
+        }
 
         // database transaction for do customer and item data
         $result = DB::transaction(function () use ($input, $request, $do_customer) {

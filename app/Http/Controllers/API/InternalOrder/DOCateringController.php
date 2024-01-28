@@ -5,7 +5,8 @@ namespace App\Http\Controllers\API\InternalOrder;
 use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InternalOrder\DOCateringRequest;
+use App\Http\Requests\InternalOrder\DOCatering\DOCateringRequest;
+use App\Http\Requests\InternalOrder\DOCatering\DOCateringUpdateRequest;
 use App\Http\Resources\InternalOrder\DOCatering\DOCateringDetailResource;
 use App\Http\Resources\InternalOrder\DOCatering\DOCateringResource;
 use App\Models\DOCatering;
@@ -63,9 +64,11 @@ class DOCateringController extends Controller
         );
     }    
 
-    public function update(DOCateringRequest $request, DOCatering $do_catering)
+    public function update(DOCateringUpdateRequest $request, DOCatering $do_catering)
     {
-        if($do_catering->status == 'submit')
+        $hard_edit = $request->hard_edit;
+
+        if($do_catering->status == 'submit' && $hard_edit == 'no')
         {
             return ResponseFormatter::errorValidation([
                 'do_catering_id' => ['cannot update this data because the status has already been submitted']
