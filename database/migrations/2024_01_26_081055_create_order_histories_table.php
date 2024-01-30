@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('reference_type');
             $table->string('order_number');
             $table->json('data');
+            $table->foreignUuid('created_by')->constrained('users')->onUpdate('cascade');
             $table->timestamps();
         });
     }

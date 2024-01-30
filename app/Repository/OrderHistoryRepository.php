@@ -3,6 +3,7 @@
     namespace App\Repository;
 
 use App\Models\OrderHistory;
+use Illuminate\Support\Facades\Auth;
 
 class OrderHistoryRepository {
 
@@ -13,6 +14,7 @@ class OrderHistoryRepository {
             'reference_type' => $data['reference_type'],
             'order_number' => $data['order_number'],
             'data' => $data['data'],
+            'created_by' => Auth::user()->id,
         ];
 
         $order_history = OrderHistory::create($new_data);

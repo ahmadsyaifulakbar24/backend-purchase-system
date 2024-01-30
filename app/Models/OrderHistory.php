@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderHistory extends Model
 {
@@ -17,7 +18,8 @@ class OrderHistory extends Model
         'reference_id',
         'reference_type',
         'order_number',
-        'data'
+        'data',
+        'created_by',
     ];
 
     protected $casts = [
@@ -44,5 +46,10 @@ class OrderHistory extends Model
                 return $date_timezone;
             },
         );
+    }
+
+    public function created_by_data(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
