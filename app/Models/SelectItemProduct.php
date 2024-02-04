@@ -48,4 +48,9 @@ class SelectItemProduct extends Model
             get: fn ($value) => intval($value),
         );
     }
+
+    public function do_catering(): BelongsTo
+    {
+        return $this->belongsTo(DOCatering::class, 'reference_id');
+    }
 }

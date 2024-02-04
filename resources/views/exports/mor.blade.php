@@ -69,7 +69,7 @@
 
     <tr>
         <td> CATEGORY </td>
-        <td> FROZEN MEAT </td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -150,195 +150,216 @@
         <td></td>
         <td>31</td>
         <td></td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td> </td>
-        <td>   </td>
-        <td> </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
+    @foreach ($item_product as $category_code => $sub_category)
+        @php
+            $no = 0;
+        @endphp
+        @foreach ($sub_category as $sub_category_code => $product)
+            @php
+                $no++;
+                $first_item = $product->first();
+            @endphp
+            <tr>
+                <td rowspan="">
+                    @if ($no == 1)
+                        {{ $first_item->item_category->category }}
+                    @endif
+                </td>
+                <td colspan="5"> {{ $first_item->sub_item_category->category }}</td>
+                <td colspan="82"></td>
+            </tr>
 
-    <tr>
-        <td></td>
-        <td> Beef Blade </td>
-        <td> Aust/Nz </td>
-        <td> 1000 gr </td>
-        <td> Kg </td>
-        <td> 117,500 </td>
-        <td> 2 </td>
-        <td> 235,000 </td>
-        <td> 10 </td>
-        <td> 1,175,000 </td>
-        <td> 15 </td>
-        <td> 1,762,500 </td>
-        <td> 10 </td>
-        <td> 1,175,000 </td>
-        <td> 10 </td>
-        <td> 1,175,000 </td>
-        <td> 10 </td>
-        <td> 1,175,000 </td>
-        <td> 57 </td>
-        <td> 6,697,500 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>5</td>
-        <td> 587,500 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>5</td>
-        <td> 587,500 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>5</td>
-        <td> 587,500 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>6</td>
-        <td> 705,000 </td>
-        <td></td>
-        <td> - </td>
-        <td>4</td>
-        <td> 470,000 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>3</td>
-        <td> 352,500 </td>
-        <td>4</td>
-        <td> 470,000 </td>
-        <td></td>
-        <td> - </td>
-        <td>4</td>
-        <td> 470,000 </td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> - </td>
-        <td>5</td>
-        <td> 587,500 </td>
-        <td> 41 </td>
-        <td> 4,817,500 </td>
-        <td> 16 </td>
-        <td> 1,880,000 </td>
-        <td> 15.0 </td>
-        <td> 1,762,500 </td>
-    </tr>
+            <tr>
+                <td></td>
+                <td> Beef Blade </td>
+                <td> Aust/Nz </td>
+                <td> 1000 gr </td>
+                <td> Kg </td>
+                <td> 117,500 </td>
+                <td> 2 </td>
+                <td> 235,000 </td>
+                <td> 10 </td>
+                <td> 1,175,000 </td>
+                <td> 15 </td>
+                <td> 1,762,500 </td>
+                <td> 10 </td>
+                <td> 1,175,000 </td>
+                <td> 10 </td>
+                <td> 1,175,000 </td>
+                <td> 10 </td>
+                <td> 1,175,000 </td>
+                <td> 57 </td>
+                <td> 6,697,500 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>5</td>
+                <td> 587,500 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>5</td>
+                <td> 587,500 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>5</td>
+                <td> 587,500 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>6</td>
+                <td> 705,000 </td>
+                <td></td>
+                <td> - </td>
+                <td>4</td>
+                <td> 470,000 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>3</td>
+                <td> 352,500 </td>
+                <td>4</td>
+                <td> 470,000 </td>
+                <td></td>
+                <td> - </td>
+                <td>4</td>
+                <td> 470,000 </td>
+                <td></td>
+                <td> - </td>
+                <td></td>
+                <td> - </td>
+                <td>5</td>
+                <td> 587,500 </td>
+                <td> 41 </td>
+                <td> 4,817,500 </td>
+                <td> 16 </td>
+                <td> 1,880,000 </td>
+                <td> 15.0 </td>
+                <td> 1,762,500 </td>
+            </tr>
+        @endforeach
 
-    <tr>
-        <td> B   </td>
-        <td> TOTAL FROZEN META </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td> - </td>
-        <td></td>
-        <td> 3,729,475 </td>
-        <td></td>
-        <td> 9,590,560 </td>
-        <td></td>
-        <td> 10,797,360 </td>
-        <td></td>
-        <td> 10,415,960 </td>
-        <td></td>
-        <td> 10,103,065 </td>
-        <td></td>
-        <td> 9,138,960 </td>
-        <td></td>
-        <td> 53,775,380 </td>
-        <td></td>
-        <td> 1,500,000 </td>
-        <td></td>
-        <td> 961,635 </td>
-        <td></td>
-        <td> 1,406,000 </td>
-        <td></td>
-        <td> 1,712,860 </td>
-        <td></td>
-        <td> 1,593,735 </td>
-        <td></td>
-        <td> 1,346,240 </td>
-        <td></td>
-        <td> 1,063,015 </td>
-        <td></td>
-        <td> 1,436,500 </td>
-        <td></td>
-        <td> 1,760,205 </td>
-        <td></td>
-        <td> 1,289,700 </td>
-        <td></td>
-        <td> 1,225,815 </td>
-        <td></td>
-        <td> 1,730,035 </td>
-        <td></td>
-        <td> 1,774,990 </td>
-        <td></td>
-        <td> 1,765,000 </td>
-        <td></td>
-        <td> 1,543,500 </td>
-        <td></td>
-        <td> 2,017,020 </td>
-        <td></td>
-        <td> 1,253,500 </td>
-        <td></td>
-        <td> 1,106,500 </td>
-        <td></td>
-        <td> 1,115,225 </td>
-        <td></td>
-        <td> 1,056,035 </td>
-        <td></td>
-        <td> 1,066,835 </td>
-        <td></td>
-        <td> 1,058,500 </td>
-        <td></td>
-        <td> 1,628,500 </td>
-        <td></td>
-        <td> 1,271,315 </td>
-        <td></td>
-        <td> 1,461,950 </td>
-        <td></td>
-        <td> 1,669,200 </td>
-        <td></td>
-        <td> 2,247,205 </td>
-        <td></td>
-        <td> 1,932,000 </td>
-        <td></td>
-        <td> 998,700 </td>
-        <td></td>
-        <td> 2,181,205 </td>
-        <td></td>
-        <td> 1,632,265 </td>
-        <td></td>
-        <td> 45,805,185 </td>
-        <td></td>
-        <td> 7,970,195 </td>
-        <td></td>
-        <td> 8,136,170 </td>
-    </tr>
+        <tr>
+            <td> B </td>
+            <td> TOTAL FROZEN META </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> - </td>
+            <td></td>
+            <td> 3,729,475 </td>
+            <td></td>
+            <td> 9,590,560 </td>
+            <td></td>
+            <td> 10,797,360 </td>
+            <td></td>
+            <td> 10,415,960 </td>
+            <td></td>
+            <td> 10,103,065 </td>
+            <td></td>
+            <td> 9,138,960 </td>
+            <td></td>
+            <td> 53,775,380 </td>
+            <td></td>
+            <td> 1,500,000 </td>
+            <td></td>
+            <td> 961,635 </td>
+            <td></td>
+            <td> 1,406,000 </td>
+            <td></td>
+            <td> 1,712,860 </td>
+            <td></td>
+            <td> 1,593,735 </td>
+            <td></td>
+            <td> 1,346,240 </td>
+            <td></td>
+            <td> 1,063,015 </td>
+            <td></td>
+            <td> 1,436,500 </td>
+            <td></td>
+            <td> 1,760,205 </td>
+            <td></td>
+            <td> 1,289,700 </td>
+            <td></td>
+            <td> 1,225,815 </td>
+            <td></td>
+            <td> 1,730,035 </td>
+            <td></td>
+            <td> 1,774,990 </td>
+            <td></td>
+            <td> 1,765,000 </td>
+            <td></td>
+            <td> 1,543,500 </td>
+            <td></td>
+            <td> 2,017,020 </td>
+            <td></td>
+            <td> 1,253,500 </td>
+            <td></td>
+            <td> 1,106,500 </td>
+            <td></td>
+            <td> 1,115,225 </td>
+            <td></td>
+            <td> 1,056,035 </td>
+            <td></td>
+            <td> 1,066,835 </td>
+            <td></td>
+            <td> 1,058,500 </td>
+            <td></td>
+            <td> 1,628,500 </td>
+            <td></td>
+            <td> 1,271,315 </td>
+            <td></td>
+            <td> 1,461,950 </td>
+            <td></td>
+            <td> 1,669,200 </td>
+            <td></td>
+            <td> 2,247,205 </td>
+            <td></td>
+            <td> 1,932,000 </td>
+            <td></td>
+            <td> 998,700 </td>
+            <td></td>
+            <td> 2,181,205 </td>
+            <td></td>
+            <td> 1,632,265 </td>
+            <td></td>
+            <td> 45,805,185 </td>
+            <td></td>
+            <td> 7,970,195 </td>
+            <td></td>
+            <td> 8,136,170 </td>
+        </tr>
+    @endforeach
+
     <tr></tr>
 
     <tr>

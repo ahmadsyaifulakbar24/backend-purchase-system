@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 use hisorange\BrowserDetect\Parser as Browser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class ItemProduct extends Model
@@ -109,5 +110,15 @@ class ItemProduct extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    public function mor(): HasMany
+    {
+        return $this->hasMany(Mor::class, 'item_product_id');
+    }
+
+    public function delivery_order(): HasMany
+    {
+        return $this->hasMany(SelectItemProduct::class, 'item_product_id');
     }
 }

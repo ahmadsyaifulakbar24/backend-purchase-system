@@ -26,6 +26,7 @@ use App\Http\Controllers\API\OrderHistory\OrderHistoryController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\ReadExcel\ReadExcelController;
 use App\Http\Controllers\API\Stock\MorController;
+use App\Http\Controllers\API\Stock\MorMonthController;
 use App\Http\Controllers\API\Stock\ProductStockController;
 use App\Http\Controllers\API\Supplier\SupplierController;
 use App\Http\Controllers\API\User\Auth\AuthController;
@@ -311,6 +312,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('order-history')->group(function () {
         Route::get('/', [OrderHistoryController::class, 'get']);
         Route::get('/{order_history:id}', [OrderHistoryController::class, 'show']);
+    });
+
+    Route::prefix('mor-month')->group(function () {
+        Route::get('month-year-group', [MorMonthController::class, 'get_month_year']);
+        Route::get('/{mor_month:id}', [MorMonthController::class, 'get']);
+        Route::post('/upsert', [MorMonthController::class, 'upsert']);
+
     });
 
 });

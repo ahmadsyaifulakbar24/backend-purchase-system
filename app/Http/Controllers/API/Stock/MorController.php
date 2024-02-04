@@ -7,7 +7,9 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\MorRequest;
 use App\Http\Resources\Stock\MorDailyResource;
+use App\Http\Resources\Stock\MorMonthlyResource;
 use App\Http\Resources\Stock\MorResource;
+use App\Models\ItemProduct;
 use App\Models\Mor;
 use App\Repository\ProductStockRepository;
 use Illuminate\Http\Request;
@@ -151,8 +153,66 @@ class MorController extends Controller
     {
         $request->validate([
             'location_id' => ['required', 'exists:locations,id'],
+            'month' => ['required', 'between:1,12'],
+            'year' => ['required', 'integer']
         ]);
-        return view('exports.mor');
-        // return Excel::download(new MorExport, 'MOR.xlsx');
+        $location_id = $request->location_id;
+        $month = $request->month;
+        $year = $request->year;
+
+        $item_product = ItemProduct::select([
+            'id',
+            'code',
+            'name',
+            'item_category_id',
+            'sub_item_category_id',
+            'brand',
+            'size',
+            'unit_id',
+        ])
+        ->with([
+            'mor' => function ($query) use ($location_id, $month, $year) {
+                $query->where('location_id', $location_id)
+                    ->whereMonth('date', $month)
+                    ->whereYear('date', $year);
+            },
+            'delivery_order' => function ($query) use ($location_id, $month, $year) {
+                $query->where('reference_type', 'App\Models\DOCatering')
+                    ->whereHas('do_catering', function ($sub_query) {
+                        $sub_query->where('status', 'submit');
+                    })
+                    ->whereHas('do_catering.po_supplier_catering.po_catering.pr_catering', function ($sub_query) use ($location_id, $month, $year) {
+                        $sub_query->where('location_id', $location_id)
+                                ->whereMonth('delivery_date', $month)
+                                ->whereYear('delivery_date', $year);
+                    });
+            },
+            'item_category',
+            'sub_item_category',
+            'unit',
+        ])
+        ->where('location_id', $location_id)->get();
+
+        // return $item_product;
+
+        $grouped_data = $item_product->groupBy([
+            'item_category.category_code',
+            'sub_item_category.category_code'
+        ]);
+
+        // return $grouped_data;
+        // foreach ($grouped_data as $category_code => $sub_category) {
+        //     foreach ($sub_category as $sub_category_code => $product) {
+        //         $product;
+        //     }
+        // }
+
+        // $mor_resource = MorMonthlyResource::collection($item_product);
+        // return $mor_resource;
+
+        return view('exports.mor',[
+            'item_product' => $grouped_data
+        ]);
+        return Excel::download(new MorExport, 'MOR.xlsx');
     }
 }
