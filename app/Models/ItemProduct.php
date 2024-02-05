@@ -12,6 +12,7 @@ use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 use hisorange\BrowserDetect\Parser as Browser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class ItemProduct extends Model
@@ -120,5 +121,11 @@ class ItemProduct extends Model
     public function delivery_order(): HasMany
     {
         return $this->hasMany(SelectItemProduct::class, 'item_product_id');
+        
+    }
+
+    public function mor_month_detail(): HasOne
+    {
+        return $this->hasOne(MorMonthDetail::class, 'item_product_id');
     }
 }

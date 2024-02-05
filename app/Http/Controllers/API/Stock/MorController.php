@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Stock;
 
 use App\Exports\MorExport;
+use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\MorRequest;
@@ -10,7 +11,9 @@ use App\Http\Resources\Stock\MorDailyResource;
 use App\Http\Resources\Stock\MorMonthlyResource;
 use App\Http\Resources\Stock\MorResource;
 use App\Models\ItemProduct;
+use App\Models\Location;
 use App\Models\Mor;
+use App\Models\SelectItemProduct;
 use App\Repository\ProductStockRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -160,7 +163,47 @@ class MorController extends Controller
         $month = $request->month;
         $year = $request->year;
 
-        $item_product = ItemProduct::select([
+
+    //    return ItemProduct::select(
+    //         'id',
+    //         'code',
+    //         'name',
+    //         'item_category_id',
+    //         'sub_item_category_id',
+    //         'brand',
+    //         'size',
+    //         'unit_id',
+    //    )
+    //    ->with([
+    //         'delivery_order' => function ($query) use ($location_id, $month, $year) {
+    //             $query->select('quantity', 'item_product_id');
+    //         },
+    //         'mor' => function ($query) use ($location_id, $month, $year) {
+    //             $query->where('location_id', $location_id)
+    //                 ->whereMonth('date', $month)
+    //                 ->whereYear('date', $year);
+    //         },
+    //         'item_category',
+    //         'sub_item_category',
+    //         'unit',
+    //         'mor_month_detail' => function ($query) use ($location_id, $month, $year) {
+    //             $query->whereHas('mor_month', function ($sub_query) use ($location_id, $month, $year) {
+    //                 $sub_query->where([
+    //                     ['location_id', $location_id],
+    //                     ['month', $month],
+    //                     ['year', $year],
+    //                 ]);
+    //             });
+    //         }
+    //    ])
+    //    ->where('location_id', $location_id)
+    //    ->get();
+
+
+
+
+        $location = Location::find($location_id);
+        $item_product = ItemProduct::select(
             'id',
             'code',
             'name',
@@ -169,27 +212,51 @@ class MorController extends Controller
             'brand',
             'size',
             'unit_id',
-        ])
+        )
         ->with([
+            'delivery_order' => function ($query) use ($location_id, $month, $year) {
+                $query->select(
+                    'item_product_id',
+                    DB::raw('
+                        CASE
+                            WHEN DAY(pr_caterings.delivery_date) BETWEEN 1 AND 7 THEN 1
+                            WHEN DAY(pr_caterings.delivery_date) BETWEEN 8 AND 14 THEN 2
+                            WHEN DAY(pr_caterings.delivery_date) BETWEEN 15 AND 21 THEN 3
+                            WHEN DAY(pr_caterings.delivery_date) BETWEEN 22 AND 28 THEN 4
+                            ELSE 5
+                        END AS week
+                    '),
+                    DB::raw('SUM(select_item_products.quantity) as total_quantity')
+                )
+                ->join('do_caterings', 'do_caterings.id', '=', 'select_item_products.reference_id')
+                ->join('po_supplier_caterings', 'po_supplier_caterings.id', '=', 'do_caterings.po_supplier_catering_id')
+                ->join('po_caterings', 'po_caterings.id', '=', 'po_supplier_caterings.po_catering_id')
+                ->join('pr_caterings', 'pr_caterings.id', '=', 'po_caterings.pr_catering_id')
+                ->where('select_item_products.reference_type', 'App\Models\DOCatering')
+                ->where('do_caterings.status', 'submit')
+                ->where('pr_caterings.location_id', $location_id)
+                ->whereMonth('pr_caterings.delivery_date', $month)
+                ->whereYear('pr_caterings.delivery_date', $year)
+                ->groupBy('week')
+                ->orderBy('week', 'ASC');
+            },
             'mor' => function ($query) use ($location_id, $month, $year) {
                 $query->where('location_id', $location_id)
                     ->whereMonth('date', $month)
                     ->whereYear('date', $year);
             },
-            'delivery_order' => function ($query) use ($location_id, $month, $year) {
-                $query->where('reference_type', 'App\Models\DOCatering')
-                    ->whereHas('do_catering', function ($sub_query) {
-                        $sub_query->where('status', 'submit');
-                    })
-                    ->whereHas('do_catering.po_supplier_catering.po_catering.pr_catering', function ($sub_query) use ($location_id, $month, $year) {
-                        $sub_query->where('location_id', $location_id)
-                                ->whereMonth('delivery_date', $month)
-                                ->whereYear('delivery_date', $year);
-                    });
-            },
             'item_category',
             'sub_item_category',
             'unit',
+            'mor_month_detail' => function ($query) use ($location_id, $month, $year) {
+                $query->whereHas('mor_month', function ($sub_query) use ($location_id, $month, $year) {
+                    $sub_query->where([
+                        ['location_id', $location_id],
+                        ['month', $month],
+                        ['year', $year],
+                    ]);
+                });
+            }
         ])
         ->where('location_id', $location_id)->get();
 
@@ -211,6 +278,9 @@ class MorController extends Controller
         // return $mor_resource;
 
         return view('exports.mor',[
+            'location' => $location,
+            'month' => DateHelpers::numericToMonth($month),
+            'year' => $year,
             'item_product' => $grouped_data
         ]);
         return Excel::download(new MorExport, 'MOR.xlsx');

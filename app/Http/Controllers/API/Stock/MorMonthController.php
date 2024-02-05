@@ -7,8 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Stock\MorMonthDetailResource;
 use App\Http\Resources\Stock\MorMonthResource;
 use App\Models\MorMonth;
-use App\Models\MorMonthDetail;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,8 +42,10 @@ class MorMonthController extends Controller
 
         $mor_month_detail = $mor_month->mor_month_detail()->paginate($limit);
 
-        return ResponseFormatter::success(
-            MorMonthDetailResource::collection($mor_month_detail),
+        return ResponseFormatter::success([
+            'mor_month' => new MorMonthResource($mor_month),
+            'detail' => MorMonthDetailResource::collection($mor_month_detail)->response()->getData(true)
+        ],
             'success get mor month detail data'
         );
     }

@@ -18,11 +18,11 @@
 
     <tr>
         <td>MONTH</td>
-        <td>:JUNE 2023</td>
+        <td>: {{ strtoupper($month) }} {{ $year }}</td>
         <td></td>
         <td></td>
         <td>LOCATION</td>
-        <td>: FEDERAL II</td>
+        <td>: {{ $location->location }}</td>
         <td colspan="82"></td>
     </tr>
 
@@ -176,96 +176,120 @@
                 <td colspan="82"></td>
             </tr>
 
-            <tr>
-                <td></td>
-                <td> Beef Blade </td>
-                <td> Aust/Nz </td>
-                <td> 1000 gr </td>
-                <td> Kg </td>
-                <td> 117,500 </td>
-                <td> 2 </td>
-                <td> 235,000 </td>
-                <td> 10 </td>
-                <td> 1,175,000 </td>
-                <td> 15 </td>
-                <td> 1,762,500 </td>
-                <td> 10 </td>
-                <td> 1,175,000 </td>
-                <td> 10 </td>
-                <td> 1,175,000 </td>
-                <td> 10 </td>
-                <td> 1,175,000 </td>
-                <td> 57 </td>
-                <td> 6,697,500 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>5</td>
-                <td> 587,500 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>5</td>
-                <td> 587,500 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>5</td>
-                <td> 587,500 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>6</td>
-                <td> 705,000 </td>
-                <td></td>
-                <td> - </td>
-                <td>4</td>
-                <td> 470,000 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>3</td>
-                <td> 352,500 </td>
-                <td>4</td>
-                <td> 470,000 </td>
-                <td></td>
-                <td> - </td>
-                <td>4</td>
-                <td> 470,000 </td>
-                <td></td>
-                <td> - </td>
-                <td></td>
-                <td> - </td>
-                <td>5</td>
-                <td> 587,500 </td>
-                <td> 41 </td>
-                <td> 4,817,500 </td>
-                <td> 16 </td>
-                <td> 1,880,000 </td>
-                <td> 15.0 </td>
-                <td> 1,762,500 </td>
-            </tr>
+            @foreach ($product as $data)
+                <tr>
+                    <td></td>
+                    <td> {{ $data->name }} </td>
+                    <td> {{ $data->brand }} </td>
+                    <td> {{ $data->size}} </td>
+                    <td> {{ $data->unit->param }} </td>
+                    <td> {{ numberFormat($data->mor_month_detail?->price) }} </td>
+                    <td> {{ number_format($data->mor_month_detail?->last_stock, 0, ',', '.') }} </td>
+                    <td> 
+                        {{ numberFormat($data->mor_month_detail?->price * $data->mor_month_detail?->last_stock) }}
+                    </td>
+
+                    @foreach ($data->delivery_order as $do) 
+                        
+                        @if ($do?->week == '1')
+                            <td> {{ $do->total_quantity }} </td>
+                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
+                        @endif
+
+                        @if ($do?->week == '2')
+                            <td> {{ $do->total_quantity }} </td>
+                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
+                        @endif
+
+                        @if ($do?->week == '3')
+                            <td> {{ $do->total_quantity }} </td>
+                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
+                        @endif
+
+                        @if ($do?->week == '4')
+                            <td> {{ $do->total_quantity }} </td>
+                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
+                        @endif
+
+                        @if ($do?->week == '5')
+                            <td> {{ $do->total_quantity }} </td>
+                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
+                        @endif
+                    @endforeach
+
+                    <td> 57 </td>
+                    <td> 6,697,500 </td>
+
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>5</td>
+                    <td> 587,500 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>5</td>
+                    <td> 587,500 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>5</td>
+                    <td> 587,500 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>6</td>
+                    <td> 705,000 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>4</td>
+                    <td> 470,000 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>3</td>
+                    <td> 352,500 </td>
+                    <td>4</td>
+                    <td> 470,000 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>4</td>
+                    <td> 470,000 </td>
+                    <td></td>
+                    <td> - </td>
+                    <td></td>
+                    <td> - </td>
+                    <td>5</td>
+                    <td> 587,500 </td>
+                    <td> 41 </td>
+                    <td> 4,817,500 </td>
+                    <td> 16 </td>
+                    <td> 1,880,000 </td>
+                    <td> 15.0 </td>
+                    <td> 1,762,500 </td>
+                </tr>
+            @endforeach
         @endforeach
 
         <tr>
