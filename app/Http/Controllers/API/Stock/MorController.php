@@ -163,45 +163,6 @@ class MorController extends Controller
         $month = $request->month;
         $year = $request->year;
 
-
-    //    return ItemProduct::select(
-    //         'id',
-    //         'code',
-    //         'name',
-    //         'item_category_id',
-    //         'sub_item_category_id',
-    //         'brand',
-    //         'size',
-    //         'unit_id',
-    //    )
-    //    ->with([
-    //         'delivery_order' => function ($query) use ($location_id, $month, $year) {
-    //             $query->select('quantity', 'item_product_id');
-    //         },
-    //         'mor' => function ($query) use ($location_id, $month, $year) {
-    //             $query->where('location_id', $location_id)
-    //                 ->whereMonth('date', $month)
-    //                 ->whereYear('date', $year);
-    //         },
-    //         'item_category',
-    //         'sub_item_category',
-    //         'unit',
-    //         'mor_month_detail' => function ($query) use ($location_id, $month, $year) {
-    //             $query->whereHas('mor_month', function ($sub_query) use ($location_id, $month, $year) {
-    //                 $sub_query->where([
-    //                     ['location_id', $location_id],
-    //                     ['month', $month],
-    //                     ['year', $year],
-    //                 ]);
-    //             });
-    //         }
-    //    ])
-    //    ->where('location_id', $location_id)
-    //    ->get();
-
-
-
-
         $location = Location::find($location_id);
         $item_product = ItemProduct::select(
             'id',
@@ -267,19 +228,10 @@ class MorController extends Controller
             'sub_item_category.category_code'
         ]);
 
-        // return $grouped_data;
-        // foreach ($grouped_data as $category_code => $sub_category) {
-        //     foreach ($sub_category as $sub_category_code => $product) {
-        //         $product;
-        //     }
-        // }
-
-        // $mor_resource = MorMonthlyResource::collection($item_product);
-        // return $mor_resource;
-
         return view('exports.mor',[
             'location' => $location,
             'month' => DateHelpers::numericToMonth($month),
+            'mm' => str_pad($month, 2, '0', STR_PAD_LEFT),
             'year' => $year,
             'item_product' => $grouped_data
         ]);

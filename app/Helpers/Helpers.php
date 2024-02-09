@@ -27,7 +27,7 @@ if (!function_exists('numberFormat')) {
 
 if (!function_exists('indexToAlphabet')) {
     function indexToAlphabet($index) {
-        $abjad = range('a', 'z');
+        $abjad = range('A', 'Z');
         
         $loop = floor($index / 26);
         $index_abjad = ($index % 26);

@@ -52,11 +52,11 @@
 
     <tr>
         <td colspan="2">31.04.2023</td>
-        <td colspan="2">7/1/23</td>
-        <td colspan="2">7/7/23</td>
-        <td colspan="2">7/7/23</td>
-        <td colspan="2">7/7/23</td>
-        <td colspan="2">7/7/23</td>
+        <td colspan="2">07/{{ $mm }}/{{ $year }}</td>
+        <td colspan="2">14/{{ $mm }}/{{ $year }}</td>
+        <td colspan="2">21/{{ $mm }}/{{ $year }}</td>
+        <td colspan="2">28/{{ $mm }}/{{ $year }}</td>
+        <td colspan="2">31/{{ $mm }}/{{ $year }}</td>
         <td colspan="62">DAILY</td>
         
         <td>QTY</td>
@@ -157,9 +157,28 @@
         <td></td>
         <td></td>
     </tr>
+    @php
+        $category_no = 0;
+        $grand_total_amount_opening_stock = 0;
+        $grand_total_amount_week = [];
+        $grand_total_amount_all_week= 0;
+        $grand_total_amount_day = [];
+        $grand_total_issue = 0;
+        $grand_total_end_stock = 0;
+        $grand_total_actual_stock = 0;
+    @endphp
     @foreach ($item_product as $category_code => $sub_category)
         @php
+            $category_no++;
             $no = 0;
+
+            $total_amount_opening_stock = 0;
+            $total_amount_week = [];
+            $total_amount_all_week= 0;
+            $total_amount_day = [];
+            $total_issue = 0;
+            $total_end_stock = 0;
+            $total_actual_stock = 0;
         @endphp
         @foreach ($sub_category as $sub_category_code => $product)
             @php
@@ -169,10 +188,10 @@
             <tr>
                 <td rowspan="">
                     @if ($no == 1)
-                        {{ $first_item->item_category->category }}
+                        {{ strtoupper($first_item->item_category->category) }}
                     @endif
                 </td>
-                <td colspan="5"> {{ $first_item->sub_item_category->category }}</td>
+                <td colspan="5"> {{ strtoupper($first_item->sub_item_category->category) }}</td>
                 <td colspan="82"></td>
             </tr>
 
@@ -185,202 +204,173 @@
                     <td> {{ $data->unit->param }} </td>
                     <td> {{ numberFormat($data->mor_month_detail?->price) }} </td>
                     <td> {{ number_format($data->mor_month_detail?->last_stock, 0, ',', '.') }} </td>
+
+                    @php
+                        $amount_opening_stock = $data->mor_month_detail?->price * $data->mor_month_detail?->last_stock;
+                        $total_amount_opening_stock += $amount_opening_stock;
+                    @endphp
                     <td> 
-                        {{ numberFormat($data->mor_month_detail?->price * $data->mor_month_detail?->last_stock) }}
+                        {{ numberFormat($amount_opening_stock) }}
                     </td>
 
-                    @foreach ($data->delivery_order as $do) 
-                        
-                        @if ($do?->week == '1')
-                            <td> {{ $do->total_quantity }} </td>
-                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
-                        @endif
+                    @php
+                        $all_week = [];
+                        $quantity_all_week = 0;
+                        for ($week=1; $week <= 5; $week++) { 
+                            $week_data =  $data->delivery_order->where('week', $week)->first();
+                            $total_quantity = !empty($week_data->total_quantity) ? $week_data->total_quantity : 0;
+                            $quantity_all_week += $total_quantity;
+                            $total_price = $total_quantity * $data->mor_month_detail?->price;
 
-                        @if ($do?->week == '2')
-                            <td> {{ $do->total_quantity }} </td>
-                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
-                        @endif
+                            $all_week[$week] = [
+                                'week' => !empty($week_data->week) ? $week_data->week : $week,
+                                'total_quantity' => $total_quantity,
+                                'total_price' => $total_price,
+                            ];
 
-                        @if ($do?->week == '3')
-                            <td> {{ $do->total_quantity }} </td>
-                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
-                        @endif
+                            if (!isset($total_amount_week[$week])) {
+                                $total_amount_week[$week] = 0;
+                            }
+                            $total_amount_week[$week] += $total_price;
+                        }
+                    @endphp
+                    
+                    @foreach ($all_week as $list_week)
+                        <td> {{ number_format($list_week['total_quantity'], 0, ',', '.') }} </td>
+                        <td>{{ numberFormat($list_week['total_price']) }}</td>
+                    @endforeach
+                    
+                    @php
+                        $stock_available = $data->mor_month_detail?->last_stock + $quantity_all_week;
+                        $price_stock_available = $stock_available * $data->mor_month_detail?->price;
+                        $total_amount_all_week += $price_stock_available;
+                    @endphp
+                    <td> {{ number_format($stock_available, 0, ',', '.') }} </td>
+                    <td>{{ numberFormat($price_stock_available) }}</td>
 
-                        @if ($do?->week == '4')
-                            <td> {{ $do->total_quantity }} </td>
-                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
-                        @endif
+                    @php
+                        $all_day = [];
+                        $quantity_all_day = 0;
 
-                        @if ($do?->week == '5')
-                            <td> {{ $do->total_quantity }} </td>
-                            <td>{{ numberFormat($do->total_quantity  * $data->mor_month_detail?->last_stock) }}</td>
-                        @endif
+                        for ($day=1; $day <= 31; $day++) { 
+                            $date = $year . '-' . $mm . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
+                            $day_data = $data->mor->where('date', $date)->first();
+                            $day_total_quantity = !empty($day_data->quantity) ? $day_data->quantity : 0;
+                            $quantity_all_day += $day_total_quantity;
+                            $total_price_day = $day_total_quantity * $data->mor_month_detail?->price;
+                            
+                            $all_day[$day] = [
+                                'day' => !empty($day_data->date) ? $day_data->date : $day,
+                                'day_total_quantity' => $day_total_quantity,
+                                'total_price_day' => $total_price_day,
+                            ];
+
+                            if (!isset($total_amount_day[$day])) {
+                                $total_amount_day[$day] = 0;
+                            }
+                            $total_amount_day[$day] += $total_price_day;
+                        }
+                    @endphp
+
+                    @foreach ($all_day as $list_day)
+                        <td> {{ number_format($list_day['day_total_quantity'], 0, ',', '.') }} </td>
+                        <td>{{ numberFormat($total_price_day) }}</td>
                     @endforeach
 
-                    <td> 57 </td>
-                    <td> 6,697,500 </td>
+                    @php
+                        $price_quantity_all_day = $quantity_all_day * $data->mor_month_detail?->price;
+                        $total_issue += $price_quantity_all_day
+                    @endphp
+                    <td> {{ number_format($quantity_all_day , 0, ',', '.') }} </td>
+                    <td>{{ numberFormat($price_quantity_all_day) }}</td>
 
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>5</td>
-                    <td> 587,500 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>5</td>
-                    <td> 587,500 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>5</td>
-                    <td> 587,500 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>6</td>
-                    <td> 705,000 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>4</td>
-                    <td> 470,000 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>3</td>
-                    <td> 352,500 </td>
-                    <td>4</td>
-                    <td> 470,000 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>4</td>
-                    <td> 470,000 </td>
-                    <td></td>
-                    <td> - </td>
-                    <td></td>
-                    <td> - </td>
-                    <td>5</td>
-                    <td> 587,500 </td>
-                    <td> 41 </td>
-                    <td> 4,817,500 </td>
-                    <td> 16 </td>
-                    <td> 1,880,000 </td>
-                    <td> 15.0 </td>
-                    <td> 1,762,500 </td>
+
+                    @php
+                        $end_stock = $stock_available - $quantity_all_day;
+                        $price_end_stock = $end_stock  * $data->mor_month_detail?->price;
+                        $total_end_stock += $price_end_stock;
+                    @endphp
+                    <td> {{ number_format($end_stock , 0, ',', '.') }} </td>
+                    <td>{{ numberFormat($price_end_stock) }}</td>
+
+                    
+                    @php
+                        $actual_stock = $data->mor_month_detail?->actual_stock;
+                        $price_actual_stock = $actual_stock * $data->mor_month_detail?->price;
+                        $total_actual_stock += $price_actual_stock;
+                    @endphp
+                    <td> {{ number_format($actual_stock , 0, ',', '.') }} </td>
+                    <td>{{ numberFormat($price_actual_stock) }}</td>
                 </tr>
             @endforeach
         @endforeach
 
         <tr>
-            <td> B </td>
-            <td> TOTAL FROZEN META </td>
+            <td> {{ indexToAlphabet($category_no - 1) }} </td>
+            <td> TOTAL {{ strtoupper($first_item->item_category->category) }} </td>
             <td></td>
             <td></td>
             <td></td>
-            <td> - </td>
             <td></td>
-            <td> 3,729,475 </td>
             <td></td>
-            <td> 9,590,560 </td>
+            @php
+                $grand_total_amount_opening_stock += $total_amount_opening_stock;
+            @endphp
+            <td> {{ numberFormat($total_amount_opening_stock) }} </td>
+
+            @php
+                foreach ($total_amount_week as $key => $value) {
+                    if (!isset($grand_total_amount_week[$key])) {
+                        $grand_total_amount_week[$key] = 0;
+                    }
+
+                    $grand_total_amount_week[$key] += $value;
+                }
+            @endphp
+            @foreach ($total_amount_week as $amount_week)
+                <td></td>
+                <td>{{ numberFormat($amount_week) }}</td>
+            @endforeach
+            
+            @php
+               $grand_total_amount_all_week += $total_amount_all_week;
+            @endphp
             <td></td>
-            <td> 10,797,360 </td>
+            <td>{{ numberFormat($total_amount_all_week) }}</td>
+
+
+            @php
+                foreach ($total_amount_day as $key => $value) {
+                    if (!isset($grand_total_amount_day[$key])) {
+                        $grand_total_amount_day[$key] = 0;
+                    }
+
+                    $grand_total_amount_day[$key] += $value;
+                }
+            @endphp
+            @foreach ($total_amount_day as $amount_day)
+                <td></td>
+                <td>{{ numberFormat($amount_day) }}</td>
+            @endforeach
+
+            @php
+               $grand_total_issue += $total_issue;
+            @endphp
             <td></td>
-            <td> 10,415,960 </td>
+            <td>{{ numberFormat($total_issue) }}</td>
+
+
+            @php
+               $grand_total_end_stock += $total_end_stock;
+            @endphp
             <td></td>
-            <td> 10,103,065 </td>
+            <td>{{ numberFormat($total_end_stock) }}</td>
+
+            @php
+               $grand_total_actual_stock += $total_actual_stock;
+            @endphp
             <td></td>
-            <td> 9,138,960 </td>
-            <td></td>
-            <td> 53,775,380 </td>
-            <td></td>
-            <td> 1,500,000 </td>
-            <td></td>
-            <td> 961,635 </td>
-            <td></td>
-            <td> 1,406,000 </td>
-            <td></td>
-            <td> 1,712,860 </td>
-            <td></td>
-            <td> 1,593,735 </td>
-            <td></td>
-            <td> 1,346,240 </td>
-            <td></td>
-            <td> 1,063,015 </td>
-            <td></td>
-            <td> 1,436,500 </td>
-            <td></td>
-            <td> 1,760,205 </td>
-            <td></td>
-            <td> 1,289,700 </td>
-            <td></td>
-            <td> 1,225,815 </td>
-            <td></td>
-            <td> 1,730,035 </td>
-            <td></td>
-            <td> 1,774,990 </td>
-            <td></td>
-            <td> 1,765,000 </td>
-            <td></td>
-            <td> 1,543,500 </td>
-            <td></td>
-            <td> 2,017,020 </td>
-            <td></td>
-            <td> 1,253,500 </td>
-            <td></td>
-            <td> 1,106,500 </td>
-            <td></td>
-            <td> 1,115,225 </td>
-            <td></td>
-            <td> 1,056,035 </td>
-            <td></td>
-            <td> 1,066,835 </td>
-            <td></td>
-            <td> 1,058,500 </td>
-            <td></td>
-            <td> 1,628,500 </td>
-            <td></td>
-            <td> 1,271,315 </td>
-            <td></td>
-            <td> 1,461,950 </td>
-            <td></td>
-            <td> 1,669,200 </td>
-            <td></td>
-            <td> 2,247,205 </td>
-            <td></td>
-            <td> 1,932,000 </td>
-            <td></td>
-            <td> 998,700 </td>
-            <td></td>
-            <td> 2,181,205 </td>
-            <td></td>
-            <td> 1,632,265 </td>
-            <td></td>
-            <td> 45,805,185 </td>
-            <td></td>
-            <td> 7,970,195 </td>
-            <td></td>
-            <td> 8,136,170 </td>
+            <td>{{ numberFormat($total_actual_stock) }}</td>
         </tr>
     @endforeach
 
@@ -393,88 +383,31 @@
         <td></td>
         <td></td>
         <td></td>
-        <td> - </td>
-        <td> 20,099,325 </td>
         <td></td>
-        <td> 39,995,798 </td>
+        <td> {{ numberFormat($grand_total_amount_opening_stock) }} </td>
+
+        @foreach($grand_total_amount_week as $grand_total_amount_week) 
+            <td></td>
+            <td> {{ numberFormat($grand_total_amount_week) }} </td>
+        @endforeach
+
         <td></td>
-        <td> 40,211,158 </td>
+        <td> {{ numberFormat($grand_total_amount_all_week) }} </td>
+
+
+        @foreach($grand_total_amount_day as $grand_total_amount_day) 
+            <td></td>
+            <td> {{ numberFormat($grand_total_amount_day) }} </td>
+        @endforeach
+
         <td></td>
-        <td> 39,186,923 </td>
+        <td> {{ numberFormat($grand_total_issue) }} </td>
+
         <td></td>
-        <td> 38,407,232 </td>
+        <td> {{ numberFormat($grand_total_end_stock) }} </td>
+
         <td></td>
-        <td> 37,488,376 </td>
-        <td></td>
-        <td> 174,922,710 </td>
-        <td></td>
-        <td> 6,250,682 </td>
-        <td></td>
-        <td> 6,732,615 </td>
-        <td></td>
-        <td> 5,915,797 </td>
-        <td></td>
-        <td> 5,939,603 </td>
-        <td></td>
-        <td> 5,874,359 </td>
-        <td></td>
-        <td> 5,127,460 </td>
-        <td></td>
-        <td> 5,485,088 </td>
-        <td></td>
-        <td> 7,599,972 </td>
-        <td></td>
-        <td> 6,062,535 </td>
-        <td></td>
-        <td> 5,299,956 </td>
-        <td></td>
-        <td> 5,285,293 </td>
-        <td></td>
-        <td> 5,752,332 </td>
-        <td></td>
-        <td> 5,744,725 </td>
-        <td></td>
-        <td> 6,018,462 </td>
-        <td></td>
-        <td> 8,464,748 </td>
-        <td></td>
-        <td> 5,880,498 </td>
-        <td></td>
-        <td> 6,472,572 </td>
-        <td></td>
-        <td> 5,814,175 </td>
-        <td></td>
-        <td> 5,137,694 </td>
-        <td></td>
-        <td> 4,634,445 </td>
-        <td></td>
-        <td> 4,950,804 </td>
-        <td></td>
-        <td> 6,984,491 </td>
-        <td></td>
-        <td> 6,126,799 </td>
-        <td></td>
-        <td> 5,969,644 </td>
-        <td></td>
-        <td> 5,934,597 </td>
-        <td></td>
-        <td> 6,013,908 </td>
-        <td></td>
-        <td> 6,336,834 </td>
-        <td></td>
-        <td> 6,503,209 </td>
-        <td></td>
-        <td> 5,820,421 </td>
-        <td></td>
-        <td> 8,397,509 </td>
-        <td></td>
-        <td> 5,376,132 </td>
-        <td></td>
-        <td> 193,510,645 </td>
-        <td></td>
-        <td> 39,842,717 </td>
-        <td></td>
-        <td> 38,949,282 </td>
+        <td> {{ numberFormat($grand_total_actual_stock) }} </td>
     </tr>
 
     <tr></tr>
@@ -752,7 +685,7 @@
         <td></td>
     </tr>
     <tr>
-        <td>B</td>
+        <td></td>
         <td>DAIRY PRODUCT</td>
         <td> 1,086,853 </td>
         <td> 3,503,252 </td>

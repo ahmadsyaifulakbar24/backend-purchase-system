@@ -18,7 +18,8 @@ class MorMonthDetail extends Model
         'mor_month_id',
         'item_product_id',
         'price',
-        'last_stock'
+        'last_stock',
+        'actual_stock',
     ];
 
     public function createdAt(): Attribute

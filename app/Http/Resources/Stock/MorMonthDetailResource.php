@@ -20,6 +20,7 @@ class MorMonthDetailResource extends JsonResource
             'item_product' => new ItemProductResource($this->item_product),
             'price' => $this->price,
             'last_stock' => $this->last_stock,
+            'actual_stock' => $this->actual_stock,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -66,6 +66,7 @@ class MorMonthController extends Controller
             ],
             'product.*.price' => ['required', 'integer'],
             'product.*.last_stock' => ['required', 'integer'],
+            'product.*.actual_stock' => ['required', 'integer'],
         ]);
         
         try {
@@ -96,6 +97,7 @@ class MorMonthController extends Controller
                         $mor_month_detail->update([
                             'price' => $data['price'],
                             'last_stock' => $data['last_stock'],
+                            'actual_stock' => $data['actual_stock'],
                         ]);
                     } else {
                         $mor_month_detail = $mor_month->mor_month_detail()->create($data);
