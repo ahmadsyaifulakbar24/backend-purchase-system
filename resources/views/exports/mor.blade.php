@@ -47,11 +47,11 @@
         <td colspan="2"> WEEK-2 </td>
         <td colspan="2"> WEEK-3 </td>
         <td colspan="2"> WEEK-4 </td>
-        <td colspan="2"> WEEK-V </td>
+        <td colspan="2"> WEEK-5 </td>
     </tr>
 
     <tr>
-        <td colspan="2">31.04.2023</td>
+        <td colspan="2">{{ $last_date }}</td>
         <td colspan="2">07/{{ $mm }}/{{ $year }}</td>
         <td colspan="2">14/{{ $mm }}/{{ $year }}</td>
         <td colspan="2">21/{{ $mm }}/{{ $year }}</td>
@@ -186,12 +186,12 @@
                 $first_item = $product->first();
             @endphp
             <tr>
-                <td rowspan="">
+                <td>
                     @if ($no == 1)
                         {{ strtoupper($first_item->item_category->category) }}
                     @endif
                 </td>
-                <td colspan="5"> {{ strtoupper($first_item->sub_item_category->category) }}</td>
+                <td colspan="5">{{ strtoupper($first_item->sub_item_category->category) }}</td>
                 <td colspan="82"></td>
             </tr>
 
@@ -414,7 +414,8 @@
     <tr></tr>
     <tr></tr>
 
-    <tr>
+
+    {{-- <tr>
         <td></td>
         <td>CATEGORY</td>
         <td>WEEK</td>
@@ -774,8 +775,6 @@
         <td></td>
         <td></td>
     </tr>
-
-
     <tr>
         <td></td>
         <td>TOTAL</td>
@@ -1225,5 +1224,5 @@
         <td></td>
         <td></td>
         <td></td>
-    </tr>
+    </tr> --}}
 </table>

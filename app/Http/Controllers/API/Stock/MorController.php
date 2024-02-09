@@ -15,6 +15,7 @@ use App\Models\Location;
 use App\Models\Mor;
 use App\Models\SelectItemProduct;
 use App\Repository\ProductStockRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -228,19 +229,21 @@ class MorController extends Controller
             'sub_item_category.category_code'
         ]);
 
-        return view('exports.mor',[
-            'location' => $location,
-            'month' => DateHelpers::numericToMonth($month),
-            'mm' => str_pad($month, 2, '0', STR_PAD_LEFT),
-            'year' => $year,
-            'item_product' => $grouped_data
-        ]);
+        // return view('exports.mor',[
+        //     'location' => $location,
+        //     'month' => DateHelpers::numericToMonth($month),
+        //     'last_date' => Carbon::createFromDate($year, $month)->endOfMonth()->format('d-m-Y'),
+        //     'mm' => str_pad($month, 2, '0', STR_PAD_LEFT),
+        //     'year' => $year,
+        //     'item_product' => $grouped_data
+        // ]);
 
         $return_data = [
             'location' => $location,
             'month' => DateHelpers::numericToMonth($month),
             'mm' => str_pad($month, 2, '0', STR_PAD_LEFT),
             'year' => $year,
+            'last_date' => Carbon::createFromDate($year, $month)->endOfMonth()->format('d-m-Y'),
             'item_product' => $grouped_data
         ];
 
