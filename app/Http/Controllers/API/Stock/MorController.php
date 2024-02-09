@@ -235,6 +235,15 @@ class MorController extends Controller
             'year' => $year,
             'item_product' => $grouped_data
         ]);
-        return Excel::download(new MorExport, 'MOR.xlsx');
+
+        $return_data = [
+            'location' => $location,
+            'month' => DateHelpers::numericToMonth($month),
+            'mm' => str_pad($month, 2, '0', STR_PAD_LEFT),
+            'year' => $year,
+            'item_product' => $grouped_data
+        ];
+
+        return Excel::download(new MorExport($return_data), 'MOR.xlsx');
     }
 }

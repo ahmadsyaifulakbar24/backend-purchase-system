@@ -19,5 +19,6 @@ class PermissionSeeder extends Seeder
         Role::create(['name' => 'purchasing', 'guard_name' => 'api']);
         Role::create(['name' => 'camp-boss', 'guard_name' => 'api']);
         Role::create(['name' => 'finance', 'guard_name' => 'api']);
+        Role::create(['name' => 'store-keeper', 'guard_name' => 'api']);
     }
 }
