@@ -40,7 +40,7 @@ class QuotationUpdateRequest extends FormRequest
             'item_product.*.vat' => ['required', 'integer'],
             'item_product.*.tnt' => ['required', 'in:T,NT'],
             'item_product.*.markup_vat' => ['required', 'integer'],
-            'item_product.*.remark' => ['required', 'string'],
+            'item_product.*.remark' => ['nullable', 'string'],
         ];
     }
 }

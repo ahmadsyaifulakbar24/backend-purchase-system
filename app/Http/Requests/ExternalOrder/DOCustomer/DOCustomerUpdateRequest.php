@@ -31,7 +31,7 @@ class DOCustomerUpdateRequest extends FormRequest
             'item_product.*.item_price' => ['required', 'numeric'],
             'item_product.*.quantity' => ['required', 'string'],
             'item_product.*.vat' => ['required', 'integer'],
-            'item_product.*.remark' => ['required', 'string'],
+            'item_product.*.remark' => ['nullable', 'string'],
         ];
     }
 }
