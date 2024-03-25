@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Client\ClientController;
 use App\Http\Controllers\API\Customer\CustomerController;
 use App\Http\Controllers\API\Department\DepartmentController;
 use App\Http\Controllers\API\Discount\DiscountController;
+use App\Http\Controllers\API\Export\ExportController;
 use App\Http\Controllers\API\ExternalOrder\DOCustomerController;
 use App\Http\Controllers\API\ExternalOrder\POCustomerController;
 use App\Http\Controllers\API\ExternalOrder\POSupplierCustomerController;
@@ -321,4 +322,8 @@ Route::middleware(['auth:api'])->group(function () {
 
     });
 
+    Route::prefix('export')->group(function () {
+        Route::get('/summary', [ExportController::class, 'summary']);
+        Route::get('/realisasi-purchase-record', [ExportController::class, 'realisasi_purchase_record']);
+    });
 });
