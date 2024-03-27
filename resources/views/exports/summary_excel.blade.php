@@ -5,12 +5,11 @@
       border-collapse: collapse;
       text-align: center;
     }
-    td {
-        width: 95;
-        font-size: 0.8rem;
+    .no {
+        width: 30;
     }
     th {
-        width: 95;
+        width: 110;
         font-size: 0.8rem;
         font-weight: bold;
     }
@@ -55,14 +54,13 @@
     <tr class='tr-h-100'>
         <td colspan="1" class="br-none">
             <img src="" alt="checklist">
-        <td colspan="3" class="bx-none">
+        <td colspan="4" class="bx-none">
             <div>
                 <span class="text-header">PT. SURYA BUANA LESTARIJAYA</span>
                 <br /> 
                 <span>Catering dan Accomodation Services</span>
             </div>
         </td>
-        <td colspan="1" class="bl-none"></td>
     </tr>
     <tr class="divider">
         <td colspan="5"></td>
@@ -74,7 +72,7 @@
         <td colspan="5"></td>
     </tr>
     <tr class="bg-orange">
-        <th>NO</th>
+        <th class="no">NO</th>
         <th>VESSEL</th>
         <th>MONTH</th>
         <th>AMOUNT</th>
