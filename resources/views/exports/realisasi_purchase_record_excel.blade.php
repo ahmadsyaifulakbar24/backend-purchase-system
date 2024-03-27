@@ -1,4 +1,8 @@
 <style>
+    .signature-border {
+        border: solid black 1px;
+        padding: 0px;
+    }
     table, th, td {
       border: 1px solid black;
       padding: 6px;
@@ -14,34 +18,84 @@
         font-size: 0.8rem;
         font-weight: bold;
     }
-    </style>
+    .b-none {
+        border: none;
+    }
+    .text-center {
+        text-align: center;
+    }
+    .br-none {
+        border-right: none;
+    }
+    .bl-none {
+        border-left: none;
+    }
+    .bx-none {
+        border-right: none;
+        border-left: none;
+    }
+    .by-none {
+        border-top: none;
+        border-bottom: none;
+    }
+    .tr-h-100 {
+        height: 80;
+    }
+    .divider {
+        height: 20;
+        border: none;
+    }
+    .text-header {
+        font-size: 1.5rem;
+    }
+    .text-subheader {
+        font-size: 1.3rem;
+    }
+    .bg-blue {
+        background-color: #8EA9DB;
+        color: white
+    }
+    .bg-yellow {
+        background-color: #FFFF00;
+    }
+    .bg-orange {
+        background-color: #F4B084;
+    }
+    .bg-black {
+        background-color: #757171;
+        color: white;
+    }
+    .bg-grey {
+        background-color: #A6A6A6;
+    }
+</style>
 <table border="1">
-    <tr>
-        <td colspan="1">
+    <tr class='tr-h-100'>
+        <td colspan="1" class="br-none">
             <img src="" alt="checklist">
-        <td colspan="7">
+        <td colspan="7" class="bx-none">
             <div>
-                <span>PT. SURYA <span>BUANA</span> LESTARIJAYA</span>
+                <span class="text-header">PT. SURYA <span style="color: red">BUANA</span> LESTARIJAYA</span>
                 <br /> 
                 <span>Catering & Accomodation Services</span>
             </div>
         </td>
-        <td colspan="1"></td>
+        <td colspan="1" class="bl-none"></td>
     </tr>
-    <tr>
+    <tr class="divider">
         <td colspan="9"></td>
     </tr>
-    <tr>
-        <td colspan="9">
+    <tr class="bg-blue">
+        <td colspan="9" class="text-subheader">
             REALISASI PURCHASE RECORD
             <br /> 
             PERIOD : Juli - 2023
         </td>
     </tr>
-    <tr>
+    <tr class="divider">
         <td colspan="9"></td>
     </tr>
-    <tr>
+    <tr class="bg-orange">
         <th>SHIPMENT</th>
         <th>WEEK</th>
         <th>SUPPLIER</th>
@@ -86,7 +140,7 @@
             <td></td>
         </tr>
         <!-- Divider -->
-        <tr>
+        <tr class="divider">
             <td colspan="8"></td>
             <td></td>
         </tr>
@@ -124,7 +178,7 @@
             <td></td>
         </tr>
         <!-- Divider -->
-        <tr>
+        <tr class="divider">
             <td colspan="8"></td>
             <td></td>
         </tr>
@@ -162,7 +216,7 @@
             <td></td>
         </tr>
         <!-- Divider -->
-        <tr>
+        <tr class="divider">
             <td colspan="8"></td>
             <td></td>
         </tr>
@@ -200,7 +254,7 @@
             <td></td>
         </tr>
         <!-- Divider -->
-        <tr>
+        <tr class="divider">
             <td colspan="8"></td>
             <td></td>
         </tr>
@@ -237,13 +291,13 @@
             <td></td>
         </tr>
         <!-- Divider -->
-        <tr>
+        <tr class="divider">
             <td colspan="8"></td>
             <td></td>
         </tr>
 
         <!-- Menghitung Total -->
-        <tr>
+        <tr class="bg-yellow">
             <td></td>
             <td></td>
             <td>MENGHITUNG TOTAL</td>
@@ -254,70 +308,74 @@
             <td></td>
             <td></td>
         </tr>
-        
+
          <!-- Divider -->
-        <tr>
+        <tr style="height: 40px;" class="divider">
             <td colspan="9"></td>
         </tr>
 
         <!-- Signatrue header -->
         <tr>
-            <td colspan="2"></td>
-            <td>Prepared By</td>
-            <td>Checked By</td>
-            <td>Approved By</td>
-            <td>Approved By</td>
-            <td>Acknowledge By</td>
-            <td colspan="2"></td>
+            <td colspan="2" class="by-none"></td>
+            <td class="bg-grey">Prepared By</td>
+            <td class="bg-grey">Checked By</td>
+            <td class="bg-grey">Approved By</td>
+            <td class="bg-grey">Approved By</td>
+            <td class="bg-grey">Acknowledge By</td>
+            <td colspan="2" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="2"></td>
+            <td colspan="2" class="by-none"></td>
             <td rowspan="6"></td>
             <td rowspan="6"></td>
             <td rowspan="6"></td>
             <td rowspan="6"></td>
             <td rowspan="6"></td>
-            <td colspan="2"></td>
+            <td colspan="2" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="9" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="9" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="9" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="9" class="by-none"></td>
         </tr>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="9" class="by-none"></td>
+        </tr>
+
+        <!-- Position -->
+        <tr>
+            <td colspan="2" class="by-none"></td>
+            <td class="bg-grey">Purchasing</td>
+            <td class="bg-grey">Quality Control</td>
+            <td class="bg-grey">Operation</td>
+            <td class="bg-grey">Operation</td>
+            <td class="bg-grey"></td>
+            <td colspan="2" class="by-none"></td>
+        </tr>
+        <!-- Name -->
+        <tr>
+            <td colspan="2" class="by-none"></td>
+            <td class="bg-grey">Haikal Fajar</td>
+            <td class="bg-grey">Johan</td>
+            <td class="bg-grey">Rifki</td>
+            <td class="bg-grey">Dian Ane Wibowo</td>
+            <td class="bg-grey"></td>
+            <td colspan="2" class="by-none"></td>
+        </tr>
+
+
+        <tr>
+            <td colspan="9" class="by-none"></td>
         </tr>
         
-
-         <!-- Position -->
-         <tr>
-            <td colspan="2"></td>
-            <td>Purchasing</td>
-            <td>Quality Control</td>
-            <td>Operation</td>
-            <td>Operation</td>
-            <td></td>
-            <td colspan="2"></td>
-        </tr>
-        <!-- Nmae -->
-        <tr>
-            <td colspan="2"></td>
-            <td>Haikal Fajar</td>
-            <td>Johan</td>
-            <td>Rifki</td>
-            <td>Dian Ane Wibowo</td>
-            <td></td>
-            <td colspan="2"></td>
-        </tr>
-
-        <tr>
+        <tr style="height: 40px;" class="divider">
             <td colspan="9"></td>
         </tr>
 
