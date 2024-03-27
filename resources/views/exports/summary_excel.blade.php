@@ -6,11 +6,11 @@
       text-align: center;
     }
     td {
-        width: 120;
+        width: 95;
         font-size: 0.8rem;
     }
     th {
-        width: 120;
+        width: 95;
         font-size: 0.8rem;
         font-weight: bold;
     }
@@ -108,8 +108,4 @@
             <td></td>
         </tr>
     </tbody>
-    <tr style="height: 150;" class="divider">
-        <td colspan="5"></td>
-    </tr>
-
 </table>
