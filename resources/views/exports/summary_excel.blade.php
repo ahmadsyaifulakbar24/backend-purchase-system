@@ -59,7 +59,7 @@
             <div>
                 <span class="text-header">PT. SURYA BUANA LESTARIJAYA</span>
                 <br /> 
-                <span>Catering & Accomodation Services</span>
+                <span>Catering dan Accomodation Services</span>
             </div>
         </td>
         <td colspan="1" class="bl-none"></td>
@@ -68,7 +68,7 @@
         <td colspan="5"></td>
     </tr>
     <tr class="bg-green">
-        <td colspan="5" class="text-subheader">SUMMARY PHYSICAL INVENTORY <br /> Juli - 2023</td>
+        <td colspan="5" class="text-subheader">SUMMARY PHYSICAL INVENTORY <br /> {{ $month_name }} - {{ $year }}</td>
     </tr>
     <tr class="divider">
         <td colspan="5"></td>
@@ -81,25 +81,30 @@
         <th>DATE OF INVENTORY</th>
     </tr>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>FEDERAL II</td>
-            <td>JULI-2023</td>
-            <td>38.949.282</td>
-            <td>date inventory</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>JINDI</td>
-            <td>JULI-2023</td>
-            <td>38.949.282</td>
-            <td>date inventory</td>
-        </tr>
+        @php
+            $no = 1;
+            $total_amount = 0;
+        @endphp
+        @foreach ($data as $data)
+            <tr>
+                <td>{{ $no++ }}</td>
+                <td>{{ $data->location }}</td>
+                <td>{{ $month_name }}-{{ $year }}</td>
+
+                @php
+                    $total_actual_stock_price = !empty($data->mor_month[0]) ? $data->mor_month[0]->mor_month_detail[0]->total_actual_stock_price : 0;
+                    $total_amount += $total_actual_stock_price;
+                @endphp
+                <td>{{ $total_actual_stock_price != 0 ? formatRupiah($total_actual_stock_price) : 'Rp. 0' }}</td>
+                
+                <td>date inventory</td>
+            </tr>
+        @endforeach
         <tr class="bg-black">
             <td></td>
             <td>TOTAL</td>
             <td></td>
-            <td>38.949.282</td>
+            <td>{{  $total_amount != 0 ? formatRupiah($total_amount) : 'Rp. 0' }}</td>
             <td></td>
         </tr>
     </tbody>

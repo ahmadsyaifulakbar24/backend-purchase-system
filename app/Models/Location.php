@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Contracts\Activity;
 use Spatie\Activitylog\LogOptions;
 use hisorange\BrowserDetect\Parser as Browser;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Location extends Model
@@ -42,5 +43,10 @@ class Location extends Model
     public function parent_location(): BelongsTo
     {
         return $this->belongsTo(Location::class, 'parent_location_id');
+    }
+
+    public function mor_month(): HasMany
+    {
+        return $this->hasMany(MorMonth::class, 'location_id');
     }
 }
