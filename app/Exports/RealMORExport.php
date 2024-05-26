@@ -13,7 +13,14 @@ class RealMORExport implements FromView, ShouldAutoSize, WithStyles
 {
     public function styles(Worksheet $sheet) 
     {
-       
+        return [
+            2 => [
+                'alignment' => [
+                    'horizontal' => 'center',
+                    'vertical' => 'center',
+                ]
+            ]
+        ];
     }
 
     public function view(): View

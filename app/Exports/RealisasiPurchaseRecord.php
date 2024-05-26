@@ -13,7 +13,12 @@ class RealisasiPurchaseRecord implements FromView, ShouldAutoSize, WithStyles
 {
     public function styles(Worksheet $sheet) 
     {
-       
+        $sheet->getStyle('A2')->applyFromArray([
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+        ]);
     }
 
     public function view(): View

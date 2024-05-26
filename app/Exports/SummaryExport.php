@@ -28,25 +28,11 @@ class SummaryExport implements FromView, ShouldAutoSize, WithStyles
                 'vertical' => Alignment::VERTICAL_CENTER,
             ],
         ]);
-
-        $sheet->getStyle('A8:E9')->applyFromArray([
+        $sheet->getStyle('A2:E5')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
             ],
-            'font' => [
-                'italic' => true,
-            ]
-        ]);
-
-        $sheet->getStyle('A12:E12')->applyFromArray([
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-            'font' => [
-                'bold' => true,
-            ]
         ]);
     }
 
