@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\API\Export;
 
+use App\Exports\RealisasiPurchaseRecord;
+use App\Exports\RealMORExport;
+use App\Exports\SalesExport;
 use App\Exports\SummaryExport;
 use App\Helpers\DateHelpers;
 use App\Helpers\ResponseFormatter;
@@ -65,5 +68,31 @@ class ExportController extends Controller
         ]);
 
         return view('exports.realisasi_purchase_record_excel');
+    }
+
+    public function summary_excel(Request $request)
+    {
+        return Excel::download(new SummaryExport(), 'SUMMARY.xlsx');
+    }
+
+    public function realisasi_purchase_record_excel(Request $request)
+    {
+        $request->validate([
+            'month' => ['required', 'between:1,12'],
+            'year' => ['required', 'integer']
+        ]);
+
+        return Excel::download(new RealisasiPurchaseRecord(), 'Realisasi Purchase Record.xlsx');
+        // return view('exports.realisasi_purchase_record_excel');
+    }
+
+    public function seles_excel(Request $request)
+    {
+        return Excel::download(new SalesExport(), 'Sales.xlsx');
+    }
+
+    public function real_mor_excel(Request $request)
+    {
+        return Excel::download(new RealMORExport(), 'MONTHLY OPERATION REPORT.xlsx');
     }
 }

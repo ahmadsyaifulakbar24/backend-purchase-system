@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class RealisasiPurchaseRecord implements FromView, ShouldAutoSize, WithStyles
+class SalesExport implements FromView, ShouldAutoSize, WithStyles
 {
     public function styles(Worksheet $sheet) 
     {
@@ -19,6 +19,6 @@ class RealisasiPurchaseRecord implements FromView, ShouldAutoSize, WithStyles
     public function view(): View
     {
         $data = [];
-        return view('exports.realisasi_purchase_record_excel', $data);
+        return view('exports.sales_excel', $data);
     }
 }

@@ -11,14 +11,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SummaryExport implements FromView, ShouldAutoSize, WithStyles
 {
-    protected $year, $month_name, $data;
+    // protected $year, $month_name, $data;
 
-    public function __construct($year, $month_name, $data)
-    {
-        $this->year = $year;
-        $this->month_name = $month_name;
-        $this->data = $data;
-    }
+    // public function __construct($year, $month_name, $data)
+    // {
+    //     $this->year = $year;
+    //     $this->month_name = $month_name;
+    //     $this->data = $data;
+    // }
 
     public function styles(Worksheet $sheet) 
     {
@@ -52,10 +52,12 @@ class SummaryExport implements FromView, ShouldAutoSize, WithStyles
 
     public function view(): View
     {
-        return view('exports.summary_excel', [
-            'year' => $this->year,
-            'month_name' => $this->month_name,
-            'data' => $this->data,
-        ]);
+        // $data = [
+        //     'year' => $this->year,
+        //     'month_name' => $this->month_name,
+        //     'data' => $this->data,
+        // ]
+        $data = [];
+        return view('exports.summary_excel', $data);
     }
 }

@@ -326,4 +326,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/summary', [ExportController::class, 'summary']);
         Route::get('/realisasi-purchase-record', [ExportController::class, 'realisasi_purchase_record']);
     });
+
+    Route::prefix('export')->group(function () {
+        Route::get('/summary-excel', [ExportController::class, 'summary_excel']);
+        Route::get('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
+        Route::get('/sales-excel', [ExportController::class, 'seles_excel']);
+        Route::get('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
+    });
 });
