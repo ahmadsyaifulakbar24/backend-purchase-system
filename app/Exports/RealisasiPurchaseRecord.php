@@ -11,6 +11,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class RealisasiPurchaseRecord implements FromView, ShouldAutoSize, WithStyles
 {
+    protected $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
     public function styles(Worksheet $sheet) 
     {
         $sheet->getStyle('A2')->applyFromArray([
@@ -23,7 +30,6 @@ class RealisasiPurchaseRecord implements FromView, ShouldAutoSize, WithStyles
 
     public function view(): View
     {
-        $data = [];
-        return view('exports.realisasi_purchase_record_excel', $data);
+        return view('exports.realisasi_purchase_record_excel', $this->data);
     }
 }

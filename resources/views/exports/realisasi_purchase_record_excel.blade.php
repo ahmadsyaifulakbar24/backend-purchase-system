@@ -1,222 +1,109 @@
-<style>
-    table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-      vertical-align: middle;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-</style>
+@php
+    $total_location = count($locations);
+    $total_colspan = $total_location + 4;
+@endphp
 <table>
     <tr>
-        <td colspan="1">
-        <td colspan="7">
-                PT. SURYA BUANA LESTARIJAYA Catering  Accomodation Services
-        </td>
-        <td colspan="1"></td>
+        <td colspan="{{ $total_colspan }}"></td>
     </tr>
     <tr>
-        <td colspan="9"></td>
+        <td colspan="{{ $total_colspan }}"> PT SURYA BUANA LESTARIJAYA </td>
     </tr>
     <tr>
-        <td colspan="9">
-            REALISASI PURCHASE RECORD PERIOD : Juli - 2023
-        </td>
+        <td colspan="{{ $total_colspan }}"> Catering dan Accommodation Services </td>
     </tr>
     <tr>
-        <td colspan="9"></td>
+        <td colspan="{{ $total_colspan }}"></td>
     </tr>
+    <tr>
+        <td colspan="{{ $total_colspan }}"> REALISASI PURCHASE RECORD </td>
+    </tr>
+    <tr>
+        <td colspan="{{ $total_colspan }}"> PERIOD : {{ $month_name }} - {{ $year }} </td>
+    </tr>
+    <tr>
+        <td colspan="{{ $total_colspan }}"></td>
+    </tr>
+
     <tr>
         <td>SHIPMENT</td>
         <td>WEEK</td>
         <td>SUPPLIER</td>
-        <td>FEDERAL</td>
-        <td>SHIP-114</td>
-        <td>SHIP-115</td>
-        <td>SHIP-112</td>
-        <td>JINDI</td>
-        <td>AMOUNt</td>
+        @foreach ($locations as $location)
+            <td>{{ $location['location'] }}</td>
+        @endforeach
+        <td>AMOUNT</td>
     </tr>
-    <!-- Week 1 -->
-    <tr>
-        <td rowspan="3">WEEK</td>
-        <td rowspan="3">I</td>
-        <td>Supplier 1</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 2</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 3</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <!-- Divider -->
-    <tr>
-        <td colspan="8"></td>
-        <td></td>
-    </tr>
+    
+    @php
+        $total_sum_total_item_price = 0;
+        $total_sum_total_item_price_first = 0;
+    @endphp
 
-   <!-- Week 2 -->
-   <tr>
-        <td rowspan="3">WEEK</td>
-        <td rowspan="3">II</td>
-        <td>Supplier 1</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 2</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 3</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <!-- Divider -->
-    <tr>
-        <td colspan="8"></td>
-        <td></td>
-    </tr>
+    @for ($i=1; $i <= 5; $i++)
+        @php
+            $new_data = collect($data);
+            $item = $new_data->firstWhere('week', $i);
+        @endphp 
 
-    <!-- Week 3 -->
-   <tr>
-        <td rowspan="3">WEEK</td>
-        <td rowspan="3">III</td>
-        <td>Supplier 1</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 2</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 3</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <!-- Divider -->
-    <tr>
-        <td colspan="8"></td>
-        <td></td>
-    </tr>
+        @if(empty($item))
+            <tr>
+                <td>WEEK</td>
+                <td>{{ numericToRoman($i) }}</td>
+                @for ($a = 1; $a <= $total_location + 2; $a++)
+                    <td></td>
+                @endfor
+            </tr>
+        @else
+            @php
+                $total_supplier = count($item['supplier']);
+                $suppliers = collect($item['supplier']);
+                $supplier_no = 0;
+            @endphp
+            <tr>
+                <td rowspan="{{ $total_supplier }}">WEEK</td>
+                <td rowspan="{{ $total_supplier }}">{{ numericToRoman($item['week']) }}</td>
+                <td>{{ $suppliers[0]['supplier_name'] }}</td>
 
-    <!-- Week 4 -->
-   <tr>
-        <td rowspan="3">WEEK</td>
-        <td rowspan="3">IV</td>
-        <td>Supplier 1</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 2</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 3</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <!-- Divider -->
-    <tr>
-        <td colspan="8"></td>
-        <td></td>
-    </tr>
+                @php
+                    $location_data = collect($suppliers[0]['location']);
+                    $sum_total_item_price_first = $location_data->sum('total_item_price');
+                    $total_sum_total_item_price_first = $sum_total_item_price_first;
+                @endphp
+                
+                @foreach ($locations as $location)
+                    @php
+                        $location_detail = $location_data->firstWhere('location_id', $location->id);
+                    @endphp
+                    <td>{{ !empty($location_detail) ? $location_detail['total_item_price'] : NULL }}</td>
+                @endforeach
+                    <td>{{ $sum_total_item_price_first }}</td>
+            </tr>
+            <tr>
+                @foreach ($suppliers->slice(1) as $supplier)
+                    @php 
+                        $supplier_no++;
+                        $location_data = collect($supplier['location']);
+                        $sum_total_item_price = $location_data->sum('total_item_price');
+                        $total_sum_total_item_price += $sum_total_item_price
+                    @endphp
+                    <td>{{ $supplier['supplier_name'] }}</td>
 
-    <!-- Week 5 -->
-   <tr>
-        <td rowspan="3">WEEK</td>
-        <td rowspan="3">V</td>
-        <td>Supplier 1</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 2</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Supplier 3</td>
-        <td>123.123.123</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
+                    @foreach ($locations as $location)
+                        @php
+                            $location_detail = $location_data->firstWhere('location_id', $location->id);
+                        @endphp
+                        <td>{{ !empty($location_detail) ? $location_detail['total_item_price'] : NULL }}</td>
+                    @endforeach
+                        <td>{{ $sum_total_item_price }}</td>
+                @endforeach
+            </tr>
+        @endif
+    @endfor
+
     <!-- Divider -->
     <tr>
-        <td colspan="8"></td>
-        <td></td>
+        <td colspan="{{ $total_colspan + 2 }}"></td>
     </tr>
 
     <!-- Menghitung Total -->
@@ -224,56 +111,57 @@
         <td></td>
         <td></td>
         <td>MENGHITUNG TOTAL</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        @foreach ($locations as $location)
+            @php
+                $total_location = !empty($total_item_price_location[$location->id]) ? $total_item_price_location[$location->id] : null;
+            @endphp
+            <td>{{ !empty($total_location) ? $total_location['total_item_price'] : null; }}</td>
+        @endforeach
+        <td>{{ $total_sum_total_item_price + $total_sum_total_item_price_first }}</td>
     </tr>
-    
+
      <!-- Divider -->
-    <tr>
+     <tr>
         <td colspan="9"></td>
     </tr>
 
-    <!-- Signatrue header -->
-    <tr>
-        <td colspan="2"></td>
+     <!-- Signatrue header -->
+     <tr>
+        <td></td>
+        <td></td>
         <td>Prepared By</td>
         <td>Checked By</td>
         <td>Approved By</td>
         <td>Approved By</td>
         <td>Acknowledge By</td>
-        <td colspan="2"></td>
     </tr>
     <tr>
-        <td colspan="2"></td>
+        <td></td>
+        <td></td>
         <td rowspan="6"></td>
         <td rowspan="6"></td>
         <td rowspan="6"></td>
         <td rowspan="6"></td>
         <td rowspan="6"></td>
-        <td colspan="2"></td>
-    </tr>
-    <tr>
-        <td colspan="9"></td>
-    </tr>
-    <tr>
-        <td colspan="9"></td>
-    </tr>
-    <tr>
-        <td colspan="9"></td>
-    </tr>
-    <tr>
-        <td colspan="9"></td>
-    </tr>
-    <tr>
-        <td colspan="9"></td>
     </tr>
     
+    <tr>
+        <td><td>
+    </tr>
+    <tr>
+        <td><td>
+    </tr>
+    <tr>
+        <td><td>
+    </tr>
+    <tr>
+        <td><td>
+    </tr>
+    <tr>
+        <td><td>
+    </tr>
 
-     <!-- Position -->
+    <!-- Position -->
      <tr>
         <td colspan="2"></td>
         <td>Purchasing</td>
