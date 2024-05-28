@@ -1,15 +1,3 @@
-<style>
-   table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-      vertical-align: middle;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-    
-</style>
 <table>
     <tr>
         <td colspan="5"></td>
@@ -18,10 +6,19 @@
         <td colspan="5">PT SURYA BUANA LESTARIJAYA</td>
     </tr>
     <tr>
+        <td colspan="5">Catering dan Accommodation Services</td>
+    </tr>
+    <tr>
         <td colspan="5"></td>
     </tr>
     <tr>
-        <td colspan="5">SUMMARY PHYSICAL INVENTORY Juli-2023</td>
+        <td colspan="5"></td>
+    </tr>
+    <tr>
+        <td colspan="5">SUMMARY PHYSICAL INVENTORY</td>
+    </tr>
+    <tr>
+        <td colspan="5">{{ $month_name }} - {{ $year }}</td>
     </tr>
     <tr>
         <td colspan="5"></td>
@@ -34,51 +31,30 @@
         <th>DATE OF INVENTORY</th>
     </tr>
 
-    <tr>
-        <td>1</td>
-        <td>FEDERAL II</td>
-        <td>Juli 2023</td>
-        <td>38.949.282</td>
-        <td>date inventory</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>FEDERAL II</td>
-        <td>Juli 2023</td>
-        <td>38.949.282</td>
-        <td>date inventory</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>FEDERAL II</td>
-        <td>Juli 2023</td>
-        <td>38.949.282</td>
-        <td>date inventory</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>FEDERAL II</td>
-        <td>Juli 2023</td>
-        <td>38.949.282</td>
-        <td>date inventory</td>
-    </tr>
-    <tr>
-        <td colspan="5"></td>
-    </tr>
-    <tr>
-        <td colspan="5"></td>
-    </tr>
-    <tr>
-        <td colspan="5"></td>
-    </tr>
-    <tr>
-        <td colspan="5"></td>
-    </tr>
+    @php
+        $no = 1;
+        $total_amount = 0;
+    @endphp
+    @foreach ($data as $data)
+        <tr>
+            <td>{{ $no++ }}</td>
+            <td>{{ $data->location }}</td>
+            <td>{{ $month_name }}-{{ $year }}</td>
+
+            @php
+                $total_actual_stock_price = !empty($data->mor_month[0]) ? $data->mor_month[0]->mor_month_detail[0]->total_actual_stock_price : 0;
+                $total_amount += $total_actual_stock_price;
+            @endphp
+            <td>{{ $total_actual_stock_price != 0 ? formatRupiah($total_actual_stock_price) : 'Rp. 0' }}</td>
+            
+            <td>date inventory</td>
+        </tr>
+    @endforeach
     <tr>
         <td></td>
         <td>TOTAL</td>
         <td></td>
-        <td>163.453.514</td>
+        <td>{{  $total_amount != 0 ? formatRupiah($total_amount) : 'Rp. 0' }}</td>
         <td></td>
     </tr>
 </table>

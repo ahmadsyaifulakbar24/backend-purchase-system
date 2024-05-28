@@ -11,24 +11,18 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SummaryExport implements FromView, ShouldAutoSize, WithStyles
 {
-    // protected $year, $month_name, $data;
+    protected $year, $month_name, $data;
 
-    // public function __construct($year, $month_name, $data)
-    // {
-    //     $this->year = $year;
-    //     $this->month_name = $month_name;
-    //     $this->data = $data;
-    // }
+    public function __construct($year, $month_name, $data)
+    {
+        $this->year = $year;
+        $this->month_name = $month_name;
+        $this->data = $data;
+    }
 
     public function styles(Worksheet $sheet) 
     {
-        $sheet->getStyle('A3:E5')->applyFromArray([
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-                'vertical' => Alignment::VERTICAL_CENTER,
-            ],
-        ]);
-        $sheet->getStyle('A2:E5')->applyFromArray([
+        $sheet->getStyle('A1:E9')->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -38,12 +32,12 @@ class SummaryExport implements FromView, ShouldAutoSize, WithStyles
 
     public function view(): View
     {
-        // $data = [
-        //     'year' => $this->year,
-        //     'month_name' => $this->month_name,
-        //     'data' => $this->data,
-        // ]
-        $data = [];
+        $data = [
+            'year' => $this->year,
+            'month_name' => $this->month_name,
+            'data' => $this->data,
+        ];
+
         return view('exports.summary_excel', $data);
     }
 }

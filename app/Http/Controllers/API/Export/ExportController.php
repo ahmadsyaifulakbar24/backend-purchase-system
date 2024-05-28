@@ -28,13 +28,13 @@ class ExportController extends Controller
         $year = $request->year;
 
         $data = Location::with([
-            'mor_month' => function (Builder $query) use ($request) {
+            'mor_month' => function ($query) use ($request) {
                 $query->where([
                     ['month', $request->month],
                     ['year', $request->year],
                 ])
                 ->with([
-                    'mor_month_detail' => function (Builder $query) {
+                    'mor_month_detail' => function ($query) {
                         $query->select(
                             'mor_month_id',
                             DB::raw("SUM(actual_stock * price) as total_actual_stock_price")
@@ -72,7 +72,36 @@ class ExportController extends Controller
 
     public function summary_excel(Request $request)
     {
-        return Excel::download(new SummaryExport(), 'SUMMARY.xlsx');
+        $request->validate([
+            'month' => ['required', 'between:1,12'],
+            'year' => ['required', 'integer']
+        ]);
+        $month = $request->month;
+        $year = $request->year;
+
+        $data = Location::with([
+            'mor_month' => function ($query) use ($request) {
+                $query->where([
+                    ['month', $request->month],
+                    ['year', $request->year],
+                ])
+                ->with([
+                    'mor_month_detail' => function ($query) {
+                        $query->select(
+                            'mor_month_id',
+                            DB::raw("SUM(actual_stock * price) as total_actual_stock_price")
+                        )
+                        ->groupBy('mor_month_id');
+                    }
+                ]);
+            }
+        ])
+        ->get();
+        
+        $month_name = strtoupper(DateHelpers::numericToMonth($month));
+
+        // return view('exports.summary_excel', compact('data', 'year', 'month_name'));
+        return Excel::download(new SummaryExport($year, $month_name, $data), 'SUMMARY.xlsx');
     }
 
     public function realisasi_purchase_record_excel(Request $request)
