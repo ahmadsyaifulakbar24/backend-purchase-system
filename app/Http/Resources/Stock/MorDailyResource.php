@@ -17,6 +17,7 @@ class MorDailyResource extends JsonResource
         return [
             'location_id' => $this->location_id,
             'date' => $this->date,
+            'sum_price' => $this->sum_price,
         ];
     }
 }

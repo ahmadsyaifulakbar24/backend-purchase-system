@@ -8,12 +8,10 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\MorRequest;
 use App\Http\Resources\Stock\MorDailyResource;
-use App\Http\Resources\Stock\MorMonthlyResource;
 use App\Http\Resources\Stock\MorResource;
 use App\Models\ItemProduct;
 use App\Models\Location;
 use App\Models\Mor;
-use App\Models\SelectItemProduct;
 use App\Repository\ProductStockRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -39,7 +37,14 @@ class MorController extends Controller
         $end_date = $request->end_date;
 
         
-        $mor_daily = Mor::where('location_id', $location_id)
+        $mor_daily = Mor::select(
+                            'location_id',
+                            'date',
+                            DB::raw('
+                                CAST(SUM(quantity * item_price) AS UNSIGNED) as sum_price
+                            '),
+                        )
+                        ->where('location_id', $location_id)
                         ->when($start_date, function ($query, $start_date) {
                             $query->where('date', '>=', $start_date);
                         })
@@ -47,7 +52,7 @@ class MorController extends Controller
                             $query->where('date', '<=', $end_date);
                         })
                         ->groupBy('date');
-
+        
         $result = $paginate ? $mor_daily->paginate($limit) : $mor_daily->get();
         return ResponseFormatter::success(
             MorDailyResource::collection($result)->response()->getData(true),
@@ -151,6 +156,34 @@ class MorController extends Controller
             ], 'create mor data failed');
         }
         
+    }
+
+    public function update(Request $request, Mor $mor)
+    {
+        $request->validate([
+            'item_price' => ['required', 'numeric'],
+            'quantity' => ['required', 'string'],
+        ]);
+        $input = $request->only([
+            'item_price',
+            'quantity'
+        ]);
+        $mor->update($input);
+
+        return ResponseFormatter::success(
+            new MorResource($mor),
+            'success update mor data'
+        );
+    }
+
+    public function destroy(Mor $mor)
+    {
+        $mor->delete();
+
+        return ResponseFormatter::success(
+            null,
+            'success delete mor data'
+        );
     }
 
     public function export(Request $request)

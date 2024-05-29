@@ -309,6 +309,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('mor')->group(function () {
         Route::get('/daily', [MorController::class, 'daily']);
         Route::get('/', [MorController::class, 'get']);
+        Route::patch('/{mor:id}', [MorController::class, 'update']);
+        Route::delete('/{mor:id}', [MorController::class, 'destroy']);
         Route::post('/upsert', [MorController::class, 'upsert']);
         Route::get('/export', [MorController::class, 'export']);
     });
