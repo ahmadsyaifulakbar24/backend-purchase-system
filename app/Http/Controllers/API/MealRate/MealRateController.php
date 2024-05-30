@@ -24,7 +24,8 @@ class MealRateController extends Controller
 
         $meal_rate = MealRate::when($location_id, function ($query, $location_id) {
             $query->where('location_id', $location_id);
-        });
+        })
+        ->orderBy('created_at', 'DESC');
 
         $result = $paginate ? $meal_rate->paginate($limit) : $meal_rate->get();
 
