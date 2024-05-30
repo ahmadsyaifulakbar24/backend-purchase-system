@@ -27,11 +27,11 @@ class FormulaController extends Controller
             'active' => ['nullable', 'in:yes,no'],
             'limit' => ['nullable', 'integer'],
             'search' => ['nullable', 'string'],
-            'paginate' => ['nullable', 'in:yes,no'],
+            'paginate' => ['nullable', 'in:1,0'],
         ]);
         $active = $request->active;
         $search = $request->search;
-        $paginate = $request->input('paginate', 'yes');
+        $paginate = $request->input('paginate', '1');
         $limit = $request->input('limit', 10);
 
         $formula = Formula::when($active, function ($query, $active) {
@@ -42,7 +42,7 @@ class FormulaController extends Controller
             $query->where('title', 'like', '%'. $search .'%');
         });
 
-        $result = $paginate == 'yes' ? $formula->paginate($limit) : $formula->get();
+        $result = $paginate ? $formula->paginate($limit) : $formula->get();
 
         return ResponseFormatter::success(
             FormulaResource::collection($result)->response()->getData(true),

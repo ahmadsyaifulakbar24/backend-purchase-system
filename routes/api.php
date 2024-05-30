@@ -20,6 +20,7 @@ use App\Http\Controllers\API\InternalOrder\PRCateringController;
 use App\Http\Controllers\API\ItemCategory\ItemCategoryController;
 use App\Http\Controllers\API\ItemProduct\ItemProductController;
 use App\Http\Controllers\API\Location\LocationController;
+use App\Http\Controllers\API\MealRate\MealRateController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyController;
 use App\Http\Controllers\API\MealSheet\MealSheetDailyRecordController;
 use App\Http\Controllers\API\MealSheet\MealSheetGroupController;
@@ -185,6 +186,14 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{formula:id}', 'show');
         Route::post('/{formula:id}', 'update');
         Route::delete('/{formula:id}', 'destroy');
+    });
+
+    Route::controller(MealRateController::class)->prefix('meal-rate')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('/{meal_rate:id}', 'show');
+        Route::patch('/{meal_rate:id}', 'update');
+        Route::delete('/{meal_rate:id}', 'destroy');
     });
 
 
