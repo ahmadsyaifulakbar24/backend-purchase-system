@@ -12,6 +12,7 @@ use App\Http\Controllers\API\ExternalOrder\POSupplierCustomerController;
 use App\Http\Controllers\API\ExternalOrder\PRCustomerController;
 use App\Http\Controllers\API\ExternalOrder\QuotationController;
 use App\Http\Controllers\API\File\FileController;
+use App\Http\Controllers\API\Formula\FormulaController;
 use App\Http\Controllers\API\InternalOrder\DOCateringController;
 use App\Http\Controllers\API\InternalOrder\POCateringController;
 use App\Http\Controllers\API\InternalOrder\POSupplierCateringController;
@@ -175,6 +176,15 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{client:id}', [ClientController::class, 'show']);
         Route::patch('/{client:id}', [ClientController::class, 'update']);
         Route::delete('/{client:id}', [ClientController::class, 'destroy']);
+    });
+
+    Route::controller(FormulaController::class)->prefix('formula')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::post('/testing-result', 'testing_result');
+        Route::get('/{formula:id}', 'show');
+        Route::post('/{formula:id}', 'update');
+        Route::delete('/{formula:id}', 'destroy');
     });
 
 
