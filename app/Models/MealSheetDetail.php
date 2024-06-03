@@ -22,6 +22,7 @@ class MealSheetDetail extends Model
     protected $fillable = [
         'meal_sheet_daily_id',
         'client_id',
+        'formula_id',
         'mandays',
         'casual_breakfast',
         'casual_lunch',
@@ -85,6 +86,11 @@ class MealSheetDetail extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function formula(): BelongsTo
+    {
+        return $this->belongsTo(Formula::class, 'formula_id');
     }
 
     public function meal_sheet_record(): HasMany

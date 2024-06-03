@@ -35,10 +35,7 @@ class MealSheetDailyRecordUpdateRequest extends FormRequest
                     $query->where('meal_sheet_daily_id', $meal_sheet_detail->meal_sheet_daily_id);
                 })->ignore($meal_sheet_detail->id)
             ],
-            'mandays' => ['required','integer'],
-            'casual_breakfast' => ['required','integer'],
-            'casual_lunch' => ['required','integer'],
-            'casual_dinner' => ['required','integer'],
+            'formula_id' => ['required', 'exists:formulas,id'],
             
             'prepared_by' => ['required', 'array'],
             'prepared_by.name' => ['required', 'string'],

@@ -15,10 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('meal_sheet_daily_id')->constrained('meal_sheet_daily')->onUpdate('cascade');
             $table->foreignUuid('client_id')->constrained('clients')->onUpdate('cascade');
-            $table->integer('mandays');
-            $table->integer('casual_breakfast');
-            $table->integer('casual_lunch');
-            $table->integer('casual_dinner');
+            $table->foreignUuid('formula_id')->constrained('formulas')->onUpdate('cascade');
+            $table->integer('mandays')->nullable();
+            $table->integer('casual_breakfast')->nullable();
+            $table->integer('casual_lunch')->nullable();
+            $table->integer('casual_dinner')->nullable();
             $table->json('prepared_by');
             $table->json('checked_by');
             $table->json('approved_by');

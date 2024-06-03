@@ -70,22 +70,24 @@ class ItemProductImport implements ToCollection, WithHeadingRow, WithChunkReadin
                 $main_location = Location::where('main', 1)->first();
                 $supplier = Supplier::where('code', $row['supplier_code'])->first();
 
-                if($supplier->main == '1') {
-                    $item_product_check = ItemProduct::where([['location_id', $main_location->id], ['name', $row['name']]])->count();
-                    if($item_product_check < 1) {
-                        $validator->errors()->add(
-                            'name', 'The product name not found on this supplier'
-                        );
-                    } 
-                }
-                
-                if($location->main == '1') {
+                if(!empty($location) && !empty($main_location) && !empty($supplier)) {
                     if($supplier->main == '1') {
-                        $validator->errors()->add(
-                            'supplier_id', 'The suppliers cannot come from the center'
-                        );
+                        $item_product_check = ItemProduct::where([['location_id', $main_location->id], ['name', $row['name']]])->count();
+                        if($item_product_check < 1) {
+                            $validator->errors()->add(
+                                'name', 'The product name not found on this supplier'
+                            );
+                        } 
                     }
-                }    
+                    
+                    if($location->main == '1') {
+                        if($supplier->main == '1') {
+                            $validator->errors()->add(
+                                'supplier_id', 'The suppliers cannot come from the center'
+                            );
+                        }
+                    }    
+                }
             });
 
             if ($validator->fails()) {

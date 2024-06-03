@@ -29,17 +29,17 @@ class MealSheetDailyRecordRequest extends FormRequest
                 'required',
                 Rule::exists('meal_sheet_clients', 'client_id')->where(function ($query) {
                     $meal_sheet_daily = MealSheetDaily::find($this->meal_sheet_daily_id);
-                    $query->where('meal_sheet_group_id', $meal_sheet_daily->meal_sheet_group_id);
+                    if(!empty($meal_sheet_daily)) {
+                        $query->where('meal_sheet_group_id', $meal_sheet_daily->meal_sheet_group_id);
+                    }
                 }),
                 Rule::unique('meal_sheet_details', 'client_id')->where(function ($query) {
                     $query->where('meal_sheet_daily_id', $this->meal_sheet_daily_id);
                 })
             ],
-            'mandays' => ['required','integer'],
-            'casual_breakfast' => ['required','integer'],
-            'casual_lunch' => ['required','integer'],
-            'casual_dinner' => ['required','integer'],
-            
+
+            'formula_id' => ['required', 'exists:formulas,id'],
+
             'prepared_by' => ['required', 'array'],
             'prepared_by.name' => ['required', 'string'],
             'prepared_by.position' => ['required', 'string'],

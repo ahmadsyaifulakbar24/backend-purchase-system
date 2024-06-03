@@ -19,6 +19,10 @@ class MealSheetDailyRecordDetailResource extends JsonResource
             'id' => $this->id,
             'meal_sheet_daily' => new MealSheetDailyDetailResource($this->meal_sheet_daily),
             'client' => new ClientResource($this->client),
+            'formula' => [
+                'id' => $this->formula->id,
+                'title' => $this->formula->title,
+            ],
             'mandays' => $this->mandays,  
             'casual_breakfast' => $this->casual_breakfast,  
             'casual_lunch' => $this->casual_lunch,  
