@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meal_rates', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
+            $table->integer('year');
+            $table->integer('month');
             $table->double('manday', 15, 2);
             $table->double('breakfast', 15, 2);
             $table->double('lunch', 15, 2);
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meal_rates');
+        Schema::dropIfExists('sales');
     }
 };

@@ -28,6 +28,7 @@ use App\Http\Controllers\API\MealSheet\MealSheetMonthlyController;
 use App\Http\Controllers\API\OrderHistory\OrderHistoryController;
 use App\Http\Controllers\API\Param\ParamController;
 use App\Http\Controllers\API\ReadExcel\ReadExcelController;
+use App\Http\Controllers\API\Sales\SalesController;
 use App\Http\Controllers\API\Stock\MorController;
 use App\Http\Controllers\API\Stock\MorMonthController;
 use App\Http\Controllers\API\Stock\ProductStockController;
@@ -353,6 +354,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('export')->group(function () {
         Route::get('/summary', [ExportController::class, 'summary']);
         Route::get('/realisasi-purchase-record', [ExportController::class, 'realisasi_purchase_record']);
+    });
+
+    Route::controller(SalesController::class)->prefix('sales')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{sales:id}', 'show');
+        Route::post('/', 'upsert');
     });
 
     // Route::prefix('export')->group(function () {
