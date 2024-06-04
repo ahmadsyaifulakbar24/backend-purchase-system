@@ -60,7 +60,7 @@ class MealSheetDailyRecordUpdateRequest extends FormRequest
             'meal_sheet_record.*.breakfast' => ['required', 'boolean'],
             'meal_sheet_record.*.lunch' => ['required', 'boolean'],
             'meal_sheet_record.*.dinner' => ['required', 'boolean'],
-            'meal_sheet_record.*.super' => ['required', 'boolean'],
+            'meal_sheet_record.*.supper' => ['required', 'boolean'],
             'meal_sheet_record.*.accomodation' => ['required', 'boolean'],
         ];
     }

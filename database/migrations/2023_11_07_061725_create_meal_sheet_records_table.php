@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('breakfast');
             $table->boolean('lunch');
             $table->boolean('dinner');
-            $table->boolean('super');
+            $table->boolean('supper');
             $table->boolean('accomodation');
         });
     }

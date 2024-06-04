@@ -98,17 +98,17 @@ class MealSheetMonthlyController extends Controller
             $casual_breakfast = 0;
             $casual_lunch = 0;
             $casual_dinner = 0;
-            $super = 0;
+            $supper = 0;
 
             foreach ($meal_sheet_client as $client) {
                 $meal_sheet_detail = $meal_sheet_dailys->meal_sheet_detail()->where('client_id', $client->id)->first();
                 if(!empty($meal_sheet_detail)) {
-                    $total_super = $meal_sheet_detail->meal_sheet_record()->where('super', 1)->count();
+                    $total_supper = $meal_sheet_detail->meal_sheet_record()->where('supper', 1)->count();
                     $onboard_actual += $meal_sheet_detail->mandays;
                     $casual_breakfast += $meal_sheet_detail->casual_breakfast;
                     $casual_lunch += $meal_sheet_detail->casual_lunch;
                     $casual_dinner += $meal_sheet_detail->casual_dinner;
-                    $super += $total_super;
+                    $supper += $total_supper;
                 }
                 
 
@@ -127,8 +127,8 @@ class MealSheetMonthlyController extends Controller
                 'casual_breakfast' => $casual_breakfast,
                 'casual_lunch' => $casual_lunch,
                 'casual_dinner' => $casual_dinner,
-                'super' => $super,
-                'total' => $casual_breakfast + $casual_lunch + $casual_dinner + $super,
+                'supper' => $supper,
+                'total' => $casual_breakfast + $casual_lunch + $casual_dinner + $supper,
             ];
         }
 

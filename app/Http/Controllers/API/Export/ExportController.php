@@ -11,10 +11,14 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\DOCatering;
 use App\Models\Location;
+use App\Models\MealSheetDetail;
+use App\Models\MealSheetGroup;
 use App\Models\POSupplierCatering;
+use App\Models\Sales;
 use App\Models\SelectItemProduct;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -206,7 +210,62 @@ class ExportController extends Controller
 
     public function seles_excel(Request $request)
     {
-        return Excel::download(new SalesExport(), 'Sales.xlsx');
+        $request->validate([
+            'month' => ['required', 'between:1,12'],
+            'year' => ['required', 'integer']
+        ]);
+        $month = $request->month;
+        $year = $request->year;
+        
+        $sales = Sales::where([
+            ['month', $month],
+            ['year', $year],
+        ])->get();
+
+        $sub_query_meal_sheet = MealSheetDetail::select(
+            'meal_sheet_details.mandays',
+            'meal_sheet_details.casual_breakfast',
+            'meal_sheet_details.casual_lunch',
+            'meal_sheet_details.casual_dinner',
+            'meal_sheet_details.supper',
+            'meal_sheet_daily.meal_sheet_date',
+            'meal_sheet_groups.location_id',
+        )
+        ->join('meal_sheet_daily', 'meal_sheet_daily.id', '=', 'meal_sheet_details.meal_sheet_daily_id')
+        ->join('meal_sheet_groups', 'meal_sheet_groups.id', '=', 'meal_sheet_daily.meal_sheet_group_id')
+        ->whereMonth('meal_sheet_daily.meal_sheet_date', $month)
+        ->whereYear('meal_sheet_daily.meal_sheet_date', $year);
+
+        $meal_sheat = Location::orderBy('location_code')
+        ->leftJoinSub($sub_query_meal_sheet, 'meal_sheet', function (JoinClause $join) {
+            $join->on('locations.id', '=', 'meal_sheet.location_id');
+        })
+        ->get();
+
+        $meal_sheat_month = $meal_sheat->groupBy('id')->map(function($location_group, $location_id) {
+            $location = $location_group->first();
+            return [
+                'location_id' => $location_id,
+                'location' => $location['location'],
+                'location_code' => $location['location_code'],
+                'mandays' => $location_group->sum('mandays'),
+                'casual_breakfast' => $location_group->sum('casual_breakfast'),
+                'casual_lunch' => $location_group->sum('casual_lunch'),
+                'casual_dinner' => $location_group->sum('casual_dinner'),
+                'supper' => $location_group->sum('supper'),
+            ];
+        })->values()->all();
+
+        $month_name = strtoupper(DateHelpers::numericToMonth($month));
+        $data = [
+            'sales' => $sales,
+            'meal_sheat_month' => $meal_sheat_month,
+            'year' => $year,
+            'month_name' => $month_name,
+        ];
+        
+        return view('exports.sales_excel', $data);
+        // return Excel::download(new SalesExport(), 'Sales.xlsx');
     }
 
     public function real_mor_excel(Request $request)

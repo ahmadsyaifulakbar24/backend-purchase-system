@@ -117,9 +117,10 @@ class MealSheetDailyRecordController extends Controller
          $casual_breakfast = 0;
          $casual_lunch = 0;
          $casual_dinner = 0;
+         $supper = 0;
 
         foreach ($records as $record) {
-            $total = $record['breakfast'] + $record['lunch'] + $record['dinner'] + $record['super'];
+            $total = $record['breakfast'] + $record['lunch'] + $record['dinner'] + $record['supper'];
             $accomodation = $record['accomodation'] == 1 ? 1 : null;
             $result = '';
 
@@ -142,6 +143,10 @@ class MealSheetDailyRecordController extends Controller
                 if($record['dinner'] == 1) {
                     $casual_dinner += 1;
                 }
+
+                if($record['supper'] == 1) {
+                    $supper += 1;
+                }
             }
         }
 
@@ -149,6 +154,7 @@ class MealSheetDailyRecordController extends Controller
         $input['casual_breakfast'] = $casual_breakfast;
         $input['casual_lunch'] = $casual_lunch;
         $input['casual_dinner'] = $casual_dinner;
+        $input['supper'] = $supper;
 
         return $input;
     }

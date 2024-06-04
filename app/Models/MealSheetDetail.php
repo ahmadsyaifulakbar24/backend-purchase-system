@@ -27,6 +27,7 @@ class MealSheetDetail extends Model
         'casual_breakfast',
         'casual_lunch',
         'casual_dinner',
+        'supper',
         'prepared_by',
         'checked_by',
         'approved_by',

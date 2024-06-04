@@ -24,7 +24,7 @@ class MealSheetRecord extends Model
         'breakfast',
         'lunch',
         'dinner',
-        'super',
+        'supper',
         'accomodation'
     ];
 

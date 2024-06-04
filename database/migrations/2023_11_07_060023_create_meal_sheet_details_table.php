@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('casual_breakfast')->nullable();
             $table->integer('casual_lunch')->nullable();
             $table->integer('casual_dinner')->nullable();
+            $table->integer('supper')->nullable();
             $table->json('prepared_by');
             $table->json('checked_by');
             $table->json('approved_by');

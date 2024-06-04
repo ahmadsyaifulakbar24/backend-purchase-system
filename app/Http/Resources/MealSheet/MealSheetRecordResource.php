@@ -22,7 +22,7 @@ class MealSheetRecordResource extends JsonResource
             'breakfast' => $this->breakfast,
             'lunch' => $this->lunch,
             'dinner' => $this->dinner,
-            'super' => $this->super,
+            'supper' => $this->supper,
             'accomodation' => $this->accomodation,
         ];
     }
