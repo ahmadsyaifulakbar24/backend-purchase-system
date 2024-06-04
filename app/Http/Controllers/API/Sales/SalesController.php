@@ -46,6 +46,7 @@ class SalesController extends Controller
             'dinner' => ['required', 'numeric'],
             'supper' => ['required', 'numeric'],
             'hk' => ['required', 'numeric'],
+            'minimum' => ['required', 'numeric'],
         ]);
         $location_id = $request->location_id;
         $year = $request->year;

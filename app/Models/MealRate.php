@@ -15,13 +15,14 @@ class MealRate extends Model
 
     protected $table = 'meal_rates';
     protected $fillable = [
-        'location_id',
+        'name',
         'manday',
         'breakfast',
         'lunch',
         'dinner',
         'supper',
-        'hk'
+        'hk',
+        'minimum',
     ];
 
     public function createdAt(): Attribute
@@ -44,10 +45,5 @@ class MealRate extends Model
                 return $date_timezone;
             },
         );
-    }    
-
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class, 'location_id');
     }
 }

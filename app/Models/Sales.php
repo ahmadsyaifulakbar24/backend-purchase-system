@@ -23,7 +23,8 @@ class Sales extends Model
         'lunch',
         'dinner',
         'supper',
-        'hk'
+        'hk',
+        'minimum',
     ];
 
     public function createdAt(): Attribute

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\MealRate;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MealRate\MealRateRequest;
 use App\Http\Resources\MealRate\MealRateResource;
 use App\Models\MealRate;
 use Illuminate\Http\Request;
@@ -35,19 +36,9 @@ class MealRateController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(MealRateRequest $request)
     {
-        $request->validate([
-            'location_id' => ['required', 'unique:meal_rates,location_id', 'exists:locations,id'],
-            'manday' => ['required', 'numeric'],
-            'breakfast' => ['required', 'numeric'],
-            'lunch' => ['required', 'numeric'],
-            'dinner' => ['required', 'numeric'],
-            'supper' => ['required', 'numeric'],
-            'hk' => ['required', 'numeric'],
-        ]);
-
-        $input = $request->all();
+        $input = $request->validated();
 
         $meal_rate = MealRate::create($input);
 
@@ -65,22 +56,9 @@ class MealRateController extends Controller
         );
     }
 
-    public function update(Request $request, MealRate $meal_rate)
+    public function update(MealRateRequest $request, MealRate $meal_rate)
     {
-        $request->validate([
-            'location_id' => [
-                'required', 
-                Rule::unique('meal_rates', 'location_id')->ignore($meal_rate->id), 
-                'exists:locations,id'
-            ],
-            'manday' => ['required', 'numeric'],
-            'breakfast' => ['required', 'numeric'],
-            'lunch' => ['required', 'numeric'],
-            'dinner' => ['required', 'numeric'],
-            'supper' => ['required', 'numeric'],
-            'hk' => ['required', 'numeric'],
-        ]);
-        $input = $request->all();
+        $input = $request->validated();
 
         $meal_rate->update($input);
 

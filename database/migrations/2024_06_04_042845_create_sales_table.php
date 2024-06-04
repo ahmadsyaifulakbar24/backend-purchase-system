@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('dinner', 15, 2);
             $table->double('supper', 15, 2);
             $table->double('hk', 15, 2);
+            $table->integer('minimum');
             $table->timestamps();
         });
     }

@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('meal_rates', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('location_id')->constrained('locations')->onUpdate('cascade');
+            $table->string('name');
             $table->double('manday', 15, 2);
             $table->double('breakfast', 15, 2);
             $table->double('lunch', 15, 2);
             $table->double('dinner', 15, 2);
             $table->double('supper', 15, 2);
             $table->double('hk', 15, 2);
+            $table->integer('minimum');
             $table->timestamps();
         });
     }

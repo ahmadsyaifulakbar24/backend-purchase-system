@@ -26,6 +26,7 @@ class SalesResource extends JsonResource
             'dinner' => $this->dinner,
             'supper' => $this->supper,
             'hk' => $this->hk,
+            'minimum' => $this->minimum,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

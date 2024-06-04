@@ -17,13 +17,14 @@ class MealRateResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'location' => new LocationResource($this->location),
+            'name' => $this->name,
             'manday' => $this->manday,
             'breakfast' => $this->breakfast,
             'lunch' => $this->lunch,
             'dinner' => $this->dinner,
             'supper' => $this->supper,
             'hk' => $this->hk,
+            'minimum' => $this->minimum,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
