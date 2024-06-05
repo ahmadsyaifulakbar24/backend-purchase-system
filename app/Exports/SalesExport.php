@@ -11,6 +11,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SalesExport implements FromView, ShouldAutoSize, WithStyles
 {
+ 
+    protected $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
     public function styles(Worksheet $sheet) 
     {
        
@@ -18,7 +26,7 @@ class SalesExport implements FromView, ShouldAutoSize, WithStyles
 
     public function view(): View
     {
-        $data = [];
+        $data = $this->data;
         return view('exports.sales_excel', $data);
     }
 }

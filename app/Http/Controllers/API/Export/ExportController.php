@@ -264,8 +264,8 @@ class ExportController extends Controller
             'month_name' => $month_name,
         ];
         
-        return view('exports.sales_excel', $data);
-        // return Excel::download(new SalesExport(), 'Sales.xlsx');
+        // return view('exports.sales_excel', $data);
+        return Excel::download(new SalesExport($data), 'Sales.xlsx');
     }
 
     public function real_mor_excel(Request $request)
