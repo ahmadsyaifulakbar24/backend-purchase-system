@@ -1,3 +1,14 @@
+<style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      vertical-align: middle;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
 @php
     $total_location = count($locations);
     $total_colspan = $total_location + 4;
@@ -68,7 +79,7 @@
                 @php
                     $location_data = collect($suppliers[0]['location']);
                     $sum_total_item_price_first = $location_data->sum('total_item_price');
-                    $total_sum_total_item_price_first = $sum_total_item_price_first;
+                    $total_sum_total_item_price_first += $sum_total_item_price_first;
                 @endphp
                 
                 @foreach ($locations as $location)
@@ -103,7 +114,7 @@
 
     <!-- Divider -->
     <tr>
-        <td colspan="{{ $total_colspan + 2 }}"></td>
+        <td colspan="{{ $total_colspan - 1}}"></td>
     </tr>
 
     <!-- Menghitung Total -->
@@ -115,7 +126,7 @@
             @php
                 $total_location = !empty($total_item_price_location[$location->id]) ? $total_item_price_location[$location->id] : null;
             @endphp
-            <td>{{ !empty($total_location) ? $total_location['total_item_price'] : null; }}</td>
+            <td>{{ !empty($total_location) ? $total_location['total_item_price'] : 0; }}</td>
         @endforeach
         <td>{{ $total_sum_total_item_price + $total_sum_total_item_price_first }}</td>
     </tr>

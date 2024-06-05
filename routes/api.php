@@ -63,10 +63,10 @@ Route::middleware(['guest'])->group(function () {
     });
 
     Route::prefix('export')->group(function () {
-        Route::get('/summary-excel', [ExportController::class, 'summary_excel']);
-        Route::get('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
+        Route::post('/summary-excel', [ExportController::class, 'summary_excel']);
+        Route::post('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
         Route::post('/sales-excel', [ExportController::class, 'seles_excel']);
-        Route::get('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
+        Route::post('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
     });
 });
 
