@@ -407,7 +407,7 @@ class ExportController extends Controller
             'last_year' => $last_year,
         ];
 
-        return view('exports.real_mor_excel', $param_data);
+        // return view('exports.real_mor_excel', $param_data);
 
         return Excel::download(new RealMORExport(), 'MONTHLY OPERATION REPORT.xlsx');
     }
