@@ -409,7 +409,7 @@ class ExportController extends Controller
 
         // return view('exports.real_mor_excel', $param_data);
 
-        return Excel::download(new RealMORExport(), 'MONTHLY OPERATION REPORT.xlsx');
+        return Excel::download(new RealMORExport($param_data), 'MONTHLY OPERATION REPORT.xlsx');
     }
 
     public function meal_sheet_month_count($month, $year)

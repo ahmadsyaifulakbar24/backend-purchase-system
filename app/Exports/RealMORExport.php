@@ -11,6 +11,13 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class RealMORExport implements FromView, ShouldAutoSize, WithStyles
 {
+    protected $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
     public function styles(Worksheet $sheet) 
     {
         return [
@@ -25,7 +32,7 @@ class RealMORExport implements FromView, ShouldAutoSize, WithStyles
 
     public function view(): View
     {
-        $data = [];
+        $data = $this->data;
         return view('exports.real_mor_excel', $data);
     }
 }
