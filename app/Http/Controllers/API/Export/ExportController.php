@@ -7,17 +7,13 @@ use App\Exports\RealMORExport;
 use App\Exports\SalesExport;
 use App\Exports\SummaryExport;
 use App\Helpers\DateHelpers;
-use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\DOCatering;
 use App\Models\Location;
 use App\Models\MealSheetDetail;
-use App\Models\MealSheetGroup;
 use App\Models\POSupplierCatering;
 use App\Models\Sales;
 use App\Models\SelectItemProduct;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -107,8 +103,8 @@ class ExportController extends Controller
         
         $month_name = strtoupper(DateHelpers::numericToMonth($month));
 
-        return view('exports.summary_excel', compact('data', 'year', 'month_name'));
-        // return Excel::download(new SummaryExport($year, $month_name, $data), 'SUMMARY.xlsx');
+        // return view('exports.summary_excel', compact('data', 'year', 'month_name'));
+        return Excel::download(new SummaryExport($year, $month_name, $data), 'SUMMARY.xlsx');
     }
 
     public function realisasi_purchase_record_excel(Request $request)
@@ -204,8 +200,8 @@ class ExportController extends Controller
             'data' => $data,
             'total_item_price_location' => $total_item_price_location,
         ];
-        // return Excel::download(new RealisasiPurchaseRecord($param_data), 'Realisasi Purchase Record.xlsx');
-        return view('exports.realisasi_purchase_record_excel', compact('locations', 'year', 'month_name', 'data', 'total_item_price_location'));
+        return Excel::download(new RealisasiPurchaseRecord($param_data), 'Realisasi Purchase Record.xlsx');
+        // return view('exports.realisasi_purchase_record_excel', compact('locations', 'year', 'month_name', 'data', 'total_item_price_location'));
     }
 
     public function seles_excel(Request $request)
