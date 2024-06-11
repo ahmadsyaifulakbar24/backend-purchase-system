@@ -11,8 +11,10 @@ use App\Http\Resources\MealSheet\MealSheetDailyRecordResource;
 use App\Models\Formula;
 use App\Models\MealSheetDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use ZipStream\ZipStream;
 
 class MealSheetDailyRecordController extends Controller
 {
@@ -108,6 +110,56 @@ class MealSheetDailyRecordController extends Controller
         $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
         $file_name = 'daily_meal_sheet-.pdf';
         return $pdf->download($file_name);
+    }
+
+    public function multiple_daily_meal_sheet_pdf(Request $request)
+    {
+        $request->validate([
+            'meal_sheet_detail_id' => ['required', 'array'],
+            'meal_sheet_detail_id.*' => ['required', 'exists:meal_sheet_details,id', 'distinct'],
+        ]);
+        $meal_sheet_detail_id = $request->meal_sheet_detail_id;
+        $pdf_file = [];
+
+        $meal_sheet_details = MealSheetDetail::whereIn('id', $meal_sheet_detail_id)->get();
+
+        $checklist_image = public_path('images/checklist.png');
+        // Generate PDF.
+        foreach ($meal_sheet_details as $meal_sheet_detail) {
+            $data = [
+                'meal_sheet_detail' => $meal_sheet_detail,
+                'checklist_image' => $checklist_image,
+            ];
+            $location = $meal_sheet_detail->meal_sheet_daily->meal_sheet_group->location->location;
+            $client_name = $meal_sheet_detail->client->client_name;
+            $date = Carbon::parse($meal_sheet_detail->meal_sheet_daily->meal_sheet_date)->format('d F Y');
+
+            $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
+            $pdf_content = $pdf->output();
+            $pdf_file[] = [
+                'name' => $location . " " . $client_name . " " . $date . ".pdf",
+                'content' => $pdf_content,
+            ];
+        }
+
+        $zip = new ZipStream(
+            outputName: 'multiple_meal_sheet_daily.zip',
+
+            // enable output of HTTP headers
+            sendHttpHeaders: true,
+        );
+
+        // add file to zip
+        foreach ($pdf_file as $file) {
+            $zip->addFile(
+                fileName: $file['name'],
+                data: $file['content'],
+            );
+        }
+
+        // finish the zip stream
+        $zip->finish();
+        
     }
 
     public function execute_formula($input, $records)

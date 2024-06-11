@@ -297,6 +297,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'show']);
             Route::patch('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'update']);
             Route::delete('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'destroy']);
+            Route::post('/meal_sheet_pdf/multiple', [MealSheetDailyController::class, 'multiple_meal_sheet_pdf']);
         });
 
         Route::prefix('daily-record')->group(function () {
@@ -306,6 +307,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::post('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'update']);
             Route::delete('/{meal_sheet_detail:id}', [MealSheetDailyRecordController::class, 'destroy']);
             Route::post('/{meal_sheet_detail:id}/daily-meal-sheet-pdf', [MealSheetDailyRecordController::class, 'daily_meal_sheet_pdf']);
+            Route::post('/daily-meal-sheet-pdf/multiple', [MealSheetDailyRecordController::class, 'multiple_daily_meal_sheet_pdf']);
         });
 
         Route::prefix('monthly')->group(function () {

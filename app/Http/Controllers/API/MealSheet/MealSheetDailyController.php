@@ -9,7 +9,11 @@ use App\Http\Requests\MealSheet\MealSheetDailyUpdateRequest;
 use App\Http\Resources\MealSheet\MealSheetDailyDetailResource;
 use App\Http\Resources\MealSheet\MealSheetDailyResource;
 use App\Models\MealSheetDaily;
+use App\Models\MealSheetDetail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use ZipStream\ZipStream;
 
 class MealSheetDailyController extends Controller
 {
@@ -96,5 +100,53 @@ class MealSheetDailyController extends Controller
                 'meal_sheet_group_id' => 'this group already has data'
             ], 'failed to delete meal sheet daily data', 422);
         }
+    }
+
+    public function multiple_meal_sheet_pdf(Request $request)
+    {
+        $request->validate([
+            'meal_sheet_daily_id' => ['required', 'array'],
+            'meal_sheet_daily_id.*' => ['required', 'exists:meal_sheet_daily,id', 'distinct'],
+        ]);
+        $meal_sheet_daily_id = $request->meal_sheet_daily_id;
+
+        $meal_sheet_details = MealSheetDetail::whereIn('meal_sheet_daily_id', $meal_sheet_daily_id)->get();
+        $checklist_image = public_path('images/checklist.png');
+
+        // Generate PDF.
+        foreach ($meal_sheet_details as $meal_sheet_detail) {
+            $data = [
+                'meal_sheet_detail' => $meal_sheet_detail,
+                'checklist_image' => $checklist_image,
+            ];
+            $location = $meal_sheet_detail->meal_sheet_daily->meal_sheet_group->location->location;
+            $client_name = $meal_sheet_detail->client->client_name;
+            $date = Carbon::parse($meal_sheet_detail->meal_sheet_daily->meal_sheet_date)->format('d F Y');
+
+            $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
+            $pdf_content = $pdf->output();
+            $pdf_file[] = [
+                'name' => $location . " " . $client_name . " " . $date . ".pdf",
+                'content' => $pdf_content,
+            ];
+        }
+
+        $zip = new ZipStream(
+            outputName: 'multiple_meal_sheet_daily.zip',
+
+            // enable output of HTTP headers
+            sendHttpHeaders: true,
+        );
+
+        // add file to zip
+        foreach ($pdf_file as $file) {
+            $zip->addFile(
+                fileName: $file['name'],
+                data: $file['content'],
+            );
+        }
+
+        // finish the zip stream
+        $zip->finish();
     }
 }
