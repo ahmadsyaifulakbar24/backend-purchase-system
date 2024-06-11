@@ -124,6 +124,7 @@ class MealSheetDailyRecordController extends Controller
         $meal_sheet_details = MealSheetDetail::whereIn('id', $meal_sheet_detail_id)->get();
 
         $checklist_image = public_path('images/checklist.png');
+        
         // Generate PDF.
         foreach ($meal_sheet_details as $meal_sheet_detail) {
             $data = [
