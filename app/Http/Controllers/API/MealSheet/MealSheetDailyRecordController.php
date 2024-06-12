@@ -135,11 +135,13 @@ class MealSheetDailyRecordController extends Controller
             $client_name = $meal_sheet_detail->client->client_name;
             $date = Carbon::parse($meal_sheet_detail->meal_sheet_daily->meal_sheet_date)->format('d F Y');
 
+            $pdf_name = $location . " " . $client_name . " " . $date . ".pdf";
+
             $pdf = Pdf::loadView('pdf.daily_meal_sheet', $data);
-            $pdf_content = $pdf->output();
+            // $pdf_content = $pdf->output();
             $pdf_file[] = [
-                'name' => $location . " " . $client_name . " " . $date . ".pdf",
-                'content' => $pdf_content,
+                'name' => $pdf_name,
+                'content' => $$pdf->download($pdf_name),
             ];
         }
 
