@@ -62,11 +62,15 @@ Route::middleware(['guest'])->group(function () {
         });
     });
 
-    Route::prefix('export')->group(function () {
-        Route::post('/summary-excel', [ExportController::class, 'summary_excel']);
-        Route::post('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
-        Route::post('/sales-excel', [ExportController::class, 'seles_excel']);
-        Route::post('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
+    // Route::prefix('export')->group(function () {
+    //     Route::post('/summary-excel', [ExportController::class, 'summary_excel']);
+    //     Route::post('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
+    //     Route::post('/sales-excel', [ExportController::class, 'seles_excel']);
+    //     Route::post('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
+    // });
+
+    Route::prefix('meal-sheet/daily')->group(function () {
+        Route::get('/meal_sheet_pdf/multiple', [MealSheetDailyController::class, 'multiple_meal_sheet_pdf']);
     });
 });
 
@@ -297,7 +301,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'show']);
             Route::patch('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'update']);
             Route::delete('/{meal_sheet_daily:id}', [MealSheetDailyController::class, 'destroy']);
-            Route::post('/meal_sheet_pdf/multiple', [MealSheetDailyController::class, 'multiple_meal_sheet_pdf']);
+            // Route::get('/meal_sheet_pdf/multiple', [MealSheetDailyController::class, 'multiple_meal_sheet_pdf']);
         });
 
         Route::prefix('daily-record')->group(function () {
@@ -364,10 +368,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', 'upsert');
     });
 
-    // Route::prefix('export')->group(function () {
-    //     Route::get('/summary-excel', [ExportController::class, 'summary_excel']);
-    //     Route::get('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
-    //     Route::get('/sales-excel', [ExportController::class, 'seles_excel']);
-    //     Route::get('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
-    // });
+    Route::prefix('export')->group(function () {
+        Route::get('/summary-excel', [ExportController::class, 'summary_excel']);
+        Route::get('/realisasi-purchase-record-excel', [ExportController::class, 'realisasi_purchase_record_excel']);
+        Route::get('/sales-excel', [ExportController::class, 'seles_excel']);
+        Route::get('/real-mor-excel', [ExportController::class, 'real_mor_excel']);
+    });
 });
