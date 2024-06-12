@@ -13,7 +13,7 @@ use App\Models\MealSheetDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use ZipStream\ZipStream;
+use ZipArchive;
 
 class MealSheetDailyController extends Controller
 {
@@ -131,22 +131,20 @@ class MealSheetDailyController extends Controller
             ];
         }
 
-        $zip = new ZipStream(
-            outputName: 'multiple_meal_sheet_daily.zip',
-
-            // enable output of HTTP headers
-            sendHttpHeaders: true,
-        );
-
+        $zip = new ZipArchive;
+        $file_path = storage_path('app/multiple_meal_sheet_daily.zip');
+        $zip->open($file_path, ZipArchive::CREATE);
+    
         // add file to zip
         foreach ($pdf_file as $file) {
-            $zip->addFile(
-                fileName: $file['name'],
-                data: $file['content'],
+            $zip->addFromString(
+                $file['name'],
+                $file['content'],
             );
         }
 
-        // finish the zip stream
-        $zip->finish();
+        $zip->close();
+
+      return response()->download($file_path)->deleteFileAfterSend();
     }
 }
