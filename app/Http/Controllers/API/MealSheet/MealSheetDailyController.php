@@ -148,7 +148,5 @@ class MealSheetDailyController extends Controller
 
         // finish the zip stream
         $zip->finish();
-
-        return response()->download($zip);
     }
 }
